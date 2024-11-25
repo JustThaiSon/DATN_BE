@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.Entities
 {
-    public class Genres
+    public class MovieActors
     {
-        public Guid Id { get; set; }
-        public string GenreName { get; set; }
+        public Guid MovieId { get; set; }
+        public Guid ActorId { get; set; }
     }
 }

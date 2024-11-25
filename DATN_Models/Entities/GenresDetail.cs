@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.Entities
 {
-    internal class GenresDetail
+    public class GenresDetail
     {
+        public Guid Id { get; set; }
+        public Guid MovieId { get; set; }
     }
 }
