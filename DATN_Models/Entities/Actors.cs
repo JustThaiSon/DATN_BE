@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.Entities
 {
-    public class Genres
+    public class Actors
     {
         public Guid Id { get; set; }
-        public string GenreName { get; set; }
+        public string Name { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Biography { get; set; }
+        public string Photo { get; set; }
     }
 }

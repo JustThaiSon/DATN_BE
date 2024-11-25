@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.Entities
 {
-    public class Genres
+    internal class AppUsers
     {
-        public Guid Id { get; set; }
-        public string GenreName { get; set; }
     }
 }

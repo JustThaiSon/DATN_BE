@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.Entities
 {
-    internal class OrderServices
+    public class OrderServices
     {
+        public Guid Id { get; set; }
+        public Guid OrderId { get; set; }
+        public Guid ServiceId { get; set; }
+        public long Quantity { get; set; }
+        public long UnitPrice { get; set; }
+        public long TotalPrice { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }
