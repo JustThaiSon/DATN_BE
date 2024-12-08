@@ -1,0 +1,6 @@
+@DATN_BackEndApi_HostAddress = http://localhost:5193
+
+GET {{DATN_BackEndApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_Models", "DATN_Models\DATN_Models.csproj", "{04169AE1-85E8-40EE-B59D-541340D8FE94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Models", "DATN_Models\DATN_Models.csproj", "{04169AE1-85E8-40EE-B59D-541340D8FE94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_Services", "DATN_Services\DATN_Services.csproj", "{BDB23DA8-5857-41C1-9B2E-012C1DCC0865}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Services", "DATN_Services\DATN_Services.csproj", "{BDB23DA8-5857-41C1-9B2E-012C1DCC0865}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_Helpers", "DATN_Helpers\DATN_Helpers.csproj", "{1F1F192C-FB78-4FC4-A5FF-45D030517B37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_BackEndApi", "DATN_BackEndApi\DATN_BackEndApi.csproj", "{C19759BE-CA03-4B43-9724-932DAD4BEAEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{BDB23DA8-5857-41C1-9B2E-012C1DCC0865}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDB23DA8-5857-41C1-9B2E-012C1DCC0865}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDB23DA8-5857-41C1-9B2E-012C1DCC0865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
