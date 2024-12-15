@@ -1,4 +1,5 @@
-﻿using DATN_Models.Models;
+﻿using DATN_Models.DTOS.Account.Res;
+using DATN_Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace DATN_Models.DTOS.Account
         public Guid ID { get; set; }
         public string UserName { get; set; }
         public string DisplayName { get; set; }
-        public List<AppRoles> Roles { get; set; }
+        public List<string> Roles { get; set; }
     }
 
 }

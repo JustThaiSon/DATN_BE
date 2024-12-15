@@ -55,8 +55,8 @@ namespace DATN_BackEndApi.Controllers
             }
             LoginRes loginCms = new LoginRes
             {
-                AccessToken = _ultils.GenerateToken(loginDto.ID),
-                RefreshToken = _ultils.GenerateRefreshToken(loginDto.ID),
+                AccessToken = _ultils.GenerateToken(loginDto.ID, loginDto.Roles),
+                RefreshToken = _ultils.GenerateRefreshToken(loginDto.ID, loginDto.Roles),
                 Roles = loginDto.Roles,
             };
             res.ResponseCode = responseCode;

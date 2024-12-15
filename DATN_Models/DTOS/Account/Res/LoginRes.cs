@@ -11,6 +11,6 @@ namespace DATN_Models.DTOS.Account.Res
     {
         public string? AccessToken { get; set; }
         public string? RefreshToken { get; set; }
-        public List<AppRoles> Roles { get; set; }
+        public List<string> Roles { get; set; }
     }
 }

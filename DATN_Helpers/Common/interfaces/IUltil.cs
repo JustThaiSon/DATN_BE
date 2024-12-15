@@ -10,10 +10,10 @@ namespace DATN_Helpers.Common.interfaces
     {
         //string GenerateJwt(LoginDTO user);
 
-        string GenerateToken(Guid id);
-        string GenerateRefreshToken(Guid id);
+        string GenerateToken(Guid id,List<string> roles);
+        string GenerateRefreshToken(Guid id, List<string> roles);
         string? GenerateTokenFromRefreshToken(string refreshToken);
-        Guid? ValidateToken(string token);
+        (Guid?, List<string>) ValidateToken(string token);
         bool IsAccessTokenExpired(string accessToken);
     }
 }

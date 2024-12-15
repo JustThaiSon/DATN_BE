@@ -54,16 +54,20 @@ namespace DATN_Models.DAO
                 return (null, response);
             }
             var roleNames = await _userManager.GetRolesAsync(user);
-            var roles = _context.Roles
-            .Where(r => roleNames.Contains(r.Name))
-            .ToList();
-
+            var roles =  _context.Roles
+                      .Where(r => roleNames.Contains(r.Name))
+                      .Select(x => new RoleRes
+                      {
+                          Name = x.Name
+                      })
+                      .ToList();
+            List<string> roleNamesList = roles.Select(role => role.Name).ToList();
             var loginDTO = new LoginDTO
             {
                 ID = user.Id,
                 DisplayName = user.Name,
                 UserName = user.UserName,
-                Roles = roles.ToList(),
+                Roles = roleNamesList
             };
             response = (int)ResponseCodeEnum.SUCCESS;
             return (loginDTO, response);
