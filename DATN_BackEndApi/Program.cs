@@ -1,6 +1,24 @@
 
+using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Common;
+using DATN_Models.DAO;
+using DATN_Models.DAO.Interface;
+using DATN_Models.HandleData;
+using DATN_Models.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using DATN_Helpers.Module;
+using Microsoft.Extensions.Configuration;
+using DATN_Models.Mapper;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DATN_BackEndApi
 {
@@ -12,11 +30,64 @@ namespace DATN_BackEndApi
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            var _services = builder.Services;
+            var _configuration = builder.Configuration;
+            _services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddLocalization(options => options.ResourcesPath = "DATN_Helpers/ResourceFiles");
+            _services.AddEndpointsApiExplorer();
+            _services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1.0.0",
+                    Title = "Streamie",
+                    Description = "Streamie api documents"
+                });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please enter a valid token!",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+            });
+            _services.AddDistributedMemoryCache();
+            _services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+            //_services.AddAutoMapper(cfg => cfg.AddProfile<MapperProfile>());
+            _services.AddTransient<ILoginDAO, LoginDAO>();
+            _services.AddTransient<IMovieDAO, MovieDAO>();
+            _services.AddScoped<IUltil, Ultil>();
+            _services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt")); ;
+            _services.AddHttpContextAccessor();
+            _services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
+            _services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
+            _services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
+            _services.AddIdentity<AppUsers, AppRoles>()
+                 .AddEntityFrameworkStores<DATN_Context>()
+                 .AddDefaultTokenProviders();
+            _services.AddDbContext<DATN_Context>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Db")));
+            _services.AddLocalization(options => options.ResourcesPath = "DATN_Helpers/ResourceFiles");
             var app = builder.Build();
 
             var supportedCultures = new[] { "en", "vi" };
@@ -32,11 +103,10 @@ namespace DATN_BackEndApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseSession();
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

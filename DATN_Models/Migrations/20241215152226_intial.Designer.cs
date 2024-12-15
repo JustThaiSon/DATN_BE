@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    [Migration("20241128170524_intial")]
+    [Migration("20241215152226_intial")]
     partial class intial
     {
         /// <inheritdoc />
@@ -80,7 +80,7 @@ namespace DATN_Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("AppRoles");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.AppUsers", b =>
@@ -155,7 +155,7 @@ namespace DATN_Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("AppUsers");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.Cinemas", b =>
@@ -295,7 +295,7 @@ namespace DATN_Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Membership");
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.MovieActors", b =>
@@ -569,7 +569,7 @@ namespace DATN_Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Service");
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.ShowTime", b =>
@@ -595,7 +595,7 @@ namespace DATN_Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShowTime");
+                    b.ToTable("ShowTimes");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.Tickets", b =>

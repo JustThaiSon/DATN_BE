@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NekBigCore.Helpers.ResourceFiles {
+namespace DATN_Helpers.ResourceFiles {
     using System;
     
     
@@ -22,7 +22,7 @@ namespace NekBigCore.Helpers.ResourceFiles {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class MessageResource {
+    internal class MessageResource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace NekBigCore.Helpers.ResourceFiles {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NekBigCore.Helpers.ResourceFiles.MessageResource", typeof(MessageResource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DATN_Helpers.ResourceFiles.MessageResource", typeof(MessageResource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace NekBigCore.Helpers.ResourceFiles {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,11 +61,11 @@ namespace NekBigCore.Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Thành công!.
+        ///   Looks up a localized string similar to Thành Công.
         /// </summary>
-        public static string _1 {
+        internal static string _200 {
             get {
-                return ResourceManager.GetString("1", resourceCulture);
+                return ResourceManager.GetString("200", resourceCulture);
             }
         }
     }

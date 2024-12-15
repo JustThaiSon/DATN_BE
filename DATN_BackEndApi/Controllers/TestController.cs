@@ -1,12 +1,15 @@
-﻿using DATN_Helpers.Common;
+﻿using DATN_BackEndApi.Extension;
+using DATN_Helpers.Common;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Principal;
 
 namespace DATN_BackEndApi.Controllers
 {
+    [BAuthorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TestController : ControllerBase
@@ -17,18 +20,12 @@ namespace DATN_BackEndApi.Controllers
         {
             _configuration = configuration;
         }
-        private string GetLanguageCode()
-        {
-            if (HttpContext.Request.Cookies.TryGetValue("LanguageCode", out string langCode))
-            {
-                return langCode;
-            }
-            return _configuration["MyCustomSettings:DefaultLanguageCode"] ?? "vi";
-        }
+
         [HttpGet]
         public async Task<CommonResponse<dynamic>> Get()
         {
             var _langCode = GetLanguageCode();
+            var í = GetUserId();
             var res = new CommonResponse<dynamic>();
             res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
             res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, _langCode);
@@ -53,6 +50,22 @@ namespace DATN_BackEndApi.Controllers
 
             return Ok(new { Message = "Language updated successfully.", LanguageCode = langCode });
         }
+        #region
+        private string GetLanguageCode()
+        {
+            if (HttpContext.Request.Cookies.TryGetValue("LanguageCode", out string langCode))
+            {
+                return langCode;
+            }
+            return _configuration["MyCustomSettings:DefaultLanguageCode"] ?? "vi";
+        }
+        #endregion
 
+        #region Define
+        private Guid GetUserId()
+        {
+            return (Guid)(HttpContext.Items["UserId"] ?? 0);
+        }
+        #endregion
     }
 }
