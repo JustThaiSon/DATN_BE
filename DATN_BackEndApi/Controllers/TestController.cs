@@ -26,6 +26,7 @@ namespace DATN_BackEndApi.Controllers
         {
             var _langCode = GetLanguageCode();
             var í = GetUserId();
+            var roles = GetRoles();
             var res = new CommonResponse<dynamic>();
             res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
             res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, _langCode);
@@ -42,10 +43,10 @@ namespace DATN_BackEndApi.Controllers
 
             HttpContext.Response.Cookies.Append("LanguageCode", langCode, new CookieOptions
             {
-                Expires = DateTimeOffset.UtcNow.AddYears(1), 
-                HttpOnly = true, 
+                Expires = DateTimeOffset.UtcNow.AddYears(1),
+                HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax 
+                SameSite = SameSiteMode.Lax
             });
 
             return Ok(new { Message = "Language updated successfully.", LanguageCode = langCode });
@@ -65,6 +66,15 @@ namespace DATN_BackEndApi.Controllers
         private Guid GetUserId()
         {
             return (Guid)(HttpContext.Items["UserId"] ?? 0);
+        }
+        private List<string> GetRoles()
+        {
+            if (HttpContext.Items["Roles"] is List<string> roles)
+            {
+                return roles;  // Return the list of roles
+            }
+
+            return new List<string>();
         }
         #endregion
     }

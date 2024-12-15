@@ -52,8 +52,8 @@ namespace DATN_BackEndApi.Extension
 
                 var bearerToken = httpRequest.Headers["Authorization"];
                 var token = !string.IsNullOrEmpty(bearerToken) ? bearerToken.ToString().Substring("Bearer ".Length) : null;
-                var userID = _ultils.ValidateToken(token);
-                if (userID == null)
+                var (userID,Roles) = _ultils.ValidateToken(token);
+                if ((userID, Roles) == (null,null))
                 {
                     var res = new CommonResponse<LoginRes>();
                     res.ResponseCode = INVALID_TOKEN;
@@ -63,6 +63,7 @@ namespace DATN_BackEndApi.Extension
                     return false;
                 }
                 context.HttpContext.Items["UserId"] = userID;
+                context.HttpContext.Items["Roles"] = Roles;
                 return true;
             }
             #endregion
