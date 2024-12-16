@@ -74,7 +74,7 @@ namespace DATN_BackEndApi
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            //_services.AddAutoMapper(cfg => cfg.AddProfile<MapperProfile>());
+            _services.AddAutoMapper(typeof(MapperProfile));
             _services.AddTransient<ILoginDAO, LoginDAO>();
             _services.AddTransient<IMovieDAO, MovieDAO>();
             _services.AddScoped<IUltil, Ultil>();
@@ -87,16 +87,7 @@ namespace DATN_BackEndApi
                  .AddEntityFrameworkStores<DATN_Context>()
                  .AddDefaultTokenProviders();
             _services.AddDbContext<DATN_Context>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Db")));
-            _services.AddLocalization(options => options.ResourcesPath = "DATN_Helpers/ResourceFiles");
             var app = builder.Build();
-
-            var supportedCultures = new[] { "en", "vi" };
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("vi"),
-                SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToArray(),
-                SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToArray()
-            });
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
