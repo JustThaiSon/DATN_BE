@@ -1,8 +1,11 @@
 ﻿using Azure;
+using Azure.Core;
 using DATN_Helpers.Common;
 using DATN_Helpers.Database;
+using DATN_Models.DAL.Movie;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Movies.Req;
+using DATN_Models.DTOS.Movies.Res;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -41,7 +44,64 @@ namespace DATN_Models.DAO
                 pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Actor_Create", pars);
+                //GetDetail GetInstanceSP
+                //GetList GetListSP
                 response = ConvertUtil.ToInt(pars[5].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public ListActorDAL GetDetailActor(Guid Id, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_ActorID", Id);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<ListActorDAL>("SP_Actor_DetailActor", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<ListActorDAL> GetListActor(int currentPage, int recordPerPage, out int totalRecord, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[4];
+                pars[0] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[1] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[2] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
+                response = ConvertUtil.ToInt(pars[3].Value);
+                totalRecord = ConvertUtil.ToInt(pars[2].Value);
+                return result;
             }
             catch (Exception ex)
             {
