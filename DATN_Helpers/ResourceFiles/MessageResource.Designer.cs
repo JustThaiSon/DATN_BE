@@ -61,6 +61,24 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Opt Sai.
+        /// </summary>
+        internal static string _107 {
+            get {
+                return ResourceManager.GetString("-107", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product.
+        /// </summary>
+        internal static string _108 {
+            get {
+                return ResourceManager.GetString("-108", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thành Công.
         /// </summary>
         internal static string _200 {
