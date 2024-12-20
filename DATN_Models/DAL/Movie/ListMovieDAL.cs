@@ -1,6 +1,12 @@
-﻿namespace DATN_Models.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DATN_Models.DAL.Movie
 {
-    public class Movies
+    public class ListMovieDAL
     {
         public Guid Id { get; set; }
         public string MovieName { get; set; }

@@ -1,11 +1,6 @@
 ﻿using DATN_Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.Configurations
 {
@@ -16,19 +11,19 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.ServiceId)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.OrderDetailId)
                 .IsRequired();
 
             builder.Property(x => x.Quantity)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.UnitPrice)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.TotalPrice)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.CreateDate)
                 .HasDefaultValueSql("GETDATE()");

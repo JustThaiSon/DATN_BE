@@ -1,24 +1,15 @@
 
-using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
+using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Module;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.HandleData;
+using DATN_Models.Mapper;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using DATN_Helpers.Module;
-using Microsoft.Extensions.Configuration;
-using DATN_Models.Mapper;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DATN_BackEndApi
 {
@@ -78,7 +69,7 @@ namespace DATN_BackEndApi
             _services.AddTransient<ILoginDAO, LoginDAO>();
             _services.AddTransient<IMovieDAO, MovieDAO>();
             _services.AddScoped<IUltil, Ultil>();
-            _services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt")); ;
+            _services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
             _services.AddHttpContextAccessor();
             _services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
             _services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();

@@ -1,8 +1,5 @@
-﻿using Azure;
-using Azure.Core;
-using DATN_Helpers.Constants;
+﻿using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAL.Account;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
@@ -11,12 +8,6 @@ using DATN_Models.HandleData;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
@@ -46,7 +37,7 @@ namespace DATN_Models.DAO
                 response = (int)ResponseCodeEnum.ERR_USER_NOT_FOUND;
                 return (null, response);
             }
-           
+
             var result = await _signInManager.PasswordSignInAsync(user, passWord, false, true);
             if (!result.Succeeded)
             {
@@ -54,7 +45,7 @@ namespace DATN_Models.DAO
                 return (null, response);
             }
             var roleNames = await _userManager.GetRolesAsync(user);
-            var roles =  _context.Roles
+            var roles = _context.Roles
                       .Where(r => roleNames.Contains(r.Name))
                       .Select(x => new RoleRes
                       {
@@ -107,7 +98,7 @@ namespace DATN_Models.DAO
             await SendOtpAsync(request.Email, otp);
             response = (int)ResponseCodeEnum.OTP_SENT;
 
-            return(response, otp);
+            return (response, otp);
         }
 
 
@@ -153,7 +144,7 @@ namespace DATN_Models.DAO
             return random.Next(100000, 999999).ToString(); // Tạo OTP 6 chữ số
         }
 
-      
+
         private async Task SendOtpAsync(string email, string otp)
         {
             // Gửi email (có thể tích hợp với dịch vụ email như SendGrid, SMTP)
@@ -161,6 +152,6 @@ namespace DATN_Models.DAO
             Console.WriteLine($"Gửi OTP {otp} đến email {email}");
         }
 
-    
+
     }
 }

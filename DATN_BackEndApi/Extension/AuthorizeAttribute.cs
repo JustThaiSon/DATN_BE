@@ -1,9 +1,9 @@
-﻿using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Common;
+﻿using DATN_Helpers.Common;
+using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Extensions;
+using DATN_Models.DTOS.Account.Res;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using DATN_Models.DTOS.Account.Res;
-using DATN_Helpers.Extensions;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -52,8 +52,8 @@ namespace DATN_BackEndApi.Extension
 
                 var bearerToken = httpRequest.Headers["Authorization"];
                 var token = !string.IsNullOrEmpty(bearerToken) ? bearerToken.ToString().Substring("Bearer ".Length) : null;
-                var (userID,Roles) = _ultils.ValidateToken(token);
-                if ((userID, Roles) == (null,null))
+                var (userID, Roles) = _ultils.ValidateToken(token);
+                if ((userID, Roles) == (null, null))
                 {
                     var res = new CommonResponse<LoginRes>();
                     res.ResponseCode = INVALID_TOKEN;
