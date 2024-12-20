@@ -10,7 +10,6 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
         public string ApiKey { get; set; }
         public string ApiSecret { get; set; }
     }
-
     public class ImageService
     {
         private readonly Cloudinary _cloudinary;
@@ -22,13 +21,13 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
 
         /// <summary>
         /// Tải ảnh lên cloud (hiện tại là cloud của nghĩa)
-        /// Giới hạn ảnh 10mb
+        /// Giới hạn ảnh 2mb
         /// </summary>
         /// <param name="file"></param>
         /// <returns>
-        /// Trả về URL của ảnh được lưu trên cloud (phục vụ việc nhúng ảnh vào ưeb)
+        /// Trả về URL của ảnh được lưu trên cloud (phục vụ việc lưu vào DB)
         /// </returns>
-        public async Task<string> UploadImageAsync(IBrowserFile file)
+        public async Task<string> UploadImageAsync(IFormFile file)
         {
             using var stream = file.OpenReadStream();
             var uploadParams = new ImageUploadParams
@@ -38,6 +37,8 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
             return uploadResult.SecureUrl.ToString();
         }
+
+
 
     }
 }
