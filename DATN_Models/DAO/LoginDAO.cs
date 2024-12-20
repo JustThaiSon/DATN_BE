@@ -28,6 +28,7 @@ namespace DATN_Models.DAO
             _httpContextAccessor = httpContextAccessor;
         }
 
+
         public async Task<(LoginDTO LoginDto, int Response)> login(string userName, string passWord)
         {
             int response = 0;
@@ -101,7 +102,6 @@ namespace DATN_Models.DAO
             return (response, otp);
         }
 
-
         public async Task<int> VerifyOtpAndRegisterUserAsync(string email, string otp)
         {
 
@@ -137,6 +137,7 @@ namespace DATN_Models.DAO
 
             return (int)ResponseCodeEnum.SUCCESS;
         }
+
 
         private string GenerateOtp()
         {

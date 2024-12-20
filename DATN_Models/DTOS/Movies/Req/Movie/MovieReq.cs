@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DATN_Models.DTOS.Movies.Req
+﻿namespace DATN_Models.DTOS.Movies.Req
 {
     public class MovieReq
     {
@@ -15,6 +9,5 @@ namespace DATN_Models.DTOS.Movies.Req
         public int Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
         public int Status { get; set; }
-        public decimal BasePriceMultiplier { get; set; }
     }
 }

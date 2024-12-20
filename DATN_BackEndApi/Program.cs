@@ -1,4 +1,5 @@
-
+﻿using CloudinaryDotNet;
+using DATN_BackEndApi.Extension.CloudinarySett;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Module;
@@ -9,6 +10,7 @@ using DATN_Models.Mapper;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace DATN_BackEndApi
@@ -43,20 +45,21 @@ namespace DATN_BackEndApi
                     BearerFormat = "JWT",
                     Scheme = "Bearer"
                 });
+                //options.OperationFilter<FileUploadOperationFilter>();
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
             _services.AddDistributedMemoryCache();
             _services.AddSession(options =>
@@ -67,8 +70,30 @@ namespace DATN_BackEndApi
             });
             _services.AddAutoMapper(typeof(MapperProfile));
             _services.AddTransient<ILoginDAO, LoginDAO>();
+
             _services.AddTransient<IMovieDAO, MovieDAO>();
+            _services.AddTransient<IActorDAO, ActorDAO>();
             _services.AddScoped<IUltil, Ultil>();
+
+
+
+            #region Nghia_Cloudinary(Ảnh/Video)
+            // Cấu hình dv lưu trữ ảnh đám mây (Cloudinary)
+            builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+            builder.Services.AddSingleton<Cloudinary>(serviceProvider =>
+            {
+                var config = serviceProvider.GetService<IOptions<CloudinarySettings>>().Value;
+                var account = new Account(config.CloudName, config.ApiKey, config.ApiSecret);
+                return new Cloudinary(account); // Cái này là account của nghĩa.
+            });
+            builder.Services.AddScoped<ImageService>();
+
+
+            #endregion
+
+
+
+
             _services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
             _services.AddHttpContextAccessor();
             _services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();

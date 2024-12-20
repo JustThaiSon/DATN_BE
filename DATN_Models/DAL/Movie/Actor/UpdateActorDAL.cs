@@ -1,12 +1,11 @@
-﻿namespace DATN_Models.DAL.Movie
+﻿namespace DATN_Models.DAL.Movie.Actor
 {
-    public class ListActorDAL
+    public class UpdateActorDAL
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Biography { get; set; }
-        public string Photo { get; set; }
+        public string PhotoURL { get; set; } = string.Empty;
         public int Status { get; set; }
     }
 }
