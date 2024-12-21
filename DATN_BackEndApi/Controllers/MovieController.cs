@@ -34,9 +34,6 @@ namespace DATN_BackEndApi.Controllers
             _mapper = mapper;
             _imgService = imgService;
         }
-        [HttpPost]
-        [Route("CreateActor")]
-
 
         #region Movie_Nghia
         [HttpGet]
