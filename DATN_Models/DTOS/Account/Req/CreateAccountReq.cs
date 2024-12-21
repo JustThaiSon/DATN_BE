@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.DTOS.Account.Req
 {
-    public class CreateAccountReq
+    public class CreateRoomRes
     {
         public string Name { get; set; }
         public string Email { get; set; }

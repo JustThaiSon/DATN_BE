@@ -77,6 +77,7 @@ namespace DATN_BackEndApi
             _services.AddAutoMapper(typeof(MapperProfile));
             _services.AddTransient<ILoginDAO, LoginDAO>();
             _services.AddTransient<IMovieDAO, MovieDAO>();
+            _services.AddTransient<IRoomDAO, RoomDAO>();
             _services.AddScoped<IUltil, Ultil>();
             _services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt")); ;
             _services.AddHttpContextAccessor();

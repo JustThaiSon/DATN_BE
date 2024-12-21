@@ -34,7 +34,7 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> CreateActor(ActorReq rq)
         {
             var res = new CommonResponse<dynamic>();
-              _movieDAO.CreateActor(rq,out int response);
+            _movieDAO.CreateActor(rq,out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;

@@ -73,7 +73,7 @@ namespace DATN_Models.DAO
             return (loginDTO, response);
         }
 
-        public async Task<(int, string)> RegisterUserAsync(CreateAccountReq request)
+        public async Task<(int, string)> RegisterUserAsync(CreateRoomRes request)
         {
             int response = 0;
             if (!StringExtension.IsValidEmail(request.Email))

@@ -1,4 +1,5 @@
-﻿using DATN_Models.Models;
+﻿using DATN_Helpers.Constants;
+using DATN_Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -15,9 +16,11 @@ namespace DATN_Models.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.NameSeat)
+            builder.Property(x => x.SeatName)
                 .HasMaxLength(50) 
                 .IsRequired();
+            builder.Property(x => x.Status)
+                .HasDefaultValue(SeatStatusEnum.Available);
         }
     }
 }

@@ -4,6 +4,7 @@ using DATN_Models.HandleData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    partial class DATN_ContextModelSnapshot : ModelSnapshot
+    [Migration("20241217171614_update_Cinema_Movies_Room_Seat_SeatType_ShowTime")]
+    partial class update_Cinema_Movies_Room_Seat_SeatType_ShowTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,6 +317,9 @@ namespace DATN_Models.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("BasePriceMultiplier")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -436,40 +442,6 @@ namespace DATN_Models.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("DATN_Models.Models.PricingRules", b =>
-                {
-                    b.Property<Guid>("PricingRuleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("Multiplier")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("RuleName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("PricingRuleId");
-
-                    b.ToTable("PricingRules");
-                });
-
             modelBuilder.Entity("DATN_Models.Models.Ratings", b =>
                 {
                     b.Property<Guid>("Id")
@@ -505,23 +477,23 @@ namespace DATN_Models.Migrations
                     b.Property<Guid>("CinemaId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("ColNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("RowNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
-
-                    b.Property<int>("TotalColNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalRowNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -534,7 +506,7 @@ namespace DATN_Models.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<long>("Multiplier")
+                    b.Property<long>("Price")
                         .HasColumnType("bigint");
 
                     b.Property<string>("SeatTypeName")
@@ -552,24 +524,15 @@ namespace DATN_Models.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ColNumber")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("RowNumber")
-                        .HasColumnType("int");
 
                     b.Property<string>("SeatName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<long>("SeatPrice")
-                        .HasColumnType("bigint");
-
-                    b.Property<Guid?>("SeatTypeId")
+                    b.Property<Guid>("SeatTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -628,6 +591,9 @@ namespace DATN_Models.Migrations
 
                     b.Property<Guid>("MovieId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Multiplier")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");

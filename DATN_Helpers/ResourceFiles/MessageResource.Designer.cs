@@ -79,7 +79,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Thành Công.
+        ///   Looks up a localized string similar to Thành công.
         /// </summary>
         internal static string _200 {
             get {

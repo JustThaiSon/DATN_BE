@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.Configurations
 {
-    internal class SeatTypeConfigruation : IEntityTypeConfiguration<SeatTypes>
+    public class PricingRuleConfiguration : IEntityTypeConfiguration<PricingRules>
     {
-        public void Configure(EntityTypeBuilder<SeatTypes> builder)
+        public void Configure(EntityTypeBuilder<PricingRules> builder)
         {
-            builder.HasKey(x => x.Id);
-
+            builder.HasKey(x => x.PricingRuleId);
             builder.Property(x => x.Multiplier)
-                .IsRequired(); 
-           
+                .IsRequired();
+            builder.Property(x => x.RuleName)
+               .IsRequired()
+               .HasMaxLength(100);
+
         }
     }
 }

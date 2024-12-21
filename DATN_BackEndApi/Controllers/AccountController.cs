@@ -31,7 +31,7 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("Resgister")]
-        public async Task<CommonResponse<dynamic>> Resgister([FromForm] CreateAccountReq request)
+        public async Task<CommonResponse<dynamic>> Resgister([FromForm] CreateRoomRes request)
         {
             var res = new CommonResponse<dynamic>();
             var (response,Opt) = await _loginDAO.RegisterUserAsync(request);

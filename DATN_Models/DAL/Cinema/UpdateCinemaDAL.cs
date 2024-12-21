@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Models
+namespace DATN_Models.DAL.Cinema
 {
-    public class Cinemas
+    public class UpdateCinemaDAL
     {
         public Guid CinemasId { get; set; }
         public string Name { get; set; }
@@ -15,6 +15,5 @@ namespace DATN_Models.Models
         public string PhoneNumber { get; set; }
         public int TotalRooms { get; set; }
         public CinemaStatusEnum Status { get; set; }
-        public DateTime CreatedDate { get; set; }
     }
 }

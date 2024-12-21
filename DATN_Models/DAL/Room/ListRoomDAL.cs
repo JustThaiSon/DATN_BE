@@ -5,15 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Models
+namespace DATN_Models.DAL.Room
 {
-    public class Rooms
+    public class ListRoomDAL
     {
         public Guid Id { get; set; }
         public Guid CinemaId { get; set; }
         public string Name { get; set; }
         public int TotalColNumber { get; set; }
         public int TotalRowNumber { get; set; }
+        public int TotalSeats { get; set; }
+        public int RoomCapacity { get; set; }
         public RoomStatusEnum Status { get; set; }
     }
 }

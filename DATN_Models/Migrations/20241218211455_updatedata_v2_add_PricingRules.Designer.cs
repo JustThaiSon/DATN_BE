@@ -4,6 +4,7 @@ using DATN_Models.HandleData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    partial class DATN_ContextModelSnapshot : ModelSnapshot
+    [Migration("20241218211455_updatedata_v2_add_PricingRules")]
+    partial class updatedata_v2_add_PricingRules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -451,8 +454,8 @@ namespace DATN_Models.Migrations
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("Multiplier")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("Multiplier")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("RuleName")
                         .IsRequired()
@@ -569,7 +572,7 @@ namespace DATN_Models.Migrations
                     b.Property<long>("SeatPrice")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid?>("SeatTypeId")
+                    b.Property<Guid>("SeatTypeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
