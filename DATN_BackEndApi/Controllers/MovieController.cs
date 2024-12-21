@@ -15,7 +15,7 @@ using DATN_BackEndApi.Extension.CloudinarySett;
 
 namespace DATN_BackEndApi.Controllers
 {
-    //[BAuthorize]
+    //[BAuthorize] 
     [Route("api/[controller]")]
     [ApiController]
     public class MovieController : ControllerBase
