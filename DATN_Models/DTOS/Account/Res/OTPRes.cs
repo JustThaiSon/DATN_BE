@@ -10,6 +10,6 @@ namespace DATN_Models.DTOS.Account.Res
     public class OtpCacheEntry
     {
         public string Otp { get; set; }
-        public CreateRoomRes UserInfo { get; set; }
+        public CreateAccountReq UserInfo { get; set; }
     }
 }

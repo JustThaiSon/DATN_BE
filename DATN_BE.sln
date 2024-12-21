@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Models", "DATN_Models\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Services", "DATN_Services\DATN_Services.csproj", "{BDB23DA8-5857-41C1-9B2E-012C1DCC0865}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_Helpers", "DATN_Helpers\DATN_Helpers.csproj", "{1F1F192C-FB78-4FC4-A5FF-45D030517B37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Helpers", "DATN_Helpers\DATN_Helpers.csproj", "{1F1F192C-FB78-4FC4-A5FF-45D030517B37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_BackEndApi", "DATN_BackEndApi\DATN_BackEndApi.csproj", "{C19759BE-CA03-4B43-9724-932DAD4BEAEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_BackEndApi", "DATN_BackEndApi\DATN_BackEndApi.csproj", "{C19759BE-CA03-4B43-9724-932DAD4BEAEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,7 +13,7 @@ namespace DATN_Models.Configurations
     {
         public void Configure(EntityTypeBuilder<GenresMovie> builder)
         {
-            builder.HasKey(x => new { x.MovieId,x.GenresId });
+            builder.HasKey(x => new { x.MovieId, x.GenresId });
         }
     }
 }
