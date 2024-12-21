@@ -1,6 +1,8 @@
-﻿using DATN_Helpers.Common;
+﻿using Azure.Core;
+using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Movie;
+using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +51,7 @@ namespace DATN_Models.DAO
                 db = new DBHelper(connectionString);
 
                 var result = db.GetListSP<MovieDAL>("SP_Movie_GetList", pars);
+
 
                 response = ConvertUtil.ToInt(pars[3].Value);
                 totalRecord = ConvertUtil.ToInt(pars[2].Value);

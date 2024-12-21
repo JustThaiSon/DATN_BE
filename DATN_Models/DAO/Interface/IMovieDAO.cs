@@ -1,4 +1,5 @@
 ﻿using DATN_Models.DAL.Movie;
+using DATN_Models.DTOS.Movies.Req;
 
 namespace DATN_Models.DAO.Interface
 {

@@ -6,8 +6,11 @@ using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Movies.Req;
+using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Res;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using DATN_BackEndApi.Extension.CloudinarySett;
 
 namespace DATN_BackEndApi.Controllers
 {
