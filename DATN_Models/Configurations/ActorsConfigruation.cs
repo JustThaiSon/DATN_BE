@@ -14,7 +14,7 @@ namespace DATN_Models.Configurations
         public void Configure(EntityTypeBuilder<Actors> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.Property(x=>x.Name).HasMaxLength(100);
+            builder.Property(x => x.Name).HasMaxLength(100);
             builder.Property(x => x.DateOfBirth)
                .IsRequired();
             builder.Property(x => x.Biography)

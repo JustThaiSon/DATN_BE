@@ -34,7 +34,7 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> Resgister([FromForm] CreateAccountReq request)
         {
             var res = new CommonResponse<dynamic>();
-            var (response,Opt) = await _loginDAO.RegisterUserAsync(request);
+            var (response, Opt) = await _loginDAO.RegisterUserAsync(request);
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.Data = Opt;
@@ -65,7 +65,7 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
         [HttpPost("verify-otp")]
-        public async Task<CommonResponse<dynamic>> VerifyOtp( string otp)
+        public async Task<CommonResponse<dynamic>> VerifyOtp(string otp)
         {
             string email = GetEmail();
             var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(email, otp);

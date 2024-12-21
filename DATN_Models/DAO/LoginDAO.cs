@@ -37,6 +37,7 @@ namespace DATN_Models.DAO
             _httpContextAccessor = httpContextAccessor;
         }
 
+
         public async Task<(LoginDTO LoginDto, int Response)> login(string userName, string passWord)
         {
             int response = 0;
@@ -54,7 +55,7 @@ namespace DATN_Models.DAO
                 return (null, response);
             }
             var roleNames = await _userManager.GetRolesAsync(user);
-            var roles =  _context.Roles
+            var roles = _context.Roles
                       .Where(r => roleNames.Contains(r.Name))
                       .Select(x => new RoleRes
                       {
@@ -107,7 +108,7 @@ namespace DATN_Models.DAO
             await SendOtpAsync(request.Email, otp);
             response = (int)ResponseCodeEnum.OTP_SENT;
 
-            return(response, otp);
+            return (response, otp);
         }
 
 
@@ -146,6 +147,7 @@ namespace DATN_Models.DAO
 
             return (int)ResponseCodeEnum.SUCCESS;
         }
+
 
         private string GenerateOtp()
         {

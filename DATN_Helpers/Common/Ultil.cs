@@ -72,7 +72,7 @@ namespace DATN_Helpers.Common
         {
             var validationResult = ValidateToken(refreshToken);
 
-            if (validationResult == (null,null))
+            if (validationResult == (null, null))
                 return null;
 
              Guid userId = validationResult.Item1.Value;
