@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Models
+namespace DATN_Models.DAL.Movie
 {
-    public class Actors
+    public class ListActorDAL
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

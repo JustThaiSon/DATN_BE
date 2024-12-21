@@ -2,7 +2,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DATN_Models.HandleData
 {
@@ -36,7 +41,7 @@ namespace DATN_Models.HandleData
         public DbSet<AppUsers> AppUsers { get; set; }
         public DbSet<Cinemas> Cinemas { get; set; }
         public DbSet<Comments> Comments { get; set; }
-        // public DbSet<Discounts> Discounts { get; set; }
+       // public DbSet<Discounts> Discounts { get; set; }
         public DbSet<Genres> Genres { get; set; }
         public DbSet<GenresMovie> GenresMovie { get; set; }
         public DbSet<Membership> Memberships { get; set; }
@@ -45,7 +50,7 @@ namespace DATN_Models.HandleData
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderServices> OrderServices { get; set; }
-        // public DbSet<PaymentMethod> PaymentMethods { get; set; }
+       // public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Ratings> Ratings { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
         public DbSet<Seats> Seats { get; set; }

@@ -1,5 +1,12 @@
-﻿using DATN_Models.DTOS.Account;
+﻿using DATN_Models.DAL.Account;
+using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
+using DATN_Models.DTOS.Account.Res;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DATN_Models.DAO.Interface
 {

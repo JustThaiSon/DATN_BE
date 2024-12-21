@@ -1,4 +1,10 @@
-﻿namespace DATN_Helpers.Constants
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DATN_Helpers.Constants
 {
     public enum ResponseCodeEnum
     {
@@ -11,7 +17,7 @@
         ERR_EMAIL_EXIST = -104,
         ERR_SYSTEM = -500,
         ERR_USER_NOT_FOUND = -105,
-        OTP_SENT = 106,
+        OTP_SENT = 106,          
         ERR_INVALID_OTP = 107,
     }
 }

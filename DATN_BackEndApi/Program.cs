@@ -9,9 +9,16 @@ using DATN_Models.HandleData;
 using DATN_Models.Mapper;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DATN_BackEndApi
 {
@@ -47,19 +54,19 @@ namespace DATN_BackEndApi
                 });
                 //options.OperationFilter<FileUploadOperationFilter>();
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
-                            }
-                        },
-                        new string[]{}
-                    }
-                });
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
             });
             _services.AddDistributedMemoryCache();
             _services.AddSession(options =>

@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Models
+namespace DATN_Models.DTOS.Movies.Req
 {
-    public class Actors
+    public class ActorReq
     {
-        public Guid Id { get; set; }
         public string Name { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Biography { get; set; }

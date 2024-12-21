@@ -1,4 +1,6 @@
-﻿namespace DATN_BackEndApi.Extension
+﻿using DATN_Models.Mapper;
+
+namespace DATN_BackEndApi.Extension
 {
     public static class ServiceExtensions
     {

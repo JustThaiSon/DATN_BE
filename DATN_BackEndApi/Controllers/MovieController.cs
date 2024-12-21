@@ -2,6 +2,7 @@
 using DATN_BackEndApi.Extension.CloudinarySett;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAO.Interface;
@@ -33,6 +34,8 @@ namespace DATN_BackEndApi.Controllers
             _mapper = mapper;
             _imgService = imgService;
         }
+        [HttpPost]
+        [Route("CreateActor")]
 
 
         #region Movie_Nghia
