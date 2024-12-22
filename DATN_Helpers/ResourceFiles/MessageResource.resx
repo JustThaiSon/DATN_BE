@@ -123,6 +123,13 @@
   <data name="-108" xml:space="preserve">
     <value>Product</value>
   </data>
+  <data name="-1998" xml:space="preserve">
+    <value>Comment không tồn tại</value>
+  </data>
+  <data name="-1999" xml:space="preserve">
+    <value>Chưa đủ điều kiện comment</value>
+    <comment>Validate comment trong page phim </comment>
+  </data>
   <data name="200" xml:space="preserve">
     <value>Thành Công</value>
   </data>

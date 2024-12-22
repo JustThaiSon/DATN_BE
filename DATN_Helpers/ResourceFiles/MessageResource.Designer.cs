@@ -79,6 +79,24 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comment không tồn tại.
+        /// </summary>
+        internal static string _1998 {
+            get {
+                return ResourceManager.GetString("-1998", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa đủ điều kiện comment.
+        /// </summary>
+        internal static string _1999 {
+            get {
+                return ResourceManager.GetString("-1999", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thành Công.
         /// </summary>
         internal static string _200 {
