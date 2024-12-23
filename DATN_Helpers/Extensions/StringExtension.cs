@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace DATN_Helpers.Extensions
 {
@@ -18,7 +13,7 @@ namespace DATN_Helpers.Extensions
         public static bool IsValidPhoneNumber(this string phoneNumber)
         {
             Regex rx = new Regex(@"^(0[1-9]{1}[0-9]{8})$");
-          
+
             return rx.IsMatch(phoneNumber);
         }
     }
