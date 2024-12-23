@@ -1,0 +1,157 @@
+﻿using DATN_Helpers.Common;
+using DATN_Helpers.Database;
+using DATN_Models.DAL.Movie;
+using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAO.Interface;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DATN_Models.DAO
+{
+    public class CommentDAO : ICommentDAO
+    {
+        private static string connectionString = string.Empty;
+
+        public CommentDAO()
+        {
+            var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+
+            connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
+        }
+
+        public void CreateComment(Guid userID, CreateCommentDAL req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[4];
+
+                pars[0] = new SqlParameter("@_UserID", userID);
+                pars[1] = new SqlParameter("@_Content", req.Content);
+                pars[2] = new SqlParameter("@_MovieID", req.MovieID);
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Comment_Create", pars);
+
+                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
+                response = ConvertUtil.ToInt(pars[3].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public void UpdateComment(Guid Id, UpdateCommentDAL req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[3];
+
+                pars[0] = new SqlParameter("@_CommentID", Id);
+                pars[1] = new SqlParameter("@_Content", req.Content);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Comment_Update", pars);
+
+                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
+                response = ConvertUtil.ToInt(pars[2].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public void DeleteComment(Guid Id, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+
+                pars[0] = new SqlParameter("@_CommentID", Id);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Comment_Delete", pars);
+
+                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<ListCommentDAL> GetListComment(Guid MovieId, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[5];
+                pars[0] = new SqlParameter("@_MovieID", MovieId);
+                pars[1] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[2] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[3] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+
+                var result = db.GetListSP<ListCommentDAL>("SP_Comment_GetList", pars);
+
+                response = ConvertUtil.ToInt(pars[4].Value);
+                totalRecord = ConvertUtil.ToInt(pars[3].Value);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+    }
+
+
+
+}
