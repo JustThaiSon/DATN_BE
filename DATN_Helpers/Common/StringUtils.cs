@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace DATN_Helpers.Common
 {
@@ -12,7 +8,7 @@ namespace DATN_Helpers.Common
         {
             if (string.IsNullOrEmpty(username))
             {
-                return "";
+                return string.Empty;
             }
 
             int length = username.Length;
