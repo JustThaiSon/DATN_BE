@@ -1,12 +1,4 @@
 ﻿using DATN_Models.DAL.Rating;
-using DATN_Models.DTOS.Movies.Req;
-using DATN_Models.DTOS.Movies.Res;
-using DATN_Models.DTOS.Rating.Req;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO.Interface
 {

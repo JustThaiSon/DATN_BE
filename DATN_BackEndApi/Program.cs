@@ -71,6 +71,7 @@ namespace DATN_BackEndApi
             _services.AddAutoMapper(typeof(MapperProfile));
 
 
+
             _services.AddTransient<ILoginDAO, LoginDAO>();
 
             _services.AddTransient<IMovieDAO, MovieDAO>();
@@ -78,6 +79,7 @@ namespace DATN_BackEndApi
             _services.AddTransient<IRatingDAO, RatingDAO>();
 
             _services.AddScoped<IUltil, Ultil>();
+
 
 
 
@@ -94,6 +96,7 @@ namespace DATN_BackEndApi
 
 
             #endregion
+
 
 
 
