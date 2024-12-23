@@ -80,6 +80,8 @@ namespace DATN_BackEndApi
 
             _services.AddTransient<IMovieDAO, MovieDAO>();
             _services.AddTransient<IActorDAO, ActorDAO>();
+            _services.AddTransient<IRatingDAO, RatingDAO>();
+
             _services.AddScoped<IUltil, Ultil>();
 
 

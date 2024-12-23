@@ -2,11 +2,14 @@
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAL.Rating;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
+using DATN_Models.DTOS.Rating.Req;
+using DATN_Models.DTOS.Rating.Res;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +48,17 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+
+            // Phần rating
+            #region Nghia_Rating
+
+            CreateMap<AddRatingDAL, AddRatingReq>().ReverseMap();
+            CreateMap<UpdateRatingDAL, UpdateRatingReq>().ReverseMap();
+
+            CreateMap<GetListRatingDAL, GetListRatingRes>().ReverseMap();
+
+
+            #endregion
         }
     }
 }

@@ -123,6 +123,17 @@
   <data name="-108" xml:space="preserve">
     <value>Product</value>
   </data>
+  <data name="-1995" xml:space="preserve">
+    <value>ID Không tồn tại</value>
+    <comment>(Rating)</comment>
+  </data>
+  <data name="-1996" xml:space="preserve">
+    <value>Giá trị rating không hợp lệ</value>
+    <comment>Rating thuộc khoảng 1 - 10</comment>
+  </data>
+  <data name="-1997" xml:space="preserve">
+    <value>Không đủ điều kiện rate (Chưa xem phim/ phim chưa kết thúc)</value>
+  </data>
   <data name="200" xml:space="preserve">
     <value>Thành Công</value>
   </data>
