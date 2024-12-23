@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DTOS.Account.Req;
@@ -55,6 +56,7 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateCommentDAL, CreateAccountDAL>().ReverseMap();
 
             CreateMap<ListCommentDAL, GetListCommentRes>().ReverseMap();
+            //CreateMap<ListCommentDALTest, GetListCommentResTest>().ReverseMap();
 
             #endregion
 

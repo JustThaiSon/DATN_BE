@@ -13,7 +13,7 @@ using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Res;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+ 
 namespace DATN_BackEndApi.Controllers
 {
     [Route("api/[controller]")]
@@ -26,13 +26,14 @@ namespace DATN_BackEndApi.Controllers
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
 
-        public CommentController(IConfiguration configuration, IUltil ultils, IMapper mapper)
+        public CommentController(ICommentDAO commentDAO,IConfiguration configuration, IUltil ultils, IMapper mapper)
         {
 
 
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
+            _commentDAO = commentDAO;
         }
 
 

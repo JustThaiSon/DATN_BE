@@ -88,7 +88,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chưa đủ điều kiện comment.
+        ///   Looks up a localized string similar to Chưa đủ điều kiện comment (chưa xem hoặc phim chưa chiếu xong).
         /// </summary>
         internal static string _1999 {
             get {

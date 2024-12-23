@@ -1,4 +1,5 @@
-﻿using DATN_Models.DAL.Movie;
+﻿using DATN_Models.DAL.Comment;
+using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using System;
 using System.Collections.Generic;
