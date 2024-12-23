@@ -1,11 +1,4 @@
-﻿using DATN_Models.DAL.Comment;
-using DATN_Models.DAL.Movie;
-using DATN_Models.DAL.Movie.Actor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DATN_Models.DAL.Movie.Actor;
 
 namespace DATN_Models.DAO.Interface
 {

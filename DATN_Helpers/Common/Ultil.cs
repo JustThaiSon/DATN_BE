@@ -2,14 +2,9 @@
 using DATN_Helpers.Module;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Helpers.Common
 {
@@ -21,7 +16,7 @@ namespace DATN_Helpers.Common
         {
             _jwtSettings = jwtSettings.Value;
         }
-     
+
 
         public string GenerateToken(Guid id, List<string> roles)
         {
@@ -75,8 +70,8 @@ namespace DATN_Helpers.Common
             if (validationResult == (null, null))
                 return null;
 
-             Guid userId = validationResult.Item1.Value;
-             List<string> roles = validationResult.Item2;
+            Guid userId = validationResult.Item1.Value;
+            List<string> roles = validationResult.Item2;
 
             return GenerateToken(userId, roles);
         }

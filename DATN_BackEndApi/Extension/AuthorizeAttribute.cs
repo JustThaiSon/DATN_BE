@@ -1,12 +1,9 @@
-﻿using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Common;
+﻿using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DTOS.Account.Res;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using DATN_Models.DTOS.Account.Res;
-using DATN_Helpers.Extensions;
 
 namespace DATN_BackEndApi.Extension
 {

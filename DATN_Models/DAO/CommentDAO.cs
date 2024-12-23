@@ -1,16 +1,10 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
