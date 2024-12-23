@@ -79,6 +79,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ID Không tồn tại (Khách Hàng).
+        /// </summary>
+        internal static string _1994 {
+            get {
+                return ResourceManager.GetString("-1994", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thành Công.
         /// </summary>
         internal static string _200 {

@@ -123,6 +123,10 @@
   <data name="-108" xml:space="preserve">
     <value>Product</value>
   </data>
+  <data name="-1994" xml:space="preserve">
+    <value>ID Không tồn tại (Khách Hàng)</value>
+    <comment>Khách Hàng</comment>
+  </data>
   <data name="200" xml:space="preserve">
     <value>Thành Công</value>
   </data>

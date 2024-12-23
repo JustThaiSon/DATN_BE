@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DTOS.Account.Req;
+using DATN_Models.DTOS.Customer.Req;
+using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Req.Movie;
@@ -42,6 +45,14 @@ namespace DATN_Models.Mapper
                 .ReverseMap();
 
             #endregion
+
+            #endregion
+
+
+            // Phần Customer
+            #region Nghia_Customer
+            CreateMap<GetListCustomerInformationDAL, GetListCustomerInformationRes>().ReverseMap();
+            CreateMap<UpdateCustomerDAL, UpdateCustomerReq>().ReverseMap();
 
             #endregion
 
