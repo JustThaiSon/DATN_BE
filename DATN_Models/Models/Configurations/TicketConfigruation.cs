@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class TicketConfigruation : IEntityTypeConfiguration<Tickets>
     {
@@ -16,19 +16,15 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.ShowtimeId)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.SeatId)
-                .IsRequired(); 
-
-            builder.Property(x => x.UserId)
-                .IsRequired(); 
-
+                .IsRequired();
             builder.Property(x => x.Price)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.Status)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.CreatedDate)
                 .IsRequired();

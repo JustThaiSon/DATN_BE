@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
-    public class AppRoleConfigruation : IEntityTypeConfiguration<AppRoles>
+    public class ActorMovieConfigruation : IEntityTypeConfiguration<MovieActors>
     {
-        public void Configure(EntityTypeBuilder<AppRoles> builder)
+        public void Configure(EntityTypeBuilder<MovieActors> builder)
         {
-            builder.Property(x => x.Description).IsRequired().HasColumnType("nvarchar(225)");
+            builder.HasKey(x => new { x.MovieId, x.ActorId });
         }
     }
 }

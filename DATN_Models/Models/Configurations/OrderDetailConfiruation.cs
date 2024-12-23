@@ -7,25 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
-    public class OrderServiceConfigruation : IEntityTypeConfiguration<OrderServices>
+    public class OrderDetailConfiruation : IEntityTypeConfiguration<OrderDetails>
     {
-        public void Configure(EntityTypeBuilder<OrderServices> builder)
+        public void Configure(EntityTypeBuilder<OrderDetails> builder)
         {
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Quantity)
-                .IsRequired(); 
-
-            builder.Property(x => x.UnitPrice)
                 .IsRequired();
 
             builder.Property(x => x.TotalPrice)
-                .IsRequired(); 
+                .IsRequired();
 
-            builder.Property(x => x.CreatedDate)
-                .IsRequired(); 
+            builder.Property(x => x.CreateDate)
+                .HasDefaultValueSql("GETDATE()");
         }
     }
 }

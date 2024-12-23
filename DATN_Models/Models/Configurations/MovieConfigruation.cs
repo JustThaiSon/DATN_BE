@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class MovieConfigruation : IEntityTypeConfiguration<Movies>
     {
@@ -16,20 +16,20 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.MovieName)
-                .IsRequired() 
-                .HasMaxLength(200); 
+                .IsRequired()
+                .HasMaxLength(200);
 
             builder.Property(x => x.Description)
-                .HasMaxLength(1000); 
+                .HasMaxLength(1000);
 
             builder.Property(x => x.Thumbnail)
-                .HasMaxLength(500); 
+                .HasMaxLength(500);
 
             builder.Property(x => x.Trailer)
                 .HasMaxLength(500);
 
             builder.Property(x => x.Duration)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.Status)
                 .HasDefaultValue(false);

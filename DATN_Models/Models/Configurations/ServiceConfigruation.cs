@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class ServiceConfigruation : IEntityTypeConfiguration<Service>
     {
@@ -16,20 +16,20 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name)
-                .HasMaxLength(100) 
+                .HasMaxLength(100)
                 .IsRequired();
 
             builder.Property(x => x.Description)
-                .HasMaxLength(500); 
+                .HasMaxLength(500);
 
             builder.Property(x => x.Price)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.Category)
-                .HasMaxLength(100); 
+                .HasMaxLength(100);
 
             builder.Property(x => x.CreatedDate)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.Status)
                 .IsRequired();

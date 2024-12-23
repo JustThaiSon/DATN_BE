@@ -11,7 +11,7 @@ namespace DATN_Models.Models
         public Guid Id { get; set; }
         public Guid ShowtimeId { get; set; }
         public Guid SeatId { get; set; }
-        public Guid UserId { get; set; }
+        public Guid OrderDetailId { get; set; }
         public long Price { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class ShowTimeConfigruation : IEntityTypeConfiguration<ShowTime>
     {
@@ -16,16 +16,16 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.MovieId)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.RoomId)
                 .IsRequired();
 
             builder.Property(x => x.StartTime)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.EndTime)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.Status)
                 .IsRequired();

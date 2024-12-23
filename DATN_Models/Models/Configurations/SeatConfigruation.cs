@@ -7,19 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
-    public class RoomConfigruation : IEntityTypeConfiguration<Rooms>
+    public class SeatConfigruation : IEntityTypeConfiguration<Seats>
     {
-        public void Configure(EntityTypeBuilder<Rooms> builder)
+        public void Configure(EntityTypeBuilder<Seats> builder)
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Name)
-                .HasMaxLength(100) 
-                .IsRequired(); 
-
-            builder.Property(x => x.SeatsCount)
+            builder.Property(x => x.NameSeat)
+                .HasMaxLength(50)
                 .IsRequired();
         }
     }

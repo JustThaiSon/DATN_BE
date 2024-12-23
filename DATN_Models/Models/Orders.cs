@@ -13,6 +13,7 @@ namespace DATN_Models.Models
         public DateTime OrderDate { get; set; }
         public long TotalPrice { get; set; }
         public int Status { get; set; }
+        public int IsAnonymous { get; set; }
         public Guid PaymentId { get; set; }
     }
 }

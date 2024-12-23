@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class RatingConfigruation : IEntityTypeConfiguration<Ratings>
     {
@@ -16,8 +16,8 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.RatingValue)
-                .HasColumnType("decimal(5, 2)") 
-                .IsRequired(); 
+                .HasColumnType("decimal(5, 2)")
+                .IsRequired();
 
             builder.Property(x => x.CreatedDate)
                 .IsRequired();

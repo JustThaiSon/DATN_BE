@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class ActorsConfigruation : IEntityTypeConfiguration<Actors>
     {
@@ -18,9 +18,9 @@ namespace DATN_Models.Configurations
             builder.Property(x => x.DateOfBirth)
                .IsRequired();
             builder.Property(x => x.Biography)
-                .HasMaxLength(1000); 
+                .HasMaxLength(1000);
             builder.Property(x => x.Photo)
-                .HasMaxLength(500); 
+                .HasMaxLength(500);
             builder.Property(x => x.Status)
                 .HasDefaultValue(false);
         }

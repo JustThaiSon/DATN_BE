@@ -79,6 +79,42 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Showtime không tồn tại !.
+        /// </summary>
+        internal static string _120 {
+            get {
+                return ResourceManager.GetString("-120", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ghế không tồn tại !.
+        /// </summary>
+        internal static string _121 {
+            get {
+                return ResourceManager.GetString("-121", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trạng thái ghế không hợp lệ để đặt!.
+        /// </summary>
+        internal static string _122 {
+            get {
+                return ResourceManager.GetString("-122", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserID không tồn tại.
+        /// </summary>
+        internal static string _123 {
+            get {
+                return ResourceManager.GetString("-123", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thành Công.
         /// </summary>
         internal static string _200 {

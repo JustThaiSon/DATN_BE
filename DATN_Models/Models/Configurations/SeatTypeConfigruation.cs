@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     internal class SeatTypeConfigruation : IEntityTypeConfiguration<SeatTypes>
     {
@@ -16,14 +16,14 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Description)
-                .HasMaxLength(200) 
-                .IsRequired(); 
+                .HasMaxLength(200)
+                .IsRequired();
 
             builder.Property(x => x.Price)
-                .IsRequired(); 
+                .IsRequired();
 
             builder.Property(x => x.Status)
-                .IsRequired(); 
+                .IsRequired();
         }
     }
 }

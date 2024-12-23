@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Configurations
+namespace DATN_Models.Models.Configurations
 {
     public class CommentConfigruation : IEntityTypeConfiguration<Comments>
     {
@@ -16,8 +16,8 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Content)
-                .IsRequired() 
-                .HasMaxLength(1000); 
+                .IsRequired()
+                .HasMaxLength(1000);
 
             builder.Property(x => x.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");
