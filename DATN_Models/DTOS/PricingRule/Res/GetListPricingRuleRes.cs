@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.DAL.PricingRule
+namespace DATN_Models.DTOS.PricingRule.Res
 {
-    public class CreatePricingRuleDAL
+    public class GetListPricingRuleRes
     {
+        public Guid PricingRuleId { get; set; }
         public string RuleName { get; set; }
         public long Multiplier { get; set; }
         public TimeSpan? StartTime { get; set; }

@@ -57,7 +57,37 @@ namespace DATN_Models.DAO
       
         public List<ListRoomDAL> GetListRoom(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
-            throw new NotImplementedException();
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[4];
+                pars[0] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[1] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[2] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+
+                
+
+                var result = db.GetListSP<ListRoomDAL>("SP_Room_GetList", pars);
+
+
+                response = ConvertUtil.ToInt(pars[3].Value);
+                totalRecord = ConvertUtil.ToInt(pars[2].Value);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
         }
     }
 }

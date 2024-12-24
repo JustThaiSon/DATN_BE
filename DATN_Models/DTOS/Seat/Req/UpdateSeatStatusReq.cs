@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.DAL.Seat
+namespace DATN_Models.DTOS.Seat.Req
 {
-    public class UpdateStatusSeatDAL
+    public class UpdateSeatStatusReq
     {
         public Guid Id { get; set; }
         public SeatStatusEnum Status { get; set; }

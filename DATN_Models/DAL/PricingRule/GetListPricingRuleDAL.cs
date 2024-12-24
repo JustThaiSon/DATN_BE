@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.DAL.PricingRule
 {
-    public class CreatePricingRuleDAL
+    public class GetListPricingRuleDAL
     {
+        public Guid PricingRuleId { get; set; }
         public string RuleName { get; set; }
         public long Multiplier { get; set; }
         public TimeSpan? StartTime { get; set; }

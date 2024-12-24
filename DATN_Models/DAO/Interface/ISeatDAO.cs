@@ -7,9 +7,9 @@ namespace DATN_Models.DAO.Interface
    
     public interface ISeatDAO
     {
-        List<ListSeatDAL> GetListSeat(int currentPage, int recordPerPage, out int totalRecord, out int response);
-        void UpdateSeatStatus(Guid seatId,int status, out int response);
-        void UpdateSeatType(Guid seatId,Guid StatusId, out int response);
+        List<ListSeatDAL> GetListSeat(Guid id,int currentPage, int recordPerPage, out int totalRecord, out int response);
+        void UpdateSeatStatus(UpdateSeatStatusDAL dataInput, out int response);
+        void UpdateSeatType(UpdateSeatTypeDAL dataInput, out int response);
 
     }
 }

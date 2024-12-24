@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.Models
+namespace DATN_Models.DTOS.SeatType.Res
 {
-    public class SeatTypes
-    { 
+    public class GetListSeatTypeRes
+    {
         public Guid Id { get; set; }
         public string SeatTypeName { get; set; }
-        public long Multiplier { get; set; } 
-        public bool IsDeleted { get; set; }
+        public long Multiplier { get; set; }
     }
 }
