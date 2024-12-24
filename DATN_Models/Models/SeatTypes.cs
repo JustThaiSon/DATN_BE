@@ -1,10 +1,10 @@
 ﻿namespace DATN_Models.Models
 {
     public class SeatTypes
-    {
+    { 
         public Guid Id { get; set; }
-        public string Description { get; set; }
-        public int Status { get; set; } // 0 Chưa Được Đặt, 1 đã được đặt,2 
-        public long Price { get; set; }
+        public string SeatTypeName { get; set; }
+        public long Multiplier { get; set; } 
+        public bool IsDeleted { get; set; }
     }
 }

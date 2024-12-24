@@ -21,7 +21,7 @@ namespace DATN_BackEndApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Add services to the container..
 
             var _services = builder.Services;
             var _configuration = builder.Configuration;
@@ -76,6 +76,10 @@ namespace DATN_BackEndApi
 
             _services.AddTransient<IMovieDAO, MovieDAO>();
             _services.AddTransient<IActorDAO, ActorDAO>();
+            _services.AddTransient<IRoomDAO, RoomDAO>();
+            _services.AddTransient<ISeatDAO, SeatDAO>();
+            _services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
+            _services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             _services.AddTransient<ICommentDAO, CommentDAO>();
 
             _services.AddScoped<IUltil, Ultil>();
