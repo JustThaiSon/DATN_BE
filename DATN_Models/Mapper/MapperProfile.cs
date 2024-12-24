@@ -13,6 +13,14 @@ using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
+using DATN_Models.DTOS.PricingRule.Req;
+using DATN_Models.DTOS.PricingRule.Res;
+using DATN_Models.DTOS.Room.Req;
+using DATN_Models.DTOS.Room.Res;
+using DATN_Models.DTOS.Seat.Req;
+using DATN_Models.DTOS.Seat.Res;
+using DATN_Models.DTOS.SeatType.Req;
+using DATN_Models.DTOS.SeatType.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -35,7 +43,7 @@ namespace DATN_Models.Mapper
 
             #region Actor
             CreateMap<CreateAccountDAL, CreateAccountReq>().ReverseMap();
-
+            #endregion
             // Phần actor
             #region Nghia_Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
@@ -92,7 +100,6 @@ namespace DATN_Models.Mapper
             #endregion
 
         }
-
 
     }
 }
