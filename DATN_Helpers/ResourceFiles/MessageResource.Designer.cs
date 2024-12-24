@@ -79,6 +79,51 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ID Không tồn tại.
+        /// </summary>
+        internal static string _1995 {
+            get {
+                return ResourceManager.GetString("-1995", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá trị rating không hợp lệ.
+        /// </summary>
+        internal static string _1996 {
+            get {
+                return ResourceManager.GetString("-1996", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không đủ điều kiện rate (Chưa xem phim/ phim chưa kết thúc).
+        /// </summary>
+        internal static string _1997 {
+            get {
+                return ResourceManager.GetString("-1997", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Comment không tồn tại.
+        /// </summary>
+        internal static string _1998 {
+            get {
+                return ResourceManager.GetString("-1998", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa đủ điều kiện comment (chưa xem hoặc phim chưa chiếu xong).
+        /// </summary>
+        internal static string _1999 {
+            get {
+                return ResourceManager.GetString("-1999", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID Không tồn tại (Khách Hàng).
         /// </summary>
         internal static string _1994 {

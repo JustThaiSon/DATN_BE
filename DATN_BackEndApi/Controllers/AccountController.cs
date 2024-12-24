@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using DATN_Helpers.Common;
+﻿using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
