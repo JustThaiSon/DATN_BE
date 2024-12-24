@@ -1,16 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Helpers.Database
 {
     public class DBHelper
     {
-        private string _cnnString = "";
+        private string _cnnString = string.Empty;
 
         public string cnnString
         {
@@ -30,7 +25,7 @@ namespace DATN_Helpers.Database
         public string FixCNN(string connStr, bool Pooling)
         {
             var aconnStr = connStr.Split(';');
-            var sTemp = "";
+            var sTemp = string.Empty;
 
             for (var i = 0; i < aconnStr.Length; i++)
             {
@@ -41,7 +36,7 @@ namespace DATN_Helpers.Database
                 {
                     continue;
                 }
-                if (!aconnStr[i].Equals(""))
+                if (!aconnStr[i].Equals(string.Empty))
                 {
                     sTemp += string.Format("{0};", aconnStr[i]);
                 }
@@ -96,7 +91,7 @@ namespace DATN_Helpers.Database
         /// </summary>
         public void Open()
         {
-            if (_cnnString == "")
+            if (_cnnString == string.Empty)
             {
                 throw new Exception("Connection String can not null");
             }
@@ -133,7 +128,7 @@ namespace DATN_Helpers.Database
         /// </summary>
         public SqlConnection OpenConnection()
         {
-            if (_cnnString == "")
+            if (_cnnString == string.Empty)
             {
                 throw new Exception("Connection String can not null");
             }

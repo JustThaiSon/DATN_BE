@@ -9,16 +9,9 @@ using DATN_Models.HandleData;
 using DATN_Models.Mapper;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace DATN_BackEndApi
 {
@@ -54,19 +47,19 @@ namespace DATN_BackEndApi
                 });
                 //options.OperationFilter<FileUploadOperationFilter>();
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type=ReferenceType.SecurityScheme,
+                                Id="Bearer"
+                            }
+                        },
+                        new string[]{}
+                    }
+                });
             });
             _services.AddDistributedMemoryCache();
             _services.AddSession(options =>
@@ -76,6 +69,9 @@ namespace DATN_BackEndApi
                 options.Cookie.IsEssential = true;
             });
             _services.AddAutoMapper(typeof(MapperProfile));
+
+
+
             _services.AddTransient<ILoginDAO, LoginDAO>();
 
             _services.AddTransient<IMovieDAO, MovieDAO>();
@@ -84,7 +80,10 @@ namespace DATN_BackEndApi
             _services.AddTransient<ISeatDAO, SeatDAO>();
             _services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             _services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
+            _services.AddTransient<ICommentDAO, CommentDAO>();
+
             _services.AddScoped<IUltil, Ultil>();
+
 
 
 
@@ -101,6 +100,7 @@ namespace DATN_BackEndApi
 
 
             #endregion
+
 
 
 

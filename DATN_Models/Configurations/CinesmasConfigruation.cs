@@ -18,17 +18,17 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.CinemasId);
 
             builder.Property(x => x.Name)
-                .IsRequired() 
-                .HasMaxLength(200); 
+                .IsRequired()
+                .HasMaxLength(200);
 
             builder.Property(x => x.Address)
-                .HasMaxLength(500); 
+                .HasMaxLength(500);
 
             builder.Property(x => x.PhoneNumber)
-                .HasMaxLength(15); 
+                .HasMaxLength(15);
 
             builder.Property(x => x.TotalRooms)
-                .IsRequired(); 
+                .IsRequired();
             builder.Property(x => x.Status)
                 .HasDefaultValue(CinemaStatusEnum.Open); 
 
