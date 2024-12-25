@@ -1,7 +1,10 @@
-﻿namespace DATN_Models.DAL.Movie
+﻿
+
+namespace DATN_Models.DAL.Movie
 {
-    public class AddMovieDAL
+    public class UpdateMovieDAL
     {
+        public Guid MovieID { get; set; }
         public string MovieName { get; set; }
         public string Description { get; set; }
         public string BannerURL { get; set; } = "https://cached.imagescaler.hbpl.co.uk/resize/scaleHeight/815/cached.offlinehbpl.hbpl.co.uk/news/OMC/Posters.jpg";

@@ -39,10 +39,18 @@ namespace DATN_Models.Mapper
 
             // Phần movie
             #region Nghia_Movie
-            // Cái này là list movie (hiện tại chưa show hết được danh sách actor trong movie)
+            // Cái này là list movie (hiện tại Đã SHOW ĐƯỢC được danh sách actor trong movie)
             CreateMap<MovieDAL, GetMovieRes>().ReverseMap();
-            CreateMap<AddMovieDAL, AddMovieReq>().ReverseMap();
-
+            CreateMap<AddMovieDAL, AddMovieReq>()
+                .ForMember(dest => dest.Thumbnail, opt => opt.Ignore()) // ko map iformfile thumnail => string thumnailURL
+                .ForMember(dest => dest.Banner, opt => opt.Ignore())    // ko map iformfile banner => string bannerURL
+                .ForMember(dest => dest.Trailer, opt => opt.Ignore())   // ko map iformfile trailer => string trailerURL
+                .ReverseMap();
+            CreateMap<UpdateMovieDAL, UpdateMovieReq>()
+                .ForMember(dest => dest.Thumbnail, opt => opt.Ignore()) // ko map iformfile thumnail => string thumnailURL
+                .ForMember(dest => dest.Banner, opt => opt.Ignore())    // ko map iformfile banner => string bannerURL
+                .ForMember(dest => dest.Trailer, opt => opt.Ignore())   // ko map iformfile trailer => string trailerURL
+                .ReverseMap();
 
             #endregion
 

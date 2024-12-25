@@ -26,7 +26,7 @@ namespace DATN_BackEndApi.Controllers
         private readonly IMapper _mapper;
         private readonly ICustomerDAO _customerDAO;
 
-        //private readonly ImageService _imgService;
+        //private readonly CloudService _cloudService;
 
         public CustomerController(IConfiguration configuration, IUltil ultils, IMapper mapper, ICustomerDAO customerDAO)
         {

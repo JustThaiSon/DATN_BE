@@ -2,8 +2,9 @@
 
 namespace DATN_Models.DTOS.Movies.Req.Movie
 {
-    public class AddMovieReq
+    public class UpdateMovieReq
     {
+        public Guid MovieID { get; set; }
         public string MovieName { get; set; }
         public string Description { get; set; }
         public IFormFile? Banner { get; set; }
