@@ -14,7 +14,6 @@ using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
-using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Rating.Req;

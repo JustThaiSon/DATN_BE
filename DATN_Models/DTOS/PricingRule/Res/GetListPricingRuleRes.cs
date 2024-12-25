@@ -16,5 +16,8 @@ namespace DATN_Models.DTOS.PricingRule.Res
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? Date { get; set; }
+        public int? SpecialDay { get; set; }
+        public int? SpecialMonth { get; set; }
+        public int? DayOfWeek { get; set; }
     }
 }
