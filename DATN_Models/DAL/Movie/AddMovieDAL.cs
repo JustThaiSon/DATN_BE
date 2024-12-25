@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace DATN_Models.DAL.Movie
+﻿namespace DATN_Models.DAL.Movie
 {
     public class AddMovieDAL
     {
