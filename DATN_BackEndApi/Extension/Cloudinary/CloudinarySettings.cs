@@ -9,11 +9,11 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
         public string ApiKey { get; set; }
         public string ApiSecret { get; set; }
     }
-    public class ImageService
+    public class CloudService
     {
         private readonly Cloudinary _cloudinary;
 
-        public ImageService(Cloudinary cloudinary)
+        public CloudService(Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
         }
@@ -24,7 +24,7 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
         /// </summary>
         /// <param name="file"></param>
         /// <returns>
-        /// Trả về URL của ảnh được lưu trên cloud (phục vụ việc lưu vào DB)
+        /// Trả về URL của ẢNH được lưu trên cloud (phục vụ việc lưu vào DB)
         /// </returns>
         public async Task<string> UploadImageAsync(IFormFile file)
         {
@@ -37,6 +37,23 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
             return uploadResult.SecureUrl.ToString();
         }
 
+        /// <summary>
+        /// Tải video lên cloud
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns>
+        /// Trả về URL của VIDEO được lưu trên cloud (phục vụ việc lưu vào DB)
+        /// </returns>
+        public async Task<string> UploadVideoAsync(IFormFile file)
+        {
+            using var stream = file.OpenReadStream();
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(file.Name, stream)
+            };
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            return uploadResult.SecureUrl.ToString();
+        }
 
 
     }
