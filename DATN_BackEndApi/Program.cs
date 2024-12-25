@@ -83,6 +83,7 @@ namespace DATN_BackEndApi
             _services.AddTransient<ICommentDAO, CommentDAO>();
             _services.AddTransient<IRatingDAO, RatingDAO>();
 
+            _services.AddTransient<ICustomerDAO, CustomerDAO>();
             _services.AddScoped<IUltil, Ultil>();
 
 

@@ -142,6 +142,10 @@
     <value>Chưa đủ điều kiện comment (chưa xem hoặc phim chưa chiếu xong)</value>
     <comment>Validate comment về phim</comment>
   </data>
+  <data name="-1994" xml:space="preserve">
+    <value>ID Không tồn tại (Khách Hàng)</value>
+    <comment>Khách Hàng</comment>
+  </data>
   <data name="200" xml:space="preserve">
     <value>Thành công</value>
   </data>

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.PricingRule;
@@ -11,6 +12,8 @@ using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
+using DATN_Models.DTOS.Customer.Req;
+using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Rating.Req;
@@ -81,6 +84,15 @@ namespace DATN_Models.Mapper
             #endregion
 
 
+            // Phần Customer
+            #region Nghia_Customer
+            CreateMap<GetListCustomerInformationDAL, GetListCustomerInformationRes>().ReverseMap();
+            CreateMap<UpdateCustomerDAL, UpdateCustomerReq>().ReverseMap();
+
+            #endregion
+
+
+
             #region ThaoDepTrai
             #region Room
             CreateMap<CreateRoomReq, CreateRoomDAL>().ReverseMap();
@@ -113,7 +125,8 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-        }
 
+
+        }
     }
 }
