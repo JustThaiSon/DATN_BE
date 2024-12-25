@@ -107,7 +107,7 @@ namespace DATN_BackEndApi
                 var account = new Account(config.CloudName, config.ApiKey, config.ApiSecret);
                 return new Cloudinary(account); // Cái này là account của nghĩa.
             });
-            builder.Services.AddScoped<ImageService>();
+            builder.Services.AddScoped<CloudService>();
 
 
             #endregion

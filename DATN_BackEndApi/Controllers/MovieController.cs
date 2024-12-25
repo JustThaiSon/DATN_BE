@@ -24,15 +24,15 @@ namespace DATN_BackEndApi.Controllers
         private readonly string _langCode;
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
-        private readonly ImageService _imgService;
+        private readonly CloudService _cloudService;
 
-        public MovieController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, ImageService imgService)
+        public MovieController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, CloudService imgService)
         {
             _movieDAO = movieDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
-            _imgService = imgService;
+            _cloudService = imgService;
         }
 
         #region Movie_Nghia
@@ -90,13 +90,24 @@ namespace DATN_BackEndApi.Controllers
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddMovieDAL>(req);
 
+
             if (req.Thumbnail != null)
             {
-                // gán photoURL = ảnh cloud
-                reqMapper.Thumbnail = await _imgService.UploadImageAsync(req.Thumbnail);
+                reqMapper.ThumbnailURL = await _cloudService.UploadImageAsync(req.Thumbnail);
+            }
+
+            if (req.Banner != null)
+            {
+                reqMapper.BannerURL = await _cloudService.UploadImageAsync(req.Banner);
+            }
+
+            if (req.Trailer != null)
+            {
+                reqMapper.TrailerURL = await _cloudService.UploadVideoAsync(req.Trailer);
             }
 
             _movieDAO.CreateMovie(reqMapper, out int response);
+
 
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -105,17 +116,22 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-        //[HttpPost]
-        //[Route("UpdateMovie")]
-        //public async Task<CommonResponse<dynamic>> UpdateMovie(MovieReq rq)
-        //{
-        //    var res = new CommonResponse<dynamic>();
-        //    _movieDAO.CreateActor(rq, out int response);
-        //    res.Data = null;
-        //    res.Message = MessageUtils.GetMessage(response, _langCode);
-        //    res.ResponseCode = response;
-        //    return res;
-        //}
+
+        // Phần update này tạm thời như vậy, sau này sửa lại sau tuỳ vào thiết kế giao diện.
+        [HttpPost]
+        [Route("UpdateMovie")]
+        public async Task<CommonResponse<dynamic>> UpdateMovie(UpdateMovieReq req)
+        {
+            var res = new CommonResponse<dynamic>();
+
+            var reqMapper = _mapper.Map<UpdateMovieDAL>(req);
+
+            _movieDAO.UpdateMovie(reqMapper, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
 
 
         [HttpPost]

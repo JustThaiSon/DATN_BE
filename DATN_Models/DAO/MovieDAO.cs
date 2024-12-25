@@ -98,9 +98,9 @@ namespace DATN_Models.DAO
 
                 pars[0] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[1] = new SqlParameter("@_Description", req.Description);
-                pars[2] = new SqlParameter("@_Thumbnail", req.Thumbnail);
-                pars[3] = new SqlParameter("@@_Banner", req.Thumbnail);
-                pars[4] = new SqlParameter("@_Trailer", req.Trailer);
+                pars[2] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
+                pars[3] = new SqlParameter("@_Banner", req.BannerURL);
+                pars[4] = new SqlParameter("@_Trailer", req.TrailerURL);
                 pars[5] = new SqlParameter("@_Duration", req.Duration);
                 pars[6] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
                 pars[7] = new SqlParameter("@_Status", req.Status);
@@ -200,7 +200,7 @@ namespace DATN_Models.DAO
         }
 
 
-        public void UpdateMovie(Guid Id,, out int response)
+        public void UpdateMovie(UpdateMovieDAL req, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -219,24 +219,24 @@ namespace DATN_Models.DAO
 
                 var pars = new SqlParameter[10];
 
-                pars[0] = new SqlParameter("@_MovieName", req.MovieName);
-                pars[1] = new SqlParameter("@_Description", req.Description);
-                pars[2] = new SqlParameter("@_Thumbnail", req.Thumbnail);
-                pars[3] = new SqlParameter("@@_Banner", req.Thumbnail);
-                pars[4] = new SqlParameter("@_Trailer", req.Trailer);
-                pars[5] = new SqlParameter("@_Duration", req.Duration);
-                pars[6] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
-                pars[7] = new SqlParameter("@_Status", req.Status);
+                pars[0] = new SqlParameter("@_MovieID", req.MovieName);
+                pars[1] = new SqlParameter("@_MovieName", req.MovieName);
+                pars[2] = new SqlParameter("@_Description", req.Description);
+                pars[3] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
+                pars[4] = new SqlParameter("@_Banner", req.BannerURL);
+                pars[5] = new SqlParameter("@_Trailer", req.TrailerURL);
+                pars[6] = new SqlParameter("@_Duration", req.Duration);
+                pars[7] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
+                pars[8] = new SqlParameter("@_Status", req.Status);
 
                 // Thêm id actor vào trong bảng MovieActor
-                pars[8] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
-                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[9] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
-                db.ExecuteNonQuerySP("SP_Movie_Create", pars);
+                db.ExecuteNonQuerySP("SP_Movie_Update", pars);
 
-                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
-                response = ConvertUtil.ToInt(pars[9].Value);
+                response = ConvertUtil.ToInt(pars[10].Value);
             }
             catch (Exception ex)
             {

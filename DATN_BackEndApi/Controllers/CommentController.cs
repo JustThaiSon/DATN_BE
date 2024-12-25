@@ -15,7 +15,7 @@ namespace DATN_BackEndApi.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        //private readonly ImageService _imgService;
+        //private readonly CloudService _cloudService;
         private readonly ICommentDAO _commentDAO;
         private readonly string _langCode;
         private readonly IUltil _ultils;

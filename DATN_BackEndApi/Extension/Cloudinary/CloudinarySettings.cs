@@ -9,11 +9,11 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
         public string ApiKey { get; set; }
         public string ApiSecret { get; set; }
     }
-    public class ImageService
+    public class CloudService
     {
         private readonly Cloudinary _cloudinary;
 
-        public ImageService(Cloudinary cloudinary)
+        public CloudService(Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
         }
