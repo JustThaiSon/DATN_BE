@@ -81,6 +81,7 @@ namespace DATN_BackEndApi
             _services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             _services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             _services.AddTransient<ICommentDAO, CommentDAO>();
+            _services.AddTransient<IRatingDAO, RatingDAO>();
 
             _services.AddScoped<IUltil, Ultil>();
 

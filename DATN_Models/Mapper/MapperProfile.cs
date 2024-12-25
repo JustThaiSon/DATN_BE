@@ -6,21 +6,23 @@ using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
+using DATN_Models.DAL.Rating;
 using DATN_Models.DTOS.Account.Req;
+using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
-using DATN_Models.DTOS.Movies.Req;
-using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
-using DATN_Models.DTOS.PricingRule.Req;
-using DATN_Models.DTOS.PricingRule.Res;
+using DATN_Models.DTOS.Rating.Req;
+using DATN_Models.DTOS.Rating.Res;
 using DATN_Models.DTOS.Room.Req;
 using DATN_Models.DTOS.Room.Res;
-using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.Seat.Res;
-using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
+using DATN_Models.DTOS.Seat.Req;
+using DATN_Models.DTOS.SeatType.Req;
+using DATN_Models.DTOS.PricingRule.Req;
+using DATN_Models.DTOS.PricingRule.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -30,7 +32,7 @@ namespace DATN_Models.Mapper
         {
 
             CreateMap<CreateAccountReq, CreateAccountDAL>();
-
+            CreateMap<CreateAccountDAL, CreateAccountReq>().ReverseMap();
 
             // Phần movie
             #region Nghia_Movie
@@ -41,9 +43,7 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-            #region Actor
-            CreateMap<CreateAccountDAL, CreateAccountReq>().ReverseMap();
-            #endregion
+
             // Phần actor
             #region Nghia_Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
@@ -67,6 +67,20 @@ namespace DATN_Models.Mapper
             //CreateMap<ListCommentDALTest, GetListCommentResTest>().ReverseMap();
 
             #endregion
+
+
+            // Phần rating
+            #region Nghia_Rating
+
+            CreateMap<AddRatingDAL, AddRatingReq>().ReverseMap();
+            CreateMap<UpdateRatingDAL, UpdateRatingReq>().ReverseMap();
+
+            CreateMap<GetListRatingDAL, GetListRatingRes>().ReverseMap();
+
+
+            #endregion
+
+
             #region ThaoDepTrai
             #region Room
             CreateMap<CreateRoomReq, CreateRoomDAL>().ReverseMap();

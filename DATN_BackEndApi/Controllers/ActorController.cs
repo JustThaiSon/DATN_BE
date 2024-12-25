@@ -5,8 +5,7 @@ using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Movies.Req;
-using DATN_Models.DTOS.Movies.Req.Actor;
+using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Movies.Res;
 using Microsoft.AspNetCore.Mvc;
 
