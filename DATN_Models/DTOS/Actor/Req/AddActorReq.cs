@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace DATN_Models.DTOS.Movies.Req.Actor
+namespace DATN_Models.DTOS.Actor
 {
     public class AddActorReq
     {
