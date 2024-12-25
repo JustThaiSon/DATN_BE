@@ -777,7 +777,8 @@ namespace DATN_Helpers.Database
 
 
         /// <summary>
-        /// Thực thi stored procedure và trả về 2 tập kết quả dạng List
+        /// Thực thi stored procedure và trả về 2 tập kết quả dạng List <br/>
+        /// Cái này giống với GetListSP nhưng khác ở chỗ lấy được mối quan hệ
         /// </summary>
         /// <typeparam name="T1">Kiểu dữ liệu của tập kết quả thứ nhất</typeparam>
         /// <typeparam name="T2">Kiểu dữ liệu của tập kết quả thứ hai</typeparam>
@@ -836,7 +837,8 @@ namespace DATN_Helpers.Database
         }
 
         /// <summary>
-        /// Thực thi stored procedure và trả về 1 đối tượng + cùng với 1 tập kết quả dạng List (quan hệ mình muốn lấy)
+        /// Thực thi stored procedure và trả về 1 đối tượng + cùng với 1 tập kết quả dạng List (quan hệ mình muốn lấy) <br/>
+        /// Cái này giống với GetInstanceSP nhưng khác ở chỗ lấy được mối quan hệ
         /// </summary>
         /// <typeparam name="T1">Kiểu dữ liệu của đối tượng đơn lẻ</typeparam>
         /// <typeparam name="T2">Kiểu dữ liệu của tập kết quả danh sách</typeparam>

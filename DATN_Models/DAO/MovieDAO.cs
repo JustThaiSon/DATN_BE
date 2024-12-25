@@ -94,24 +94,26 @@ namespace DATN_Models.DAO
                     actorTable.Rows.Add(actorId);
                 }
 
-                var pars = new SqlParameter[9];
+                var pars = new SqlParameter[10];
 
                 pars[0] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[1] = new SqlParameter("@_Description", req.Description);
                 pars[2] = new SqlParameter("@_Thumbnail", req.Thumbnail);
-                pars[3] = new SqlParameter("@_Trailer", req.Trailer);
-                pars[4] = new SqlParameter("@_Duration", req.Duration);
-                pars[5] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
-                pars[6] = new SqlParameter("@_Status", req.Status);
+                pars[3] = new SqlParameter("@@_Banner", req.Thumbnail);
+                pars[4] = new SqlParameter("@_Trailer", req.Trailer);
+                pars[5] = new SqlParameter("@_Duration", req.Duration);
+                pars[6] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
+                pars[7] = new SqlParameter("@_Status", req.Status);
+
                 // Thêm id actor vào trong bảng MovieActor
-                pars[7] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
-                pars[8] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[8] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Create", pars);
 
                 //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
-                response = ConvertUtil.ToInt(pars[8].Value);
+                response = ConvertUtil.ToInt(pars[9].Value);
             }
             catch (Exception ex)
             {
@@ -198,9 +200,54 @@ namespace DATN_Models.DAO
         }
 
 
-        public void UpdateMovie(Guid Id, out int response)
+        public void UpdateMovie(Guid Id,, out int response)
         {
-            throw new NotImplementedException();
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                // Tạo DataTable để chứa danh sách actorId
+                // GuidList
+                DataTable actorTable = new DataTable();
+
+                actorTable.Columns.Add("Id", typeof(Guid));
+
+                foreach (var actorId in req.ListActorID)
+                {
+                    actorTable.Rows.Add(actorId);
+                }
+
+                var pars = new SqlParameter[10];
+
+                pars[0] = new SqlParameter("@_MovieName", req.MovieName);
+                pars[1] = new SqlParameter("@_Description", req.Description);
+                pars[2] = new SqlParameter("@_Thumbnail", req.Thumbnail);
+                pars[3] = new SqlParameter("@@_Banner", req.Thumbnail);
+                pars[4] = new SqlParameter("@_Trailer", req.Trailer);
+                pars[5] = new SqlParameter("@_Duration", req.Duration);
+                pars[6] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
+                pars[7] = new SqlParameter("@_Status", req.Status);
+
+                // Thêm id actor vào trong bảng MovieActor
+                pars[8] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Movie_Create", pars);
+
+                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
+                response = ConvertUtil.ToInt(pars[9].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
         }
 
         #endregion

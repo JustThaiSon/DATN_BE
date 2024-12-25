@@ -33,9 +33,7 @@ namespace DATN_BackEndApi.Controllers
             _actorDAO = actorDAO;
         }
 
-
         #region Actor
-
 
         // Cái api này sẽ chạy khá lâu vì cần thời gian để upload ảnh lên cloud (mất tầm 5-10s)
         [HttpPost]
@@ -60,7 +58,6 @@ namespace DATN_BackEndApi.Controllers
 
             return res;
         }
-
 
         [HttpPost]
         [Route("UpdateActor")]
@@ -99,7 +96,6 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
         [HttpGet]
         [Route("GetListActor")]
         public async Task<CommonPagination<List<GetListActorRes>>> GetListActor(int currentPage, int recordPerPage)
@@ -132,5 +128,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         #endregion
+
+
     }
 }

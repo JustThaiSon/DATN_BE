@@ -4,7 +4,10 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Movie;
+using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
@@ -82,10 +85,16 @@ namespace DATN_BackEndApi.Controllers
         /// </returns>
         [HttpPost]
         [Route("CreateMovie")]
-        public async Task<CommonResponse<dynamic>> CreateMovie(AddMovieReq rq)
+        public async Task<CommonResponse<dynamic>> CreateMovie(AddMovieReq req)
         {
             var res = new CommonResponse<dynamic>();
-            var reqMapper = _mapper.Map<AddMovieDAL>(rq);
+            var reqMapper = _mapper.Map<AddMovieDAL>(req);
+
+            if (req.Thumbnail != null)
+            {
+                // gán photoURL = ảnh cloud
+                reqMapper.Thumbnail = await _imgService.UploadImageAsync(req.Thumbnail);
+            }
 
             _movieDAO.CreateMovie(reqMapper, out int response);
 
@@ -95,8 +104,6 @@ namespace DATN_BackEndApi.Controllers
 
             return res;
         }
-
-
 
         //[HttpPost]
         //[Route("UpdateMovie")]
