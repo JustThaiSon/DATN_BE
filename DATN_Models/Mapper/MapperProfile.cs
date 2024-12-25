@@ -2,6 +2,7 @@
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAL.Orders;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
@@ -9,6 +10,7 @@ using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Actor;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
+using DATN_Models.DTOS.Order.Req;
 
 namespace DATN_Models.Mapper
 {
@@ -54,7 +56,11 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+            // Phần Order
+            #region
+            CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
 
+            #endregion
         }
     }
 }

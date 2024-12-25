@@ -10,8 +10,9 @@ namespace DATN_Models.Models.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.OrderDate)
+            builder.Property(x => x.CreatedDate)
                 .IsRequired();
+            builder.Property(x => x.UpdatedDate).IsRequired(false);
 
             builder.Property(x => x.TotalPrice)
                 .IsRequired();

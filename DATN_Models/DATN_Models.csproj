@@ -28,4 +28,8 @@
     <ProjectReference Include="..\DATN_Helpers\DATN_Helpers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOS\Order\Res\" />
+  </ItemGroup>
+
 </Project>

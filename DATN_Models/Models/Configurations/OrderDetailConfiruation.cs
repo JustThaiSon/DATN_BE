@@ -19,8 +19,9 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.TotalPrice)
                 .IsRequired();
 
-            builder.Property(x => x.CreateDate)
+            builder.Property(x => x.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");
+       
         }
     }
 }
