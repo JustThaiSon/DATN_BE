@@ -713,5 +713,189 @@ namespace DATN_Helpers.Database
         }
 
         #endregion
+
+
+
+        #region Lấy dữ liệu có mối quan hệ phức tạp (test)
+        /// <summary>
+        /// Chuyển đổi dữ liệu từ SqlDataReader thành một List các đối tượng kiểu T
+        /// </summary>
+        /// <typeparam name="T">Kiểu dữ liệu của đối tượng cần chuyển đổi</typeparam>
+        /// <param name="reader">SqlDataReader chứa dữ liệu cần chuyển đổi</param>
+        /// <returns>List các đối tượng kiểu T được map từ dữ liệu của SqlDataReader</returns>
+        /// <remarks>
+        /// - Tự động map các trường dữ liệu từ reader vào properties của đối tượng <br/>
+        /// - Xử lý các kiểu nullable <br/>
+        /// - Bỏ qua các trường không tồn tại trong đối tượng đích <br/>
+        /// - Set null cho các giá trị không thể chuyển đổi <br/>
+        /// </remarks>
+        private List<T> MapToList<T>(SqlDataReader reader)
+        {
+            var results = new List<T>();
+            var type = typeof(T);
+            var properties = type.GetProperties();
+            var fieldNames = Enumerable.Range(0, reader.FieldCount)
+                                      .Select(i => reader.GetName(i))
+                                      .ToList();
+
+            while (reader.Read())
+            {
+                var item = Activator.CreateInstance<T>();
+                foreach (var property in properties)
+                {
+                    // Check if the property exists in the reader
+                    if (fieldNames.Contains(property.Name))
+                    {
+                        var value = reader[property.Name];
+                        if (value != DBNull.Value)
+                        {
+                            try
+                            {
+                                // Handle nullable types
+                                if (Nullable.GetUnderlyingType(property.PropertyType) != null)
+                                {
+                                    property.SetValue(item, Convert.ChangeType(value, Nullable.GetUnderlyingType(property.PropertyType)));
+                                }
+                                else
+                                {
+                                    property.SetValue(item, Convert.ChangeType(value, property.PropertyType));
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                // If conversion fails, set default value
+                                property.SetValue(item, null);
+                            }
+                        }
+                    }
+                }
+                results.Add(item);
+            }
+
+            return results;
+        }
+
+
+        /// <summary>
+        /// Thực thi stored procedure và trả về 2 tập kết quả dạng List
+        /// </summary>
+        /// <typeparam name="T1">Kiểu dữ liệu của tập kết quả thứ nhất</typeparam>
+        /// <typeparam name="T2">Kiểu dữ liệu của tập kết quả thứ hai</typeparam>
+        /// <param name="storedProcedure">Tên stored procedure</param>
+        /// <param name="parameters">Mảng tham số truyền vào stored procedure</param>
+        /// <returns>Tuple chứa 2 List kết quả (List{T1}, List{T2})</returns>
+        /// <remarks>
+        /// Sử dụng để lấy 2 tập dữ liệu có quan hệ với nhau từ cùng một stored procedure <br/>
+        /// Ví dụ: Ví dụ 1 movie có thể có nhiều actor <br/>
+        /// </remarks>
+        public (List<T1>, List<T2>) GetMultipleSP<T1, T2>(string storedProcedure, SqlParameter[] parameters)
+        {
+            var result1 = new List<T1>();
+            var result2 = new List<T2>();
+
+            SqlConnection conn = null;
+            try
+            {
+                if (_ConnectionToDB == null)
+                {
+                    conn = OpenConnection();
+                }
+
+                using (var command = new SqlCommand(storedProcedure, conn ?? _ConnectionToDB))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters);
+                    }
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        result1 = MapToList<T1>(reader);
+
+                        if (reader.NextResult())
+                        {
+                            result2 = MapToList<T2>(reader);
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    CloseConnection(conn);
+                }
+            }
+
+            return (result1, result2);
+        }
+
+        /// <summary>
+        /// Thực thi stored procedure và trả về 1 đối tượng + cùng với 1 tập kết quả dạng List (quan hệ mình muốn lấy)
+        /// </summary>
+        /// <typeparam name="T1">Kiểu dữ liệu của đối tượng đơn lẻ</typeparam>
+        /// <typeparam name="T2">Kiểu dữ liệu của tập kết quả danh sách</typeparam>
+        /// <param name="storedProcedure">Tên stored procedure</param>
+        /// <param name="parameters">Mảng tham số truyền vào stored procedure</param>
+        /// <returns>Tuple chứa (đối tượng T1, List{T2})</returns>
+        /// <remarks>
+        /// Sử dụng khi cần lấy 1 đối tượng chính và danh sách các đối tượng liên quan <br/>
+        /// Ví dụ: Lấy thông tin 1 movie + danh sách actor trong movie đó
+        /// </remarks>
+        public (T1, List<T2>) GetSingleSP<T1, T2>(string storedProcedure, SqlParameter[] parameters) where T1 : class, new()
+        {
+            T1 result1 = null;
+            var result2 = new List<T2>();
+            SqlConnection conn = null;
+
+            try
+            {
+                if (_ConnectionToDB == null)
+                {
+                    conn = OpenConnection();
+                }
+
+                using (var command = new SqlCommand(storedProcedure, conn ?? _ConnectionToDB))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    if (parameters != null)
+                    {
+                        command.Parameters.AddRange(parameters);
+                    }
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        // Lấy đối tượng đầu tiên
+                        var items = MapToList<T1>(reader);
+                        result1 = items.FirstOrDefault();
+
+                        // Lấy danh sách đối tượng thứ hai
+                        if (reader.NextResult())
+                        {
+                            result2 = MapToList<T2>(reader);
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    CloseConnection(conn);
+                }
+            }
+
+            return (result1, result2);
+        }
+        #endregion
     }
 }

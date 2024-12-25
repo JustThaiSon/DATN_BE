@@ -48,13 +48,19 @@ namespace DATN_Models.DAO
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                var result = db.GetListSP<MovieDAL>("SP_Movie_GetList", pars);
+                var (movies, actors) = db.GetMultipleSP<MovieDAL, ActorDAL>("SP_Movie_GetList", pars);
+
+
+                foreach (var item in movies)
+                {
+                    item.listdienvien = actors.Where(x => x.MovieId == item.Id).ToList();
+                }
 
 
                 response = ConvertUtil.ToInt(pars[3].Value);
                 totalRecord = ConvertUtil.ToInt(pars[2].Value);
 
-                return result;
+                return movies;
             }
             catch (Exception ex)
             {
@@ -75,7 +81,7 @@ namespace DATN_Models.DAO
         /// <param name="req">Thông tin phim</param>
         /// <param name="response">Trả về mã response sau khi thực hiện thủ tục</param>
         /// <param name="actorids">Để nhận vào nhiều actor 1 lúc (1 movie có thể có nhiều actor)</param>
-        public void CreateMovie(AddMovieDAL req, out int response, params Guid[] actorIds)
+        public void CreateMovie(AddMovieDAL req, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -84,8 +90,10 @@ namespace DATN_Models.DAO
                 // Tạo DataTable để chứa danh sách actorId
                 // GuidList
                 DataTable actorTable = new DataTable();
+
                 actorTable.Columns.Add("Id", typeof(Guid));
-                foreach (var actorId in actorIds)
+
+                foreach (var actorId in req.ListActorID)
                 {
                     actorTable.Rows.Add(actorId);
                 }
@@ -139,9 +147,17 @@ namespace DATN_Models.DAO
                 pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                var result = db.GetInstanceSP<MovieDAL>("SP_Movie_MovieDetail", pars);
+                //var result = db.GetInstanceSP<MovieDAL>("SP_Movie_MovieDetail", pars);
+
+                var (movies, actors) = db.GetSingleSP<MovieDAL, ActorDAL>("SP_Movie_MovieDetail", pars);
+
+                if (movies != null)
+                {
+                    movies.listdienvien = actors.Where(x => x.MovieId == movies.Id).ToList();
+                }
+
                 response = ConvertUtil.ToInt(pars[1].Value);
-                return result;
+                return movies;
             }
             catch (Exception ex)
             {

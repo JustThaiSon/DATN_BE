@@ -149,4 +149,7 @@
   <data name="200" xml:space="preserve">
     <value>Thành công</value>
   </data>
+  <data name="-1993" xml:space="preserve">
+    <value>Không tìm thấy movie</value>
+  </data>
 </root>
