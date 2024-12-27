@@ -26,6 +26,7 @@ using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
+using DATN_Models.DAL.Membership;
 
 namespace DATN_Models.Mapper
 {
@@ -91,6 +92,14 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+
+            // Phần Membership
+            #region Nghia_Membership
+            CreateMap<MembershipDAL, MembershipRes>().ReverseMap();
+            CreateMap<UpdateMembershipDAL, UpdateMembershipReq>().ReverseMap();
+            CreateMap<AddMembershipDAL, AddMembershipReq>().ReverseMap();
+
+            #endregion
 
 
             #region ThaoDepTrai
