@@ -71,7 +71,7 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[8];
+                var pars = new SqlParameter[12];
                 pars[0] = new SqlParameter("@_RuleName", dataInput.RuleName);
                 pars[1] = new SqlParameter("@_Multiplier", dataInput.Multiplier );
                 pars[2] = new SqlParameter("@_StartTime", dataInput.StartTime ?? (object)DBNull.Value);
@@ -79,12 +79,16 @@ namespace DATN_Models.DAO
                 pars[4] = new SqlParameter("@_StartDate", dataInput.StartDate ?? (object)DBNull.Value);
                 pars[5] = new SqlParameter("@_EndDate", dataInput.EndDate ?? (object)DBNull.Value);
                 pars[6] = new SqlParameter("@_Date", dataInput.Date ?? (object)DBNull.Value);
+                pars[7] = new SqlParameter("@_SpecialDay", dataInput.SpecialDay ?? (object)DBNull.Value);
+                pars[8] = new SqlParameter("@_SpecialMonth", dataInput.SpecialMonth ?? (object)DBNull.Value);
+                pars[9] = new SqlParameter("@_DayOfWeek", dataInput.DayOfWeek ?? (object)DBNull.Value);
+                pars[10] = new SqlParameter("@_IsDiscount", dataInput.IsDiscount);
 
-                pars[7] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 var result = db.ExecuteNonQuerySP("SP_PricingRule_Create", pars);
-                response = ConvertUtil.ToInt(pars[7].Value);
+                response = ConvertUtil.ToInt(pars[10].Value);
             }
             catch (Exception ex)
             {

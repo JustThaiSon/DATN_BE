@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,6 +20,7 @@ namespace DATN_Models.Models
         public int? SpecialDay { get; set; }
         public int? SpecialMonth { get; set; }
         public int? DayOfWeek { get; set; } // từ 1 - 7 tương ứng với 7 ngày trong tuần
+        public bool? IsDiscount { get; set; }
         public bool IsDeleted { get; set; }
 
     }
