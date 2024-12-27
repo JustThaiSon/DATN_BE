@@ -21,7 +21,6 @@ namespace DATN_Models.HandleData
         {
         }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=tcp:nhom1-datn.database.windows.net,1433;Initial Catalog=rapphim;Persist Security Info=False;User ID=datn;Password=Nghiagaming1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
