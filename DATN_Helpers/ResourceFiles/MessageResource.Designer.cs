@@ -79,11 +79,20 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Không tìm thấy movie.
+        ///   Looks up a localized string similar to Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100).
         /// </summary>
-        internal static string _1993 {
+        internal static string _1800 {
             get {
-                return ResourceManager.GetString("-1993", resourceCulture);
+                return ResourceManager.GetString("-1800", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Membership không tồn tại hoặc đã bị XOÁ.
+        /// </summary>
+        internal static string _1810 {
+            get {
+                return ResourceManager.GetString("-1810", resourceCulture);
             }
         }
         
@@ -93,6 +102,15 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _1994 {
             get {
                 return ResourceManager.GetString("-1994", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy movie.
+        /// </summary>
+        internal static string _1993 {
+            get {
+                return ResourceManager.GetString("-1993", resourceCulture);
             }
         }
         
@@ -124,7 +142,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Comment không tồn tại.
+        ///   Looks up a localized string similar to Comment không tồn tại hoặc đã bị XOÁ.
         /// </summary>
         internal static string _1998 {
             get {
