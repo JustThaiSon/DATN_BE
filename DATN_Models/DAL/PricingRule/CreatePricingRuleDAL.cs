@@ -18,5 +18,6 @@ namespace DATN_Models.DAL.PricingRule
         public int? SpecialDay { get; set; }
         public int? SpecialMonth { get; set; }
         public int? DayOfWeek { get; set; }
+        public bool? IsDiscount { get; set; } // 0 or 1
     }
 }

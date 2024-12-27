@@ -36,6 +36,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DATN_Models.DAL.Membership;
 
 namespace DATN_Models.Mapper
 {
@@ -109,6 +110,14 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+
+            // Phần Membership
+            #region Nghia_Membership
+            CreateMap<MembershipDAL, MembershipRes>().ReverseMap();
+            CreateMap<UpdateMembershipDAL, UpdateMembershipReq>().ReverseMap();
+            CreateMap<AddMembershipDAL, AddMembershipReq>().ReverseMap();
+
+            #endregion
 
 
             #region ThaoDepTrai

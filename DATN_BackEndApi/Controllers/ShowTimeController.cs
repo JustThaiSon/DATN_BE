@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DATN_BackEndApi.Extension;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
@@ -13,6 +14,7 @@ namespace DATN_BackEndApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[BAuthorize]
     public class ShowTimeController : ControllerBase
     {
         private readonly IShowTimeDAO _showtimeDAO;

@@ -138,7 +138,7 @@
     <value>Không đủ điều kiện rate (Chưa xem phim/ phim chưa kết thúc)</value>
   </data>
   <data name="-1998" xml:space="preserve">
-    <value>Comment không tồn tại</value>
+    <value>Comment không tồn tại hoặc đã bị XOÁ</value>
     <comment>Phục vụ sửa / xoá</comment>
   </data>
   <data name="-1999" xml:space="preserve">
@@ -157,6 +157,12 @@
   </data>
   <data name="200" xml:space="preserve">
     <value>Thành công</value>
+  </data>
+  <data name="-1800" xml:space="preserve">
+    <value>Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100)</value>
+  </data>
+  <data name="-1810" xml:space="preserve">
+    <value>Membership không tồn tại hoặc đã bị XOÁ</value>
   </data>
   <data name="-1993" xml:space="preserve">
     <value>Không tìm thấy movie</value>
