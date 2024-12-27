@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="-1" xml:space="preserve">
+    <value>Lịch chiếu bị trùng</value>
+  </data>
   <data name="-107" xml:space="preserve">
     <value>Opt Sai</value>
   </data>
   <data name="-108" xml:space="preserve">
     <value>Product</value>
+  </data>
+  <data name="-2" xml:space="preserve">
+    <value>lịch chiếu kông tồn tại</value>
+  </data>
+  <data name="-404" xml:space="preserve">
+    <value>không tìm thấy rạp chiếu phim</value>
   </data>
   <data name="200" xml:space="preserve">
     <value>Thành Công</value>
