@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DATN_Models.DTOS.Movies.Res
+namespace DATN_Models.DAL.Movie
 {
-    public class GetListActorRes
+    public class ActorDAL
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -14,5 +14,6 @@ namespace DATN_Models.DTOS.Movies.Res
         public string Biography { get; set; }
         public string Photo { get; set; }
         public int Status { get; set; }
+        public Guid MovieId { get; set; }  // This is important for mapping
     }
 }

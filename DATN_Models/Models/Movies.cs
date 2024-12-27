@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DATN_Models.Models
+﻿namespace DATN_Models.Models
 {
     public class Movies
     {
@@ -12,6 +6,7 @@ namespace DATN_Models.Models
         public string MovieName { get; set; }
         public string Description { get; set; }
         public string Thumbnail { get; set; }
+        public string Banner { get; set; }
         public string Trailer { get; set; }
         public int Duration { get; set; } // thời kuong của phim tính bằng phút
         public int Status { get; set; }

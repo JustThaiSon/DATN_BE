@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using DATN_Helpers.Common;
+﻿using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -34,7 +30,7 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> Resgister([FromForm] CreateAccountReq request)
         {
             var res = new CommonResponse<dynamic>();
-            var (response,Opt) = await _loginDAO.RegisterUserAsync(request);
+            var (response, Opt) = await _loginDAO.RegisterUserAsync(request);
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.Data = Opt;
@@ -65,7 +61,7 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
         [HttpPost("verify-otp")]
-        public async Task<CommonResponse<dynamic>> VerifyOtp( string otp)
+        public async Task<CommonResponse<dynamic>> VerifyOtp(string otp)
         {
             string email = GetEmail();
             var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(email, otp);

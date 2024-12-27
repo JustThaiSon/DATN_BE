@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DATN_Helpers.Common.interfaces
+﻿namespace DATN_Helpers.Common.interfaces
 {
     public interface IUltil
     {
         //string GenerateJwt(LoginDTO user);
 
-        string GenerateToken(Guid id,List<string> roles);
+        string GenerateToken(Guid id, List<string> roles);
         string GenerateRefreshToken(Guid id, List<string> roles);
         string? GenerateTokenFromRefreshToken(string refreshToken);
         (Guid?, List<string>) ValidateToken(string token);
