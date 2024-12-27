@@ -106,6 +106,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy movie.
+        /// </summary>
+        internal static string _1993 {
+            get {
+                return ResourceManager.GetString("-1993", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID Không tồn tại.
         /// </summary>
         internal static string _1995 {

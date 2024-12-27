@@ -76,12 +76,21 @@ namespace DATN_BackEndApi
 
             _services.AddTransient<IMovieDAO, MovieDAO>();
             _services.AddTransient<IMembershipDAO, MembershipDAO>();
+
+            //_services.AddTransient<IMovieDAO, MovieTESTDAO>();
+
             _services.AddTransient<IActorDAO, ActorDAO>();
+
             _services.AddTransient<IRoomDAO, RoomDAO>();
+
             _services.AddTransient<ISeatDAO, SeatDAO>();
+
             _services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
+
             _services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
+
             _services.AddTransient<ICommentDAO, CommentDAO>();
+
             _services.AddTransient<IRatingDAO, RatingDAO>();
 
             _services.AddTransient<ICustomerDAO, CustomerDAO>();
@@ -99,7 +108,7 @@ namespace DATN_BackEndApi
                 var account = new Account(config.CloudName, config.ApiKey, config.ApiSecret);
                 return new Cloudinary(account); // Cái này là account của nghĩa.
             });
-            builder.Services.AddScoped<ImageService>();
+            builder.Services.AddScoped<CloudService>();
 
 
             #endregion

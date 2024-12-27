@@ -1,4 +1,7 @@
-﻿namespace DATN_Models.DTOS.Movies.Res
+﻿using DATN_Models.DAL.Movie;
+using DATN_Models.Models;
+
+namespace DATN_Models.DTOS.Movies.Res
 {
     public class GetMovieRes
     {
@@ -9,6 +12,8 @@
         public string Trailer { get; set; }
         public int Duration { get; set; } // thời kuong của phim tính bằng phút
         public int Status { get; set; }
+        public List<ActorDAL>? listdienvien { get; set; }
+
         public DateTime ReleaseDate { get; set; }
     }
 }

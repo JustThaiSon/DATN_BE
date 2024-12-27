@@ -24,7 +24,7 @@ namespace DATN_BackEndApi.Controllers
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
 
-        public MembershipController(IMembershipDAO membershipDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, ImageService imgService)
+        public MembershipController(IMembershipDAO membershipDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
         {
             _membershipDAO = membershipDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";

@@ -22,10 +22,6 @@ namespace DATN_Models.DAO
         }
 
         #region movie_nghia
-        /* =========================================================================================================== */
-        /* =========================================================================================================== */
-        /* =========================================================================================================== */
-        /* =========================================================================================================== */
 
         /// <summary>
         /// Hàm thực hiện lấy danh sách movie
@@ -48,13 +44,19 @@ namespace DATN_Models.DAO
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                var result = db.GetListSP<MovieDAL>("SP_Movie_GetList", pars);
+                var (movies, actors) = db.GetMultipleSP<MovieDAL, ActorDAL>("SP_Movie_GetList", pars);
+
+
+                foreach (var item in movies)
+                {
+                    item.listdienvien = actors.Where(x => x.MovieId == item.Id).ToList();
+                }
 
 
                 response = ConvertUtil.ToInt(pars[3].Value);
                 totalRecord = ConvertUtil.ToInt(pars[2].Value);
 
-                return result;
+                return movies;
             }
             catch (Exception ex)
             {
@@ -75,7 +77,7 @@ namespace DATN_Models.DAO
         /// <param name="req">Thông tin phim</param>
         /// <param name="response">Trả về mã response sau khi thực hiện thủ tục</param>
         /// <param name="actorids">Để nhận vào nhiều actor 1 lúc (1 movie có thể có nhiều actor)</param>
-        public void CreateMovie(AddMovieDAL req, out int response, params Guid[] actorIds)
+        public void CreateMovie(AddMovieDAL req, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -84,30 +86,34 @@ namespace DATN_Models.DAO
                 // Tạo DataTable để chứa danh sách actorId
                 // GuidList
                 DataTable actorTable = new DataTable();
+
                 actorTable.Columns.Add("Id", typeof(Guid));
-                foreach (var actorId in actorIds)
+
+                foreach (var actorId in req.ListActorID)
                 {
                     actorTable.Rows.Add(actorId);
                 }
 
-                var pars = new SqlParameter[9];
+                var pars = new SqlParameter[10];
 
                 pars[0] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[1] = new SqlParameter("@_Description", req.Description);
-                pars[2] = new SqlParameter("@_Thumbnail", req.Thumbnail);
-                pars[3] = new SqlParameter("@_Trailer", req.Trailer);
-                pars[4] = new SqlParameter("@_Duration", req.Duration);
-                pars[5] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
-                pars[6] = new SqlParameter("@_Status", req.Status);
+                pars[2] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
+                pars[3] = new SqlParameter("@_Banner", req.BannerURL);
+                pars[4] = new SqlParameter("@_Trailer", req.TrailerURL);
+                pars[5] = new SqlParameter("@_Duration", req.Duration);
+                pars[6] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
+                pars[7] = new SqlParameter("@_Status", req.Status);
+
                 // Thêm id actor vào trong bảng MovieActor
-                pars[7] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
-                pars[8] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[8] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Create", pars);
 
                 //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
-                response = ConvertUtil.ToInt(pars[8].Value);
+                response = ConvertUtil.ToInt(pars[9].Value);
             }
             catch (Exception ex)
             {
@@ -139,9 +145,17 @@ namespace DATN_Models.DAO
                 pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                var result = db.GetInstanceSP<MovieDAL>("SP_Movie_MovieDetail", pars);
+                //var result = db.GetInstanceSP<MovieDAL>("SP_Movie_MovieDetail", pars);
+
+                var (movies, actors) = db.GetSingleSP<MovieDAL, ActorDAL>("SP_Movie_MovieDetail", pars);
+
+                if (movies != null)
+                {
+                    movies.listdienvien = actors.Where(x => x.MovieId == movies.Id).ToList();
+                }
+
                 response = ConvertUtil.ToInt(pars[1].Value);
-                return result;
+                return movies;
             }
             catch (Exception ex)
             {
@@ -186,9 +200,54 @@ namespace DATN_Models.DAO
         }
 
 
-        public void UpdateMovie(Guid Id, out int response)
+        public void UpdateMovie(UpdateMovieDAL req, out int response)
         {
-            throw new NotImplementedException();
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                // Tạo DataTable để chứa danh sách actorId
+                // GuidList
+                DataTable actorTable = new DataTable();
+
+                actorTable.Columns.Add("Id", typeof(Guid));
+
+                foreach (var actorId in req.ListActorID)
+                {
+                    actorTable.Rows.Add(actorId);
+                }
+
+                var pars = new SqlParameter[10];
+
+                pars[0] = new SqlParameter("@_MovieID", req.MovieName);
+                pars[1] = new SqlParameter("@_MovieName", req.MovieName);
+                pars[2] = new SqlParameter("@_Description", req.Description);
+                pars[3] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
+                pars[4] = new SqlParameter("@_Banner", req.BannerURL);
+                pars[5] = new SqlParameter("@_Trailer", req.TrailerURL);
+                pars[6] = new SqlParameter("@_Duration", req.Duration);
+                pars[7] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
+                pars[8] = new SqlParameter("@_Status", req.Status);
+
+                // Thêm id actor vào trong bảng MovieActor
+                pars[9] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Movie_Update", pars);
+
+                response = ConvertUtil.ToInt(pars[10].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
         }
 
         #endregion

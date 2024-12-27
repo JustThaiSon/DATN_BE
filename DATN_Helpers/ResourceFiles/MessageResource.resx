@@ -155,4 +155,7 @@
   <data name="-1810" xml:space="preserve">
     <value>Membership không tồn tại hoặc đã bị XOÁ</value>
   </data>
+  <data name="-1993" xml:space="preserve">
+    <value>Không tìm thấy movie</value>
+  </data>
 </root>
