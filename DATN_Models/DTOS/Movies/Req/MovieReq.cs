@@ -9,5 +9,6 @@
         public int Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
         public int Status { get; set; }
+        public List<Guid>? ListActorID { get; set; }
     }
 }

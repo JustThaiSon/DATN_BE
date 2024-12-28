@@ -9,11 +9,11 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
         public string ApiKey { get; set; }
         public string ApiSecret { get; set; }
     }
-    public class ImageService
+    public class CloudService
     {
         private readonly Cloudinary _cloudinary;
 
-        public ImageService(Cloudinary cloudinary)
+        public CloudService(Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
         }
@@ -33,7 +33,7 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
             {
                 File = new FileDescription(file.Name, stream)
             };
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
             return uploadResult.SecureUrl.ToString();
         }
 
@@ -51,7 +51,7 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
             {
                 File = new FileDescription(file.Name, stream)
             };
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
             return uploadResult.SecureUrl.ToString();
         }
 

@@ -12,8 +12,8 @@ namespace DATN_Models.Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Name)
-                .HasMaxLength(100) 
-                .IsRequired(); 
+                .HasMaxLength(100)
+                .IsRequired();
             builder.Property(x => x.TotalColNumber)
                 .HasMaxLength(100)
                 .IsRequired();

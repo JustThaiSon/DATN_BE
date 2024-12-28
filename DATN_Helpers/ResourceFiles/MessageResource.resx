@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="-1" xml:space="preserve">
+    <value>Lịch chiếu bị trùng</value>
+  </data>
   <data name="-107" xml:space="preserve">
     <value>Opt Sai</value>
   </data>
@@ -135,7 +138,7 @@
     <value>Không đủ điều kiện rate (Chưa xem phim/ phim chưa kết thúc)</value>
   </data>
   <data name="-1998" xml:space="preserve">
-    <value>Comment không tồn tại</value>
+    <value>Comment không tồn tại hoặc đã bị XOÁ</value>
     <comment>Phục vụ sửa / xoá</comment>
   </data>
   <data name="-1999" xml:space="preserve">
@@ -158,7 +161,22 @@
     <value>ID Không tồn tại (Khách Hàng)</value>
     <comment>Khách Hàng</comment>
   </data>
+  <data name="-2" xml:space="preserve">
+    <value>lịch chiếu kông tồn tại</value>
+  </data>
+  <data name="-404" xml:space="preserve">
+    <value>không tìm thấy rạp chiếu phim</value>
+  </data>
   <data name="200" xml:space="preserve">
     <value>Thành công</value>
+  </data>
+  <data name="-1800" xml:space="preserve">
+    <value>Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100)</value>
+  </data>
+  <data name="-1810" xml:space="preserve">
+    <value>Membership không tồn tại hoặc đã bị XOÁ</value>
+  </data>
+  <data name="-1993" xml:space="preserve">
+    <value>Không tìm thấy movie</value>
   </data>
 </root>

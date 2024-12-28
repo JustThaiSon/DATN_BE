@@ -2,12 +2,6 @@
 using DATN_Models.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.Models.Configurations
 {
@@ -30,7 +24,7 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.TotalRooms)
                 .IsRequired();
             builder.Property(x => x.Status)
-                .HasDefaultValue(CinemaStatusEnum.Open); 
+                .HasDefaultValue(CinemaStatusEnum.Open);
 
             builder.Property(x => x.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");

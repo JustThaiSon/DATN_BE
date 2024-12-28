@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DATN_Models.DTOS.PricingRule.Req
 {
@@ -29,5 +24,6 @@ namespace DATN_Models.DTOS.PricingRule.Req
         public int? SpecialDay { get; set; }
         public int? SpecialMonth { get; set; }
         public int? DayOfWeek { get; set; }
+        public bool? IsDiscount { get; set; }
     }
 }

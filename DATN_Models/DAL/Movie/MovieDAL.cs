@@ -9,6 +9,7 @@
         public string Trailer { get; set; }
         public int Duration { get; set; } // thời kuong của phim tính bằng phút
         public int Status { get; set; }
+        public List<ActorDAL>? listdienvien { get; set; }
         public DateTime ReleaseDate { get; set; }
     }
 }

@@ -11,8 +11,8 @@ namespace DATN_Models.Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Multiplier)
-                .IsRequired(); 
-           
+                .IsRequired();
+
         }
     }
 }

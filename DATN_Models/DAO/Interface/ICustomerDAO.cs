@@ -1,13 +1,5 @@
 ﻿using DATN_Models.DAL.Customer;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DTOS.Customer.Req;
-using DATN_Models.DTOS.Movies.Req;
-using DATN_Models.DTOS.Movies.Res;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO.Interface
 {

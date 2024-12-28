@@ -44,7 +44,7 @@ namespace DATN_Models.Migrations
                 table: "SeatTypes",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AlterColumn<int>(
                 name: "Status",
@@ -137,7 +137,7 @@ namespace DATN_Models.Migrations
                 type: "nvarchar(200)",
                 maxLength: 200,
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<int>(
                 name: "Status",

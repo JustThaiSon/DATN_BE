@@ -21,21 +21,19 @@ namespace DATN_BackEndApi.Controllers
         private readonly string _langCode;
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
-        private readonly ImageService _imgService;
+        private readonly CloudService _cloudService;
 
-        public ActorController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, ImageService imgService, IActorDAO actorDAO)
+        public ActorController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, CloudService imgService, IActorDAO actorDAO)
         {
             _movieDAO = movieDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
-            _imgService = imgService;
+            _cloudService = imgService;
             _actorDAO = actorDAO;
         }
 
-
         #region Actor
-
 
         // Cái api này sẽ chạy khá lâu vì cần thời gian để upload ảnh lên cloud (mất tầm 5-10s)
         [HttpPost]
@@ -49,7 +47,7 @@ namespace DATN_BackEndApi.Controllers
             if (rq.Photo != null)
             {
                 // gán photoURL = ảnh cloud
-                reqMapper.PhotoURL = await _imgService.UploadImageAsync(rq.Photo);
+                reqMapper.PhotoURL = await _cloudService.UploadImageAsync(rq.Photo).ConfigureAwait(false);
             }
 
             _actorDAO.CreateActor(reqMapper, out int response);
@@ -61,7 +59,6 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
         [HttpPost]
         [Route("UpdateActor")]
         public async Task<CommonResponse<dynamic>> UpdateActor([FromQuery] Guid Id, [FromForm] UpdateActorReq rq)
@@ -72,7 +69,7 @@ namespace DATN_BackEndApi.Controllers
             if (rq.Photo != null)
             {
                 // gán photoURL = ảnh cloud
-                reqMapper.PhotoURL = await _imgService.UploadImageAsync(rq.Photo);
+                reqMapper.PhotoURL = await _cloudService.UploadImageAsync(rq.Photo).ConfigureAwait(false);
             }
 
             _actorDAO.UpdateActor(Id, reqMapper, out int response);
@@ -98,7 +95,6 @@ namespace DATN_BackEndApi.Controllers
 
             return res;
         }
-
 
         [HttpGet]
         [Route("GetListActor")]
@@ -132,5 +128,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         #endregion
+
+
     }
 }

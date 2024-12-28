@@ -2,16 +2,10 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Room;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Movies.Req;
-using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Room.Req;
 using DATN_Models.DTOS.Room.Res;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers

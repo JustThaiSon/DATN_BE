@@ -1,16 +1,10 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
-using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
@@ -65,7 +59,7 @@ namespace DATN_Models.DAO
 
                 pars[0] = new SqlParameter("@_SeatTypeId", dataInput);
                 pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                 db = new DBHelper(connectionString);
+                db = new DBHelper(connectionString);
 
                 var result = db.ExecuteNonQuerySP("SP_SeatType_Delete", pars);
 

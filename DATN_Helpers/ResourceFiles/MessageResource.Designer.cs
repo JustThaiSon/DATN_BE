@@ -61,6 +61,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lịch chiếu bị trùng.
+        /// </summary>
+        internal static string _1 {
+            get {
+                return ResourceManager.GetString("-1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opt Sai.
         /// </summary>
         internal static string _107 {
@@ -75,6 +84,42 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _108 {
             get {
                 return ResourceManager.GetString("-108", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100).
+        /// </summary>
+        internal static string _1800 {
+            get {
+                return ResourceManager.GetString("-1800", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Membership không tồn tại hoặc đã bị XOÁ.
+        /// </summary>
+        internal static string _1810 {
+            get {
+                return ResourceManager.GetString("-1810", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID Không tồn tại (Khách Hàng).
+        /// </summary>
+        internal static string _1994 {
+            get {
+                return ResourceManager.GetString("-1994", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không tìm thấy movie.
+        /// </summary>
+        internal static string _1993 {
+            get {
+                return ResourceManager.GetString("-1993", resourceCulture);
             }
         }
         
@@ -106,7 +151,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Comment không tồn tại.
+        ///   Looks up a localized string similar to Comment không tồn tại hoặc đã bị XOÁ.
         /// </summary>
         internal static string _1998 {
             get {
@@ -124,11 +169,12 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ID Không tồn tại (Khách Hàng).
+        ///   Looks up a localized string similar to Thành công.
+        ///   Looks up a localized string similar to lịch chiếu kông tồn tại.
         /// </summary>
-        internal static string _1994 {
+        internal static string _2 {
             get {
-                return ResourceManager.GetString("-1994", resourceCulture);
+                return ResourceManager.GetString("-2", resourceCulture);
             }
         }
         
@@ -174,6 +220,15 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _200 {
             get {
                 return ResourceManager.GetString("200", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to không tìm thấy rạp chiếu phim.
+        /// </summary>
+        internal static string _404 {
+            get {
+                return ResourceManager.GetString("-404", resourceCulture);
             }
         }
     }
