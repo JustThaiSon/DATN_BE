@@ -4,9 +4,7 @@ using DATN_Models.DAL.Membership;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Data;
-using System.Linq;
 
 namespace DATN_Models.DAO
 {

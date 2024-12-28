@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using DATN_Helpers.Common;
+﻿using DATN_Helpers.Common;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Helpers.Extensions;

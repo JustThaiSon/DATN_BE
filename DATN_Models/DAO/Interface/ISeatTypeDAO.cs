@@ -1,10 +1,4 @@
-﻿using DATN_Models.DAL.Seat;
-using DATN_Models.DAL.SeatType;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DATN_Models.DAL.SeatType;
 
 namespace DATN_Models.DAO.Interface
 {

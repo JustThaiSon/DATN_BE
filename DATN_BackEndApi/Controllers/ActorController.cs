@@ -47,7 +47,7 @@ namespace DATN_BackEndApi.Controllers
             if (rq.Photo != null)
             {
                 // gán photoURL = ảnh cloud
-                reqMapper.PhotoURL = await _cloudService.UploadImageAsync(rq.Photo);
+                reqMapper.PhotoURL = await _cloudService.UploadImageAsync(rq.Photo).ConfigureAwait(false);
             }
 
             _actorDAO.CreateActor(reqMapper, out int response);
@@ -69,7 +69,7 @@ namespace DATN_BackEndApi.Controllers
             if (rq.Photo != null)
             {
                 // gán photoURL = ảnh cloud
-                reqMapper.PhotoURL = await _cloudService.UploadImageAsync(rq.Photo);
+                reqMapper.PhotoURL = await _cloudService.UploadImageAsync(rq.Photo).ConfigureAwait(false);
             }
 
             _actorDAO.UpdateActor(Id, reqMapper, out int response);

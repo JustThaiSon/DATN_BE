@@ -12,7 +12,7 @@ namespace DATN_Models.Configurations
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.SeatName)
-                .HasMaxLength(50) 
+                .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.Status)
                 .HasDefaultValue(SeatStatusEnum.Available);

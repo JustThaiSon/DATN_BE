@@ -1,5 +1,4 @@
 ﻿using DATN_Models.DAL.Movie;
-using DATN_Models.Models;
 
 namespace DATN_Models.DTOS.Movies.Res
 {

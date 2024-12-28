@@ -3,14 +3,9 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.PricingRule;
-using DATN_Models.DAL.SeatType;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
-using DATN_Models.DTOS.SeatType.Req;
-using DATN_Models.DTOS.SeatType.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -32,7 +27,7 @@ namespace DATN_BackEndApi.Controllers
             _pricingRuleDAO = pricingRuleDAO;
         }
 
-      
+
         [HttpGet]
         [Route("GetAllRule")]
 

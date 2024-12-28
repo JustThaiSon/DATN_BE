@@ -1,17 +1,10 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.PricingRule;
-using DATN_Models.DAL.Seat;
-using DATN_Models.DAL.SeatType;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
@@ -63,7 +56,7 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
-       
+
         public void CreatePricingRule(CreatePricingRuleDAL dataInput, out int response)
         {
             response = 0;
@@ -73,7 +66,7 @@ namespace DATN_Models.DAO
             {
                 var pars = new SqlParameter[12];
                 pars[0] = new SqlParameter("@_RuleName", dataInput.RuleName);
-                pars[1] = new SqlParameter("@_Multiplier", dataInput.Multiplier );
+                pars[1] = new SqlParameter("@_Multiplier", dataInput.Multiplier);
                 pars[2] = new SqlParameter("@_StartTime", dataInput.StartTime ?? (object)DBNull.Value);
                 pars[3] = new SqlParameter("@_EndTime", dataInput.EndTime ?? (object)DBNull.Value);
                 pars[4] = new SqlParameter("@_StartDate", dataInput.StartDate ?? (object)DBNull.Value);
@@ -159,8 +152,8 @@ namespace DATN_Models.DAO
             }
         }
 
-        
 
-       
+
+
     }
 }

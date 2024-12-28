@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using DATN_BackEndApi.Extension.CloudinarySett;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Membership;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using Microsoft.AspNetCore.Mvc;
@@ -113,7 +110,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
 
-        
+
 
         #endregion
 

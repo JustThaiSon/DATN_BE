@@ -1,14 +1,5 @@
-﻿using DATN_Models.DAL.Cinemas;
-using DATN_Models.DTOS.Cinemas.Res;
-using DATN_Models.DTOS.Cinemas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DATN_Models.DAL.ShowTime;
 using DATN_Models.DTOS.ShowTime.Req;
-using DATN_Models.Models;
-using DATN_Models.DAL.ShowTime;
 
 namespace DATN_Models.DAO.Interface
 {

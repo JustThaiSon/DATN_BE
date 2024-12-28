@@ -33,7 +33,7 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
             {
                 File = new FileDescription(file.Name, stream)
             };
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
             return uploadResult.SecureUrl.ToString();
         }
 
@@ -51,7 +51,7 @@ namespace DATN_BackEndApi.Extension.CloudinarySett
             {
                 File = new FileDescription(file.Name, stream)
             };
-            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
             return uploadResult.SecureUrl.ToString();
         }
 

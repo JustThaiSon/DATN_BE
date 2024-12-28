@@ -1,17 +1,10 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
-using DATN_Models.DAL.Room;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Seat.Req;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
@@ -27,7 +20,7 @@ namespace DATN_Models.DAO
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
-        public List<ListSeatDAL> GetListSeat(Guid id,int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<ListSeatDAL> GetListSeat(Guid id, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -67,7 +60,7 @@ namespace DATN_Models.DAO
 
         public void UpdateSeatStatus(UpdateSeatStatusDAL dataInput, out int response)
         {
-            response = 0; 
+            response = 0;
             DBHelper db = null;
 
             try

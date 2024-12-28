@@ -1,24 +1,16 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Cinemas;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
-using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
-    public class CinemasDAO:ICinemasDAO
+    public class CinemasDAO : ICinemasDAO
     {
         private static string connectionString = string.Empty;
 

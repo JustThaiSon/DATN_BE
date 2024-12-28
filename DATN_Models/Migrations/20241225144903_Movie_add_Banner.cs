@@ -15,7 +15,7 @@ namespace DATN_Models.Migrations
                 table: "Movies",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
         }
 
         /// <inheritdoc />

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-namespace DATN_Models.DTOS.Movies.Req
+﻿namespace DATN_Models.DTOS.Movies.Req
 {
     public class MovieReq
     {

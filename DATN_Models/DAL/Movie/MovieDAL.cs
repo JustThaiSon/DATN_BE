@@ -1,6 +1,4 @@
-﻿using DATN_Models.Models;
-
-namespace DATN_Models.DAL.Movie
+﻿namespace DATN_Models.DAL.Movie
 {
     public class MovieDAL
     {

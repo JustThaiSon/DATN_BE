@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
-using DATN_BackEndApi.Extension;
-using DATN_BackEndApi.Extension.CloudinarySett;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAL.Customer;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
-using DATN_Models.DTOS.Movies.Res;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers

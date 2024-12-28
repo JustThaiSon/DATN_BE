@@ -4,11 +4,7 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Movie;
-using DATN_Models.DAL.Movie.Actor;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Actor;
-using DATN_Models.DTOS.Movies.Req;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using Microsoft.AspNetCore.Mvc;
@@ -93,17 +89,17 @@ namespace DATN_BackEndApi.Controllers
 
             if (req.Thumbnail != null)
             {
-                reqMapper.ThumbnailURL = await _cloudService.UploadImageAsync(req.Thumbnail);
+                reqMapper.ThumbnailURL = await _cloudService.UploadImageAsync(req.Thumbnail).ConfigureAwait(false);
             }
 
             if (req.Banner != null)
             {
-                reqMapper.BannerURL = await _cloudService.UploadImageAsync(req.Banner);
+                reqMapper.BannerURL = await _cloudService.UploadImageAsync(req.Banner).ConfigureAwait(false);
             }
 
             if (req.Trailer != null)
             {
-                reqMapper.TrailerURL = await _cloudService.UploadVideoAsync(req.Trailer);
+                reqMapper.TrailerURL = await _cloudService.UploadVideoAsync(req.Trailer).ConfigureAwait(false);
             }
 
             _movieDAO.CreateMovie(reqMapper, out int response);

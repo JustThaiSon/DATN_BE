@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using DATN_BackEndApi.Extension;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Cinemas;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -49,7 +46,7 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> UpdateShowTime(Guid ShowTimeId, ShowTimeReq rq)
         {
             var res = new CommonResponse<dynamic>();
-            _showtimeDAO.UpdateShowTime(ShowTimeId,rq,out int response);
+            _showtimeDAO.UpdateShowTime(ShowTimeId, rq, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;

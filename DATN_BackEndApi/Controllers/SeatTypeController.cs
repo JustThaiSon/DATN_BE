@@ -2,17 +2,10 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAL.Room;
-using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Room.Req;
-using DATN_Models.DTOS.Seat.Req;
-using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -38,11 +31,11 @@ namespace DATN_BackEndApi.Controllers
         [HttpGet]
         [Route("GetAllSeatType")]
 
-        public async Task<CommonPagination<List<GetListSeatTypeRes>>> GetAllSeatType( int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetListSeatTypeRes>>> GetAllSeatType(int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetListSeatTypeRes>>();
 
-            var result = _seatTypeDAO.GetListSeatType( currentPage, recordPerPage, out int TotalRecord, out int response);
+            var result = _seatTypeDAO.GetListSeatType(currentPage, recordPerPage, out int TotalRecord, out int response);
 
             var resultMapper = _mapper.Map<List<GetListSeatTypeRes>>(result);
 
@@ -86,7 +79,7 @@ namespace DATN_BackEndApi.Controllers
         [HttpPost]
         [Route("DeleteSeatType")]
 
-        public async Task<CommonResponse<dynamic>> DeleteSeatType(Guid id )
+        public async Task<CommonResponse<dynamic>> DeleteSeatType(Guid id)
         {
             var res = new CommonResponse<dynamic>();
             _seatTypeDAO.DeleteSeatType(id, out int response);

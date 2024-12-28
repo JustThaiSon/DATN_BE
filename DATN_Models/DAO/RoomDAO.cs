@@ -1,16 +1,10 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
@@ -39,7 +33,7 @@ namespace DATN_Models.DAO
                 pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Room_Create", pars);
-                
+
                 response = ConvertUtil.ToInt(pars[4].Value);
             }
             catch (Exception ex)
@@ -54,7 +48,7 @@ namespace DATN_Models.DAO
             }
         }
 
-      
+
         public List<ListRoomDAL> GetListRoom(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
@@ -68,7 +62,7 @@ namespace DATN_Models.DAO
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                
+
 
                 var result = db.GetListSP<ListRoomDAL>("SP_Room_GetList", pars);
 

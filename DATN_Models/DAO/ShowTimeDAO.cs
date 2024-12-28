@@ -3,15 +3,9 @@ using DATN_Helpers.Database;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.ShowTime.Req;
-using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO
 {
@@ -65,7 +59,7 @@ namespace DATN_Models.DAO
             }
         }
 
-        public void UpdateShowTime(Guid ShowTimeId,ShowTimeReq request, out int response)
+        public void UpdateShowTime(Guid ShowTimeId, ShowTimeReq request, out int response)
         {
             response = 0; // Khởi tạo mã phản hồi
             DBHelper db = null;

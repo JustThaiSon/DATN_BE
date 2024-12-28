@@ -1,13 +1,6 @@
 ﻿using DATN_Models.DAL.Cinemas;
-using DATN_Models.DAL.Movie;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
-using DATN_Models.DTOS.Movies.Req;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Models.DAO.Interface
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DATN_Models.DTOS.SeatType.Req
+﻿namespace DATN_Models.DTOS.SeatType.Req
 {
     public class CreateSeatTypeReq
     {

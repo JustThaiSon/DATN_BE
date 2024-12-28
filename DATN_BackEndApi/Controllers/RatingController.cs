@@ -55,7 +55,7 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddRatingDAL>(req);
-            reqMapper.UserId = await GetUserId();
+            reqMapper.UserId = await GetUserId().ConfigureAwait(false);
             _ratingDAO.CreateRating(reqMapper, out int response);
 
             res.Data = null;
@@ -134,15 +134,6 @@ namespace DATN_BackEndApi.Controllers
         private async Task<Guid> GetUserId()
         {
             return (Guid)(HttpContext.Items["UserId"] ?? 0);
-        }
-        private List<string> GetRoles()
-        {
-            if (HttpContext.Items["Roles"] is List<string> roles)
-            {
-                return roles;  // Return the list of roles
-            }
-
-            return new List<string>();
         }
         #endregion
     }

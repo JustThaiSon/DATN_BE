@@ -2,13 +2,9 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
-using DATN_Models.DTOS.Movies.Req;
-using DATN_Models.DTOS.Movies.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -46,10 +42,10 @@ namespace DATN_BackEndApi.Controllers
         [HttpPost]
         [Route("UpdateCinemas")]
 
-        public async Task<CommonResponse<dynamic>> UpdateCinemas(Guid IdCinemasReq , CinemasReq rq)
+        public async Task<CommonResponse<dynamic>> UpdateCinemas(Guid IdCinemasReq, CinemasReq rq)
         {
             var res = new CommonResponse<dynamic>();
-            _cinemasDAO.UpdateCinemas(IdCinemasReq,rq, out int response);
+            _cinemasDAO.UpdateCinemas(IdCinemasReq, rq, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
@@ -85,7 +81,7 @@ namespace DATN_BackEndApi.Controllers
 
             return res;
         }
-        
+
 
         [HttpPost]
         [Route("UpdateCinemasAddress")]
