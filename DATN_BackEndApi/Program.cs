@@ -8,6 +8,8 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.HandleData;
 using DATN_Models.Mapper;
 using DATN_Models.Models;
+using DATN_Services.Orders;
+using DATN_Services.Orders.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -83,6 +85,7 @@ namespace DATN_BackEndApi
             _services.AddTransient<ICommentDAO, CommentDAO>();
             _services.AddTransient<IOrderDAO, OrderDAO>();
             _services.AddTransient<IRatingDAO, RatingDAO>();
+            _services.AddTransient<IOrderService, OrderService>();
 
             _services.AddTransient<ICustomerDAO, CustomerDAO>();
             _services.AddScoped<IUltil, Ultil>();

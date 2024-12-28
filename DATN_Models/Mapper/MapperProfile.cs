@@ -110,6 +110,9 @@ namespace DATN_Models.Mapper
             // Phần Order
             #region
             CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
+            CreateMap<TicketDAL, TicketReq>().ReverseMap();
+            CreateMap<CreateTicketDAL, CreateTicketReq>().ReverseMap();
+            CreateMap<CreateOrderServiceDAL, CreateOrderServiceReq>().ReverseMap();
             #region SeatType
             CreateMap<GetListSeatTypeDAL, GetListSeatTypeRes>().ReverseMap();
             CreateMap<CreateSeatTypeDAL, CreateSeatTypeReq>().ReverseMap();

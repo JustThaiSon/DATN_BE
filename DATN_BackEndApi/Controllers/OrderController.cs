@@ -9,6 +9,7 @@ using DATN_Models.DAL.Orders;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Order.Req;
+using DATN_Services.Orders.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,21 +24,36 @@ namespace DATN_BackEndApi.Controllers
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
         private readonly IOrderDAO _orderDAO;
-        public OrderController( IConfiguration configuration, IUltil ultils, IMapper mapper, IOrderDAO orderDAO)
+        private readonly IOrderService _orderService;
+        public OrderController(IConfiguration configuration, IUltil ultils, IMapper mapper, IOrderDAO orderDAO, IOrderService orderService)
         {
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
             _orderDAO = orderDAO;
+            _orderService = orderService;
         }
+        //[HttpPost]
+        //[Route("CreateOrder")]
+        //public async Task<CommonResponse<string>> CreateOrder(CreateOrderReq req)
+        //{
+        //    var res = new CommonResponse<string>();
+
+        //    var reqMapper = _mapper.Map<CreateOrderDAL>(req);
+        //    _orderDAO.CreateOrder(GetUserId(), reqMapper, out Guid OrderId, out int response);
+        //    res.Data = null;
+        //    res.Message = MessageUtils.GetMessage(response, _langCode);
+        //    res.ResponseCode = response;
+        //    return res;
+        //}
+
         [HttpPost]
-        [Route("CreateOrder")]
-        public async Task<CommonResponse<string>> CreateOrder(CreateOrderReq req)
+        [Route("CreateTicket")]
+        public async Task<CommonResponse<string>> CreateTicket(CreateTicketReq req)
         {
             var res = new CommonResponse<string>();
-
-            var reqMapper = _mapper.Map<CreateOrderDAL>(req);
-            _orderDAO.CreateOrder(GetUserId(),reqMapper, out Guid OrderId,out int response);
+            var reqMapper = _mapper.Map<CreateTicketDAL>(req);
+            _orderService.AddTicket(GetUserId(), reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;

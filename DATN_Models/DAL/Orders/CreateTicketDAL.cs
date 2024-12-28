@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DATN_Models.DTOS.Order.Req;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DATN_Models.DAL.Orders
 {
-    public class CreateOrderDAL
+    public class CreateTicketDAL
     {
         public long TotalPrice { get; set; }
         public int Status { get; set; }
@@ -14,5 +15,7 @@ namespace DATN_Models.DAL.Orders
         public Guid PaymentId { get; set; }
         public int QuantityTicket { get; set; }
         public long TotalPriceTicket { get; set; }
+        public List<TicketDAL> Tickets { get; set; }
+        public List<CreateOrderServiceDAL> Services { get; set; }
     }
 }
