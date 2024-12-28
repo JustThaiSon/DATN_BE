@@ -167,4 +167,12 @@
   <data name="-1993" xml:space="preserve">
     <value>Không tìm thấy movie</value>
   </data>
+  <data name="-1700" xml:space="preserve">
+    <value>Ngày tìm kiếm không hợp lệ </value>
+    <comment>lỗi  Ngày bắt đầu &gt; ngày kết thúc</comment>
+  </data>
+  <data name="-1720" xml:space="preserve">
+    <value>Không có dữ liệu tìm kiếm</value>
+    <comment>Theo khoảng ngày</comment>
+  </data>
 </root>

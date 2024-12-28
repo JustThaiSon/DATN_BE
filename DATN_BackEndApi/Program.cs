@@ -77,6 +77,8 @@ namespace DATN_BackEndApi
             _services.AddTransient<IMovieDAO, MovieDAO>();
             _services.AddTransient<IMembershipDAO, MembershipDAO>();
 
+            _services.AddTransient<IStatisticDAO, StatisticDAO>();
+
             //_services.AddTransient<IMovieDAO, MovieTESTDAO>();
 
             _services.AddTransient<IActorDAO, ActorDAO>();

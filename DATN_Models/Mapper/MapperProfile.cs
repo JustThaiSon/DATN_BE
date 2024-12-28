@@ -9,6 +9,7 @@ using DATN_Models.DAL.Rating;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
+using DATN_Models.DAL.Statistic;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Comments.Req;
@@ -27,6 +28,7 @@ using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
+using DATN_Models.DTOS.Statistic.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -106,6 +108,14 @@ namespace DATN_Models.Mapper
             CreateMap<MembershipDAL, MembershipRes>().ReverseMap();
             CreateMap<UpdateMembershipDAL, UpdateMembershipReq>().ReverseMap();
             CreateMap<AddMembershipDAL, AddMembershipReq>().ReverseMap();
+
+            #endregion
+
+
+            // Phần Thống kê
+            #region Nghia_Statistic
+            CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
+            CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
 
             #endregion
 
