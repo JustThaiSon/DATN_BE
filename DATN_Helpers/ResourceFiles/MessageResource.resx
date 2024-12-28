@@ -145,6 +145,18 @@
     <value>Chưa đủ điều kiện comment (chưa xem hoặc phim chưa chiếu xong)</value>
     <comment>Validate comment về phim</comment>
   </data>
+  <data name="-120" xml:space="preserve">
+    <value>Showtime không tồn tại !</value>
+  </data>
+  <data name="-121" xml:space="preserve">
+    <value>Ghế không tồn tại !</value>
+  </data>
+  <data name="-122" xml:space="preserve">
+    <value>Trạng thái ghế không hợp lệ để đặt!</value>
+  </data>
+  <data name="-123" xml:space="preserve">
+    <value>UserID không tồn tại</value>
+  </data>
   <data name="-1994" xml:space="preserve">
     <value>ID Không tồn tại (Khách Hàng)</value>
     <comment>Khách Hàng</comment>

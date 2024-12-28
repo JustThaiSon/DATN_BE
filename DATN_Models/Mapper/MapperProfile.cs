@@ -4,6 +4,7 @@ using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAL.Rating;
 using DATN_Models.DAL.Room;
@@ -19,6 +20,7 @@ using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
+using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Rating.Req;
 using DATN_Models.DTOS.Rating.Res;
 using DATN_Models.DTOS.Room.Req;
@@ -122,6 +124,12 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateSeatTypeDAL, UpdateSeatTypeReq>().ReverseMap();
             #endregion
 
+            // Phần Order
+            #region
+            CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
+            CreateMap<TicketDAL, TicketReq>().ReverseMap();
+            CreateMap<CreateTicketDAL, CreateTicketReq>().ReverseMap();
+            CreateMap<CreateOrderServiceDAL, CreateOrderServiceReq>().ReverseMap();
             #region SeatType
             CreateMap<GetListSeatTypeDAL, GetListSeatTypeRes>().ReverseMap();
             CreateMap<CreateSeatTypeDAL, CreateSeatTypeReq>().ReverseMap();
@@ -144,6 +152,7 @@ namespace DATN_Models.Mapper
 
 
 
+            #endregion
         }
     }
 }

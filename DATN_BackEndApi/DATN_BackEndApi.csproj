@@ -12,12 +12,17 @@
     <PackageReference Include="CloudinaryDotNet" Version="1.27.0" />
     <PackageReference Include="jose-jwt" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DATN_Helpers\DATN_Helpers.csproj" />
     <ProjectReference Include="..\DATN_Models\DATN_Models.csproj" />
+    <ProjectReference Include="..\DATN_Services\DATN_Services.csproj" />
   </ItemGroup>
 
 </Project>
