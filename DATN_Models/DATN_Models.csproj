@@ -29,6 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DTOS\Order\Res\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DTOS\Statistic\Req\" />
   </ItemGroup>
 

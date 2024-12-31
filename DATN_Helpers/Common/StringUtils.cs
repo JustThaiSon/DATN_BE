@@ -109,6 +109,13 @@ namespace DATN_Helpers.Common
             decimal.TryParse(obj.ToString(), out value);
             return value;
         }
+        public static Guid ToGuid(object obj)
+        {
+            if (obj == null) return Guid.Empty;
+            Guid value = Guid.Empty;
+            Guid.TryParse(obj.ToString(), out value);
+            return value;
+        }
 
         public static float ToFloat(object obj)
         {

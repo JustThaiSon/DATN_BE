@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DATN_Models\DATN_Models.csproj" />
+  </ItemGroup>
+
 </Project>
