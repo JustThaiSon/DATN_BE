@@ -128,9 +128,20 @@ namespace DATN_BackEndApi
             _services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
             _services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             _services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
-            _services.AddIdentity<AppUsers, AppRoles>()
-                 .AddEntityFrameworkStores<DATN_Context>()
-                 .AddDefaultTokenProviders();
+
+
+            // Config lại cách nhập mật khẩu
+            _services.AddIdentity<AppUsers, AppRoles>(options =>
+            {
+                // Tùy chỉnh chính sách mật khẩu
+                options.Password.RequireDigit = false;               // Không yêu cầu số
+                options.Password.RequireLowercase = false;           // Không yêu cầu chữ thường
+                options.Password.RequireUppercase = false;           // Không yêu cầu chữ hoa
+                options.Password.RequireNonAlphanumeric = false;     // Không yêu cầu ký tự đặc biệt
+            })
+            .AddEntityFrameworkStores<DATN_Context>()
+            .AddDefaultTokenProviders();
+
             _services.AddDbContext<DATN_Context>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Db")));
             var app = builder.Build();
             // Configure the HTTP request pipeline.
