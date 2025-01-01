@@ -8,6 +8,11 @@ namespace DATN_Helpers.Extensions
     {
         public static string GetMessage(int code, string language = "vi")
         {
+            if (string.IsNullOrEmpty(language))
+            {
+                language = "vi"; 
+            }
+
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
 
             string codeString = code.ToString();

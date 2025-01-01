@@ -1,5 +1,6 @@
 ﻿using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
+using DATN_Models.DAL.Account;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
@@ -8,6 +9,8 @@ using DATN_Models.HandleData;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Generic;
 
 namespace DATN_Models.DAO
 {
@@ -17,29 +20,30 @@ namespace DATN_Models.DAO
         private readonly SignInManager<AppUsers> _signInManager;
         private readonly RoleManager<AppRoles> _roleManager;
         private readonly DATN_Context _context;
-        private static Dictionary<string, OtpCacheEntry> _otpCache = new Dictionary<string, OtpCacheEntry>();
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public LoginDAO(RoleManager<AppRoles> roleManager, UserManager<AppUsers> _userManager, SignInManager<AppUsers> _signInManager, DATN_Context _context, IHttpContextAccessor httpContextAccessor)
+        private readonly IMemoryCache _memoryCache;
+        public LoginDAO(RoleManager<AppRoles> roleManager, UserManager<AppUsers> _userManager, SignInManager<AppUsers> _signInManager, DATN_Context _context, IHttpContextAccessor httpContextAccessor, IMemoryCache memoryCache)
         {
             _roleManager = roleManager;
             this._userManager = _userManager;
             this._signInManager = _signInManager;
             this._context = _context;
             _httpContextAccessor = httpContextAccessor;
+            _memoryCache = memoryCache;
         }
 
 
-        public async Task<(LoginDTO LoginDto, int Response)> login(string userName, string passWord)
+        public async Task<(LoginDTO LoginDto, int Response)> login(SignInDAL req)
         {
             int response = 0;
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userManager.FindByNameAsync(req.UseName);
             if (user == null)
             {
                 response = (int)ResponseCodeEnum.ERR_USER_NOT_FOUND;
                 return (null, response);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user, passWord, false, true);
+            var result = await _signInManager.PasswordSignInAsync(user, req.PassWord, true, true);
             if (!result.Succeeded)
             {
                 response = (int)ResponseCodeEnum.ERR_SYSTEM;
@@ -89,37 +93,34 @@ namespace DATN_Models.DAO
 
             string otp = GenerateOtp();
 
-            _otpCache[request.Email] = new OtpCacheEntry
+            var otpCacheEntry = new OtpCacheEntry
             {
                 Otp = otp,
                 UserInfo = request
             };
-            _httpContextAccessor.HttpContext.Session.SetString("email", request.Email);
+            _memoryCache.Set(request.Email, otpCacheEntry, TimeSpan.FromMinutes(5));
 
             await SendOtpAsync(request.Email, otp);
-            response = (int)ResponseCodeEnum.OTP_SENT;
-
+            response = (int)ResponseCodeEnum.SUCCESS;
             return (response, otp);
         }
 
 
-        public async Task<int> VerifyOtpAndRegisterUserAsync(string email, string otp)
+        public async Task<int> VerifyOtpAndRegisterUserAsync(VerifyOtpReq req)
         {
-
-            if (!_otpCache.ContainsKey(email))
+            if (!_memoryCache.TryGetValue(req.Email, out OtpCacheEntry otpCacheEntry))
             {
-                Console.WriteLine($"Key {email} không tồn tại trong _otpCache.");
+                Console.WriteLine($"Key {req.Email} không tồn tại trong bộ nhớ cache.");
                 return (int)ResponseCodeEnum.ERR_INVALID_OTP;
             }
 
-            if (_otpCache[email].Otp != otp)
+            if (otpCacheEntry.Otp != req.Opt)
             {
-                Console.WriteLine($"OTP không khớp. Nhập: {otp}, Lưu: {_otpCache[email].Otp}");
+                Console.WriteLine($"OTP không khớp. Nhập: {req.Opt}, Lưu: {otpCacheEntry.Otp}");
                 return (int)ResponseCodeEnum.ERR_INVALID_OTP;
             }
-            var userInfo = _otpCache[email].UserInfo;
-
-            _otpCache.Remove(email);
+            var userInfo = otpCacheEntry.UserInfo;
+            _memoryCache.Remove(req.Email);
 
             var newAccount = new AppUsers
             {
