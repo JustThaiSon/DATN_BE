@@ -10,6 +10,7 @@ using DATN_Models.DAL.Rating;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
+using DATN_Models.DAL.Service;
 using DATN_Models.DAL.Statistic;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
@@ -19,9 +20,9 @@ using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
+using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
-using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Rating.Req;
 using DATN_Models.DTOS.Rating.Res;
 using DATN_Models.DTOS.Room.Req;
@@ -30,6 +31,8 @@ using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
+using DATN_Models.DTOS.Service.Request;
+using DATN_Models.DTOS.Service.Response;
 using DATN_Models.DTOS.Statistic.Res;
 
 namespace DATN_Models.Mapper
@@ -140,6 +143,11 @@ namespace DATN_Models.Mapper
             CreateMap<TicketDAL, TicketReq>().ReverseMap();
             CreateMap<CreateTicketDAL, CreateTicketReq>().ReverseMap();
             CreateMap<CreateOrderServiceDAL, CreateOrderServiceReq>().ReverseMap();
+            CreateMap<CreateServiceReq, CreateServiceDAL>().ReverseMap();
+            CreateMap<UpdateServiceDAL, UpdateServiceReq>().ReverseMap();
+            CreateMap<GetServiceDAL, GetServiceRes>().ReverseMap();
+            CreateMap<DeleteServiceDAL, DeleteServiceReq>().ReverseMap();
+
             #region SeatType
             CreateMap<GetListSeatTypeDAL, GetListSeatTypeRes>().ReverseMap();
             CreateMap<CreateSeatTypeDAL, CreateSeatTypeReq>().ReverseMap();

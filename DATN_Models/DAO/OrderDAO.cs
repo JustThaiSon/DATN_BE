@@ -1,20 +1,10 @@
-﻿using Azure.Core;
-using Azure;
-using DATN_Helpers.Common;
+﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
-using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DATN_Models.DTOS.Order.Req;
-using DATN_Models.Models;
 
 namespace DATN_Models.DAO
 {
@@ -29,7 +19,7 @@ namespace DATN_Models.DAO
                 .Build();
 
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
-        }    
+        }
         public void CreateOrder(Guid UserID, CreateOrderDAL req, out Guid orderDetail, out Guid orderId, out int response)
         {
             response = 0;

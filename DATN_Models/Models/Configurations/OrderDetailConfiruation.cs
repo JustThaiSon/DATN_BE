@@ -1,5 +1,4 @@
-﻿using DATN_Models.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DATN_Models.Models.Configurations
@@ -14,14 +13,14 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.Quantity)
                 .IsRequired();
 
-           
+
 
             builder.Property(x => x.TotalPrice)
                 .IsRequired();
 
             builder.Property(x => x.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");
-       
+
         }
     }
 }

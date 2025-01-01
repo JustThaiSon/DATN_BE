@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
-using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
+using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Movies.Res;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using DATN_Models.DTOS.Statistic.Res;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
-using System.IO;
-using DATN_Models.DTOS.Statistic.Res;
-using DATN_Models.Models;
 
 namespace DATN_BackEndApi.Controllers.Test
 {

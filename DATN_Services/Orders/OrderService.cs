@@ -2,7 +2,6 @@
 using DATN_Helpers.Constants;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Order.Req;
 using DATN_Services.Orders.Interface;
 
 namespace DATN_Services.Orders
