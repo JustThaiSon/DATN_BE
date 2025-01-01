@@ -1,7 +1,9 @@
-﻿using DATN_Helpers.Common;
+﻿using AutoMapper;
+using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
+using DATN_Models.DAL.Account;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
@@ -16,18 +18,18 @@ namespace DATN_BackEndApi.Controllers
         private readonly ILoginDAO _loginDAO;
         private readonly string _langCode;
         private readonly IUltil _ultils;
-        //private readonly Mapper _mapper;
-        public AccountController(ILoginDAO loginDAO, IConfiguration configuration, IUltil ultils)
+        private readonly IMapper _mapper;
+        public AccountController(ILoginDAO loginDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
         {
             _loginDAO = loginDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
-            //_mapper = mapper;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("Resgister")]
-        public async Task<CommonResponse<dynamic>> Resgister([FromForm] CreateAccountReq request)
+        public async Task<CommonResponse<dynamic>> Resgister(CreateAccountReq request)
         {
             var res = new CommonResponse<dynamic>();
             var (response, Opt) = await _loginDAO.RegisterUserAsync(request);
@@ -39,10 +41,11 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<CommonResponse<dynamic>> Login(string userName, string passWord)
+        public async Task<CommonResponse<dynamic>> Login(SignInReq req)
         {
             var res = new CommonResponse<dynamic>();
-            var (loginDto, responseCode) = await _loginDAO.login(userName, passWord);
+            var reqMapper = _mapper.Map<SignInDAL>(req);
+            var (loginDto, responseCode) = await _loginDAO.login(reqMapper);
             if (responseCode != 200)
             {
                 res.ResponseCode = (int)ResponseCodeEnum.ERR_SYSTEM;
@@ -61,10 +64,9 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
         [HttpPost("verify-otp")]
-        public async Task<CommonResponse<dynamic>> VerifyOtp(string otp)
+        public async Task<CommonResponse<dynamic>> VerifyOtp(VerifyOtpReq req)
         {
-            string email = GetEmail();
-            var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(email, otp);
+            var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(req);
             var res = new CommonResponse<dynamic>
             {
                 ResponseCode = result,
@@ -72,14 +74,6 @@ namespace DATN_BackEndApi.Controllers
             };
             return res;
         }
-        private string GetEmail()
-        {
-            var email = HttpContext.Session.GetString("email");
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new InvalidOperationException("Email không tồn tại trong session.");
-            }
-            return email;
-        }
+     
     }
 }

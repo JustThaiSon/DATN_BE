@@ -158,7 +158,7 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-
+            CreateMap<SignInDAL, SignInReq>().ReverseMap();
 
             #endregion
         }

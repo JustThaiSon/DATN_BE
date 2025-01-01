@@ -2,6 +2,7 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
+using DATN_Models.DTOS.Template.Req;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -22,8 +23,18 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> Get()
         {
             var _langCode = GetLanguageCode();
-            var í = GetUserId();
-            var roles = GetRoles();
+            var í = HttpContextHelper.GetUserId();
+            var roles = HttpContextHelper.GetRoles();
+            var res = new CommonResponse<dynamic>();
+            res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
+            res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, _langCode);
+            res.Data = null;
+            return res;
+        }
+        [HttpPost("Testt")]
+        public async Task<CommonResponse<dynamic>> Testt(TemplateReq req)
+        {
+            var _langCode = GetLanguageCode();
             var res = new CommonResponse<dynamic>();
             res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
             res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, _langCode);
@@ -56,22 +67,6 @@ namespace DATN_BackEndApi.Controllers
                 return langCode;
             }
             return _configuration["MyCustomSettings:DefaultLanguageCode"] ?? "vi";
-        }
-        #endregion
-
-        #region Define
-        private Guid GetUserId()
-        {
-            return (Guid)(HttpContext.Items["UserId"] ?? 0);
-        }
-        private List<string> GetRoles()
-        {
-            if (HttpContext.Items["Roles"] is List<string> roles)
-            {
-                return roles;  // Return the list of roles
-            }
-
-            return new List<string>();
         }
         #endregion
     }

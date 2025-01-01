@@ -11,6 +11,8 @@ using DATN_Models.Mapper;
 using DATN_Models.Models;
 using DATN_Services.Orders;
 using DATN_Services.Orders.Interface;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -45,7 +47,21 @@ namespace DATN_BackEndApi
             _services.AddCoreService();
             _services.AddMemoryCache();
 
-            _services.AddControllers();
+            _services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState
+                        .Where(ms => ms.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            ms => ms.Key,
+                            ms => ms.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+                    throw new ValidationException(
+                        errors.SelectMany(kv => kv.Value.Select(error => new ValidationFailure(kv.Key, error)))
+                    );
+                };
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             _services.AddEndpointsApiExplorer();
             _services.AddSwaggerGen(options =>
