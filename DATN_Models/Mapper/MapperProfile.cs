@@ -29,6 +29,9 @@ using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
+using DATN_Models.DTOS.Service.Request;
+using DATN_Models.DAL.Service;
+using DATN_Models.DTOS.Service.Response;
 
 namespace DATN_Models.Mapper
 {
@@ -130,6 +133,11 @@ namespace DATN_Models.Mapper
             CreateMap<TicketDAL, TicketReq>().ReverseMap();
             CreateMap<CreateTicketDAL, CreateTicketReq>().ReverseMap();
             CreateMap<CreateOrderServiceDAL, CreateOrderServiceReq>().ReverseMap();
+            CreateMap<CreateServiceReq, CreateServiceDAL>().ReverseMap();
+            CreateMap<UpdateServiceDAL, UpdateServiceReq>().ReverseMap();
+            CreateMap<GetServiceDAL, GetServiceRes>().ReverseMap();
+            CreateMap<DeleteServiceDAL, DeleteServiceReq>().ReverseMap();
+
             #region SeatType
             CreateMap<GetListSeatTypeDAL, GetListSeatTypeRes>().ReverseMap();
             CreateMap<CreateSeatTypeDAL, CreateSeatTypeReq>().ReverseMap();
