@@ -179,4 +179,25 @@
   <data name="-1993" xml:space="preserve">
     <value>Không tìm thấy movie</value>
   </data>
+  <data name="-601" xml:space="preserve">
+    <value>{0} được yêu cầu.</value>
+  </data>
+  <data name="-602" xml:space="preserve">
+    <value>Không được nhập quá {0} ký tự.</value>
+  </data>
+  <data name="-603" xml:space="preserve">
+    <value>Nhập ít nhất {0} ký tự.</value>
+  </data>
+  <data name="-604" xml:space="preserve">
+    <value>Nhập trong khoảng từ {0} đến {1} ký tự.</value>
+  </data>
+  <data name="-605" xml:space="preserve">
+    <value>Giá trị không được âm.</value>
+  </data>
+  <data name="-606" xml:space="preserve">
+    <value>Giá trị phải lớn hơn 0</value>
+  </data>
+  <data name="-607" xml:space="preserve">
+    <value>Giá trị phải là số nguyên</value>
+  </data>
 </root>

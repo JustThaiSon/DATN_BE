@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Helpers.Extensions;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -97,7 +98,7 @@ namespace DATN_BackEndApi.Extension
             services.AddSession(options => {
                 options.IdleTimeout = TimeSpan.FromDays(8);
             });
-            //HttpContextHelper.Configure(httpContextAccessor);
+            HttpContextHelper.Configure(httpContextAccessor);
             //services.AddSingleton<IWebSocketManager, WebSocketManager>();
 
             return services;
