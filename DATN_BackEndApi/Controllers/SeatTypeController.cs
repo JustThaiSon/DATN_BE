@@ -3,7 +3,7 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.SeatType;
-using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
 using Microsoft.AspNetCore.Mvc;

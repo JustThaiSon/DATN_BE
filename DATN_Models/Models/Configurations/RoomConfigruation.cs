@@ -22,6 +22,8 @@ namespace DATN_Models.Models.Configurations
                .IsRequired();
             builder.Property(x => x.Status)
                 .HasDefaultValue(RoomStatusEnum.Available);
+            builder.Property(x => x.SeatPrice)
+                .IsRequired();
 
         }
     }

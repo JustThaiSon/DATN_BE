@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using DATN_Models.DAO.Interface.SeatAbout;
 
 namespace DATN_BackEndApi.Extension
 {

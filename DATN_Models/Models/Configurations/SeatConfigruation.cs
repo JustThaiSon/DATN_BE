@@ -14,8 +14,11 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.SeatName)
                 .HasMaxLength(50)
                 .IsRequired();
+
             builder.Property(x => x.Status)
+                .IsRequired()
                 .HasDefaultValue(SeatStatusEnum.Available);
+
         }
     }
 }

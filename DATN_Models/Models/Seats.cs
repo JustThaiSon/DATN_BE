@@ -12,5 +12,6 @@ namespace DATN_Models.Models
         public int RowNumber { get; set; }
         public long SeatPrice { get; set; }
         public SeatStatusEnum Status { get; set; }
+
     }
 }

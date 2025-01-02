@@ -6,5 +6,6 @@
         public string Name { get; set; }
         public int TotalColNumber { get; set; }
         public int TotalRowNumber { get; set; }
+        public long SeatPrice { get; set; }
     }
 }

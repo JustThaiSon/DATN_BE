@@ -1,6 +1,6 @@
 ﻿using DATN_Models.DAL.SeatType;
 
-namespace DATN_Models.DAO.Interface
+namespace DATN_Models.DAO.Interface.SeatAbout
 {
     public interface ISeatTypeDAO
     {
