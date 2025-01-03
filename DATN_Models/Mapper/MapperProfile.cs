@@ -137,13 +137,16 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateServiceDAL, UpdateServiceReq>().ReverseMap();
             CreateMap<GetServiceDAL, GetServiceRes>().ReverseMap();
             CreateMap<DeleteServiceDAL, DeleteServiceReq>().ReverseMap();
+            #endregion
+            #region SeatbyShowTime
+            CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();
+            #endregion
 
             #region SeatType
             CreateMap<GetListSeatTypeDAL, GetListSeatTypeRes>().ReverseMap();
             CreateMap<CreateSeatTypeDAL, CreateSeatTypeReq>().ReverseMap();
             CreateMap<UpdateSeatTypeMultiplierDAL, UpdateSeatTypeMultiplierReq>().ReverseMap();
             #endregion
-
             #region PricingRule
             CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.StartTime) ? (TimeSpan?)null : TimeSpan.Parse(src.StartTime)))
@@ -160,6 +163,7 @@ namespace DATN_Models.Mapper
 
             CreateMap<SignInDAL, SignInReq>().ReverseMap();
 
+           
             #endregion
         }
     }

@@ -30,6 +30,7 @@ namespace DATN_Models.DAO
                 pars[1] = new SqlParameter("@_Name", resquest.Name);
                 pars[2] = new SqlParameter("@_TotalColNumber", resquest.TotalColNumber);
                 pars[3] = new SqlParameter("@_TotalRowNumber", resquest.TotalRowNumber);
+                pars[3] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
                 pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Room_Create", pars);

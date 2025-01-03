@@ -11,6 +11,8 @@ namespace DATN_Models.DTOS.Room.Res
         public int TotalRowNumber { get; set; }
         public int TotalSeats { get; set; }
         public int RoomCapacity { get; set; }
+        public long SeatPrice { get; set; }
+
         public RoomStatusEnum Status { get; set; }
     }
 }
