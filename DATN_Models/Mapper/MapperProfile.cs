@@ -140,6 +140,7 @@ namespace DATN_Models.Mapper
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();
+            CreateMap<UpdateSeatByShowTimeStatusDAL, UpdateSeatByShowTimeStatusReq>().ReverseMap();
             #endregion
 
             #region SeatType

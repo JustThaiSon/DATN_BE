@@ -84,6 +84,22 @@ namespace DATN_BackEndApi.Controllers
 
         }
 
+
+        [HttpPost]
+        [Route("UpdateStatusSeatByShowTime")]
+
+        public async Task<CommonResponse<dynamic>> UpdateStatusSeatByShowTime(UpdateSeatByShowTimeStatusReq rq)
+        {
+            var res = new CommonResponse<dynamic>();
+            var resultMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(rq);
+            _seatDAO.UpdateSeatByShowTimeStatus(resultMapper, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+
+        }
+
         [HttpPost]
         [Route("UpdateTypeSeat")]
         public async Task<CommonResponse<dynamic>> UpdateTypeSeat(UpdateSeatTypeReq rq)
