@@ -10,10 +10,7 @@ namespace DATN_Models.Models.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.ShowtimeId)
-                .IsRequired();
-
-            builder.Property(x => x.SeatId)
+            builder.Property(x => x.SeatByShowTimeId)
                 .IsRequired();
             builder.Property(x => x.Price)
                 .IsRequired();

@@ -106,11 +106,10 @@ namespace DATN_BackEndApi
             }
             app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
-            //app.UseWebSockets(new WebSocketOptions
-            //{
-            //    KeepAliveInterval = TimeSpan.FromSeconds(30),
-            //});
-
+            app.UseWebSockets(new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(30),
+            });
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseAuthentication();

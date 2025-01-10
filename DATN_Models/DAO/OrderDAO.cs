@@ -100,15 +100,14 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[4];
                 pars[0] = new SqlParameter("@_OrderDetailId", orderDetailId);
-                pars[1] = new SqlParameter("@_ShowTimeId", req.ShowTimeId);
-                pars[2] = new SqlParameter("@_SeatId", req.SeatId);
-                pars[3] = new SqlParameter("@_Price", req.Price);
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[1] = new SqlParameter("@_SeatByShowTimeId", req.SeatByShowTimeId);
+                pars[2] = new SqlParameter("@_Price", req.Price);
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Ticket_CreateTicket", pars);
-                response = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[3].Value);
             }
             catch (Exception ex)
             {

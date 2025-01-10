@@ -2,8 +2,7 @@
 {
     public class TicketDAL
     {
-        public Guid ShowTimeId { get; set; }
-        public Guid SeatId { get; set; }
+        public Guid SeatByShowTimeId { get; set; }
         public long Price { get; set; }
     }
 }
