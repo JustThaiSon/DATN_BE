@@ -127,6 +127,37 @@ namespace DATN_Models.DAO
 
         }
 
+        public void UpdateSeatByShowTimeStatus(UpdateSeatByShowTimeStatusDAL dataInput, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_SeatByShowTimeId", dataInput.Id);
+                pars[1] = new SqlParameter("@_SeatStatus", dataInput.Status);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+
+                var result = db.ExecuteNonQuerySP("SP_SeatByShowTime_Update", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+
+        }
+
+
         public void UpdateSeatType(UpdateSeatTypeDAL dataInput, out int response)
         {
             response = 0;
