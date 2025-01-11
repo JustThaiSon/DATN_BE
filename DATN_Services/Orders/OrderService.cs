@@ -19,13 +19,14 @@ namespace DATN_Services.Orders
 
         public void AddTicket(Guid UserID, CreateTicketDAL req, out int responseCode)
         {
+
             var order = new CreateOrderDAL
             {
                 IsAnonymous = req.IsAnonymous,
                 PaymentId = req.PaymentId,
                 Status = req.Status,
                 TotalPrice = req.TotalPrice,
-                QuantityTicket = req.QuantityTicket,
+                QuantityTicket = req.Tickets.Count(),
                 TotalPriceTicket = req.TotalPriceTicket
             };
             _orderDao.CreateOrder(UserID, order, out Guid orderDetailId, out Guid orderId, out int response);

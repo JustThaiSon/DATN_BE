@@ -4,6 +4,7 @@ using DATN_Models.HandleData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    partial class DATN_ContextModelSnapshot : ModelSnapshot
+    [Migration("20250111153144_Update Table v12")]
+    partial class UpdateTablev12
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -474,7 +477,7 @@ namespace DATN_Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PaymentId")
+                    b.Property<Guid>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -486,7 +489,7 @@ namespace DATN_Models.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -803,6 +806,9 @@ namespace DATN_Models.Migrations
 
                     b.Property<Guid>("OrderDetailId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("SeatByShowTimeId")
                         .HasColumnType("uniqueidentifier");

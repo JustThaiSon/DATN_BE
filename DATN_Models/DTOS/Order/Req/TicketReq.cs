@@ -3,6 +3,5 @@
     public class TicketReq
     {
         public Guid SeatByShowTimeId { get; set; }
-        public long Price { get; set; }
     }
 }

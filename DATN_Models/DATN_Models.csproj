@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOS\Order\Res\" />
     <Folder Include="DTOS\Template\Res\" />
   </ItemGroup>
 
