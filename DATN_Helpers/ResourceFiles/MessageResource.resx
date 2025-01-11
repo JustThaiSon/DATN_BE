@@ -200,4 +200,10 @@
   <data name="-607" xml:space="preserve">
     <value>Giá trị phải là số nguyên</value>
   </data>
+  <data name="-125" xml:space="preserve">
+    <value>Service Không tồn tại</value>
+  </data>
+  <data name="-126" xml:space="preserve">
+    <value>Order không tồn tại!</value>
+  </data>
 </root>

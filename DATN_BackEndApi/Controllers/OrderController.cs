@@ -9,6 +9,7 @@ using DATN_Models.DAL.Orders;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Services.Orders.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,26 +54,24 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<string>();
             var reqMapper = _mapper.Map<CreateTicketDAL>(req);
-            _orderService.AddTicket(GetUserId(), reqMapper, out int response);
+            _orderService.AddTicket(HttpContextHelper.GetUserId(), reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
             return res;
         }
-        #region Define
-        private Guid GetUserId()
-        {
-            return (Guid)(HttpContext.Items["UserId"] ?? 0);
-        }
-        private List<string> GetRoles()
-        {
-            if (HttpContext.Items["Roles"] is List<string> roles)
-            {
-                return roles;  // Return the list of roles
-            }
 
-            return new List<string>();
+        [HttpGet]
+        [Route("GetDetailOrder")]
+        public async Task<CommonResponse<GetDetailOrderRes>> GetDetailOrder(Guid OrderId)
+        {
+            var res = new CommonResponse<GetDetailOrderRes>();
+            var result = _orderDAO.GetDetailOrder(OrderId, out int response);
+            var resultMapper = _mapper.Map<GetDetailOrderRes>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
         }
-        #endregion
     }
 }

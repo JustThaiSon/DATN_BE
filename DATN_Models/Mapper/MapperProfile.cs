@@ -32,6 +32,7 @@ using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DAL.Service;
 using DATN_Models.DTOS.Service.Response;
+using DATN_Models.DTOS.Order.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -137,6 +138,8 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateServiceDAL, UpdateServiceReq>().ReverseMap();
             CreateMap<GetServiceDAL, GetServiceRes>().ReverseMap();
             CreateMap<DeleteServiceDAL, DeleteServiceReq>().ReverseMap();
+            CreateMap<GetListTicketDAL, GetListTicketRes>().ReverseMap();
+            CreateMap<GetDetailOrderDAL, GetDetailOrderRes>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();
@@ -165,7 +168,6 @@ namespace DATN_Models.Mapper
             CreateMap<SignInDAL, SignInReq>().ReverseMap();
 
            
-            
         }
     }
 }

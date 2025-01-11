@@ -124,6 +124,24 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Service Không tồn tại.
+        /// </summary>
+        internal static string _125 {
+            get {
+                return ResourceManager.GetString("-125", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order không tồn tại!.
+        /// </summary>
+        internal static string _126 {
+            get {
+                return ResourceManager.GetString("-126", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100).
         /// </summary>
         internal static string _1800 {

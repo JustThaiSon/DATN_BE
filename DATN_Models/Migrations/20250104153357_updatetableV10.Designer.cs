@@ -4,6 +4,7 @@ using DATN_Models.HandleData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    partial class DATN_ContextModelSnapshot : ModelSnapshot
+    [Migration("20250104153357_updatetableV10")]
+    partial class updatetableV10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,56 +229,6 @@ namespace DATN_Models.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("DATN_Models.Models.ErrorLog", b =>
-                {
-                    b.Property<int>("ErrorLogID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ErrorLogID"));
-
-                    b.Property<int?>("ErrorCode")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ErrorLine")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ErrorMessage")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("nvarchar(4000)");
-
-                    b.Property<int>("ErrorNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ErrorProcedure")
-                        .HasMaxLength(126)
-                        .HasColumnType("nvarchar(126)");
-
-                    b.Property<int?>("ErrorSeverity")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ErrorState")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ErrorTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<string>("HostName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("sysname");
-
-                    b.HasKey("ErrorLogID");
-
-                    b.ToTable("ErrorLog");
-                });
-
             modelBuilder.Entity("DATN_Models.Models.Genres", b =>
                 {
                     b.Property<Guid>("Id")
@@ -470,11 +423,7 @@ namespace DATN_Models.Migrations
                     b.Property<int>("IsAnonymous")
                         .HasColumnType("int");
 
-                    b.Property<string>("OrderCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("PaymentId")
+                    b.Property<Guid>("PaymentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Status")
@@ -486,50 +435,12 @@ namespace DATN_Models.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("DATN_Models.Models.ParamConfig", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("GroupConfigId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ParamCode")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ParamType")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("ParamValue")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ParamConfig");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.PricingRules", b =>
@@ -803,6 +714,9 @@ namespace DATN_Models.Migrations
 
                     b.Property<Guid>("OrderDetailId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("Price")
+                        .HasColumnType("bigint");
 
                     b.Property<Guid>("SeatByShowTimeId")
                         .HasColumnType("uniqueidentifier");
