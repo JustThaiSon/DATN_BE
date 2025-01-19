@@ -140,6 +140,7 @@ namespace DATN_Models.Mapper
             CreateMap<DeleteServiceDAL, DeleteServiceReq>().ReverseMap();
             CreateMap<GetListTicketDAL, GetListTicketRes>().ReverseMap();
             CreateMap<GetDetailOrderDAL, GetDetailOrderRes>().ReverseMap();
+            CreateMap<GetStatusByIdDAL, GetStatusByIdRes>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();
