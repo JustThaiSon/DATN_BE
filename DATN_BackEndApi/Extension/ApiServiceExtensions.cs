@@ -18,6 +18,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Helpers.Extensions;
+using NekBigCore.Services.WebSockets;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -49,6 +50,7 @@ namespace DATN_BackEndApi.Extension
             services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
             services.AddDistributedMemoryCache();
             services.AddHttpContextAccessor();
+
             return services;
         }
 
@@ -77,8 +79,10 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICustomerDAO, CustomerDAO>();
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
+            services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
             // AddSingleton
+            services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var serviceProvider = services.BuildServiceProvider();
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
@@ -97,8 +101,6 @@ namespace DATN_BackEndApi.Extension
                 options.IdleTimeout = TimeSpan.FromDays(8);
             });
             HttpContextHelper.Configure(httpContextAccessor);
-            //services.AddSingleton<IWebSocketManager, WebSocketManager>();
-
             return services;
         }
         public static IServiceCollection AddCORS(this IServiceCollection services, string name)

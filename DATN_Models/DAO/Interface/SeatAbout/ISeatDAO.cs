@@ -10,6 +10,7 @@ namespace DATN_Models.DAO.Interface.SeatAbout
         void UpdateSeatStatus(UpdateSeatStatusDAL dataInput, out int response);
         void UpdateSeatByShowTimeStatus(UpdateSeatByShowTimeStatusDAL dataInput, out int response);
         void UpdateSeatType(UpdateSeatTypeDAL dataInput, out int response);
+        GetStatusByIdDAL GetStatusById(Guid Id, out int response);
 
     }
 }
