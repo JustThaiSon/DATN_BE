@@ -41,7 +41,6 @@ namespace DATN_BackEndApi.Extension
                         return;
                     }
 
-                    var seatId = context.Request.Query["seatId"].ToString();
                     var displayName = GetDisplayNameById(userId.Value);
                     using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
@@ -51,7 +50,8 @@ namespace DATN_BackEndApi.Extension
                         case "/ws/KeepSeat":
                             {
                                 var chatHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
-                                await chatHandler.HandleUpdateSeatStatusAsync(seatId, (int)SeatStatusEnum.Available, "KeepSeat");
+                                await chatHandler.HandleUpdateSeatStatusAsync(null, (int)SeatStatusEnum.Available, "KeepSeat");
+                                _ = chatHandler.ReceiveMessages("KeepSeat", userId.Value.ToString());
                                 break;
                             }
 
@@ -73,6 +73,7 @@ namespace DATN_BackEndApi.Extension
                     await _next(context);
                 }
             }
+
             private async Task HandleTestWebSocketAsync(WebSocket webSocket)
             {
                 var buffer = new byte[1024 * 4];
@@ -93,10 +94,11 @@ namespace DATN_BackEndApi.Extension
                     await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
             }
-                private string GetDisplayNameById(Guid id)
-                {
-                    return "ThaiSonDepTrai";
-                }
+
+            private string GetDisplayNameById(Guid id)
+            {
+                return "ThaiSonDepTrai";
             }
         }
     }
+}

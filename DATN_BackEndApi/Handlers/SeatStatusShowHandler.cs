@@ -53,7 +53,7 @@ namespace DATN_BackEndApi.Handlers
                 // Notify connected clients
                 await SendStatusUpdate(seatId, status, hub);
 
-                // Start the wait and cancel process after 120 seconds if no further action is taken
+                // Start the wait and cancel process after 30 seconds if no further action is taken
                 _ = WaitAndCancelSeat(seatId); // Fire and forget approach
             }
             catch (Exception ex)
@@ -62,7 +62,7 @@ namespace DATN_BackEndApi.Handlers
             }
         }
 
-        private async Task ReceiveMessages(string hub, string seatId)
+        public async Task ReceiveMessages(string hub, string seatId)
         {
             var buffer = new byte[1024 * 4];
 
@@ -121,11 +121,11 @@ namespace DATN_BackEndApi.Handlers
         {
             try
             {
-                await Task.Delay(120 * 1000);
+                await Task.Delay(30 * 1000); // Wait for 30 seconds
 
-                var currentStatus = _seatDAO.GetStatusById(Guid.Parse(seatId),out int response);
+                var currentStatus = _seatDAO.GetStatusById(Guid.Parse(seatId), out int response);
 
-                if (currentStatus.Status != SeatStatusEnum.UnAvailable) return; 
+                if (currentStatus.Status != SeatStatusEnum.UnAvailable) return;
 
                 _seatDAO.UpdateSeatByShowTimeStatus(new UpdateSeatByShowTimeStatusDAL
                 {
@@ -135,11 +135,11 @@ namespace DATN_BackEndApi.Handlers
 
                 if (responseCode == 200)
                 {
-                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, "seatHub"); 
+                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, "seatHub");
                 }
                 else
                 {
-                    await SendErrorMessage("Failed to cancel seat reservation after 120 seconds.");
+                    await SendErrorMessage("Failed to cancel seat reservation after 30 seconds.");
                 }
             }
             catch (Exception ex)
