@@ -29,37 +29,40 @@ namespace DATN_BackEndApi.Handlers
             _seatDAO = seatDAO;
         }
 
-        public async Task HandleUpdateSeatStatusAsync(string seatId, int status, string hub)
+        public async Task HandleUpdateSeatStatusAsync(List<SeatStatusUpdateRequest> seatStatusUpdateRequests, string hub)
         {
             try
             {
-                if (seatId != null)
+                foreach (var updateRequest in seatStatusUpdateRequests)
                 {
-                    // Cập nhật trạng thái ghế trong cơ sở dữ liệu
-                    var updateStatus = new UpdateSeatByShowTimeStatusReq
+                    if (updateRequest.SeatId != null)
                     {
-                        Id = Guid.Parse(seatId),
-                        Status = (SeatStatusEnum)status
-                    };
-                    var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
-                    _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
-                    if (responseCode != 200)
-                    {
-                        await SendErrorMessage("Failed to update seat status.");
-                        return;
+                        // Cập nhật trạng thái ghế trong cơ sở dữ liệu
+                        var updateStatus = new UpdateSeatByShowTimeStatusReq
+                        {
+                            Id = Guid.Parse(updateRequest.SeatId),
+                            Status = updateRequest.Status
+                        };
+                        var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
+                        _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
+                        if (responseCode != 200)
+                        {
+                            await SendErrorMessage("Failed to update seat status.");
+                            return;
+                        }
+
+                        // Cập nhật trạng thái trong lớp dịch vụ
+                        _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(updateRequest.SeatId), updateRequest.Status);
                     }
 
-                    // Cập nhật trạng thái trong lớp dịch vụ
-                    _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(seatId), (SeatStatusEnum)status);
-                }
+                    // Thông báo cho các khách hàng kết nối
+                    await SendStatusUpdate(updateRequest.SeatId, (int)updateRequest.Status, hub);
 
-                // Thông báo cho các khách hàng kết nối
-                await SendStatusUpdate(seatId, status, hub);
-
-                // Bắt đầu quá trình chờ và hủy sau 30 giây nếu không có hành động nào khác
-                if (seatId != null && status == (int)SeatStatusEnum.UnAvailable)
-                {
-                    _ = WaitAndCancelSeat(seatId); // Fire and forget approach
+                    // Bắt đầu quá trình chờ và hủy sau 30 giây nếu không có hành động nào khác
+                    if (updateRequest.SeatId != null && updateRequest.Status == SeatStatusEnum.UnAvailable)
+                    {
+                        _ = WaitAndCancelSeat(updateRequest.SeatId); // Fire and forget approach
+                    }
                 }
             }
             catch (Exception ex)
@@ -85,11 +88,11 @@ namespace DATN_BackEndApi.Handlers
 
                     // Process received message
                     var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    var updateRequest = JsonConvert.DeserializeObject<SeatStatusUpdateRequest>(receivedMessage);
+                    var updateRequests = JsonConvert.DeserializeObject<List<SeatStatusUpdateRequest>>(receivedMessage);
 
-                    if (updateRequest != null)
+                    if (updateRequests != null)
                     {
-                        await HandleUpdateSeatStatusAsync(updateRequest.SeatId, (int)updateRequest.Status, hub);
+                        await HandleUpdateSeatStatusAsync(updateRequests, hub);
                     }
                 }
                 catch (WebSocketException wsEx)
