@@ -61,7 +61,7 @@ namespace DATN_BackEndApi.Handlers
                     // Bắt đầu quá trình chờ và hủy sau 30 giây nếu không có hành động nào khác
                     if (updateRequest.SeatId != null && updateRequest.Status == SeatStatusEnum.UnAvailable)
                     {
-                        _ = WaitAndCancelSeat(updateRequest.SeatId); // Fire and forget approach
+                        _ = WaitAndCancelSeat(updateRequest.SeatId, hub); // Fire and forget approach
                     }
                 }
             }
@@ -70,6 +70,7 @@ namespace DATN_BackEndApi.Handlers
                 await SendErrorMessage($"An error occurred: {ex.Message}");
             }
         }
+
 
         public async Task ReceiveMessages(string hub, string userId)
         {
@@ -86,7 +87,6 @@ namespace DATN_BackEndApi.Handlers
                         break;
                     }
 
-                    // Process received message
                     var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
                     var updateRequests = JsonConvert.DeserializeObject<List<SeatStatusUpdateRequest>>(receivedMessage);
 
@@ -110,30 +110,7 @@ namespace DATN_BackEndApi.Handlers
             }
         }
 
-        private async Task SendStatusUpdate(string seatId, int status, string hub)
-        {
-            try
-            {
-                var response = new
-                {
-                    SeatId = seatId,
-                    Status = status,
-                    Message = "Seat status updated successfully"
-                };
-
-                var responseMessage = JsonConvert.SerializeObject(response);
-                var responseBuffer = Encoding.UTF8.GetBytes(responseMessage);
-
-                // Send message to all clients in the specified hub
-                await _webSocketManager.SendMessageToAllUserAsync(hub, responseMessage);
-            }
-            catch (Exception ex)
-            {
-                await SendErrorMessage($"Failed to send status update: {ex.Message}");
-            }
-        }
-
-        private async Task WaitAndCancelSeat(string seatId)
+        private async Task WaitAndCancelSeat(string seatId, string hub)
         {
             try
             {
@@ -151,7 +128,7 @@ namespace DATN_BackEndApi.Handlers
 
                 if (responseCode == 200)
                 {
-                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, "seatHub");
+                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, hub);
                 }
                 else
                 {
@@ -164,6 +141,31 @@ namespace DATN_BackEndApi.Handlers
             }
         }
 
+        private async Task SendStatusUpdate(string seatId, int status, string hub)
+        {
+            try
+            {
+                var response = new
+                {
+                    SeatId = seatId,
+                    Status = status,
+                    Message = "Seat status updated successfully"
+                };
+
+                var responseMessage = JsonConvert.SerializeObject(response);
+                var responseBuffer = Encoding.UTF8.GetBytes(responseMessage);
+
+                // Send message to all clients in the specified hub
+                await _webSocketManager.SendMessageToAllUserAsync(hub, responseMessage);
+
+                // Send message back to the client who initiated the request
+                await _webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                await SendErrorMessage($"Failed to send status update: {ex.Message}");
+            }
+        }
         private async Task SendErrorMessage(string error)
         {
             var errorResponse = new
