@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_BackEndApi", "DATN_Bac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_LandingPage", "LandingBackEnd\DATN_LandingPage.csproj", "{73A294BF-2659-4D59-B124-3F3A4C2C44E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_OfflineManager", "DATN_OfflineManager\DATN_OfflineManager.csproj", "{48222532-167A-4DC6-810E-25BE1886736A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DATN_BackEnd", "DATN_BackEnd", "{51570DD9-10AB-477D-AD6A-AA4011969DF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,18 @@ Global
 		{73A294BF-2659-4D59-B124-3F3A4C2C44E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73A294BF-2659-4D59-B124-3F3A4C2C44E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73A294BF-2659-4D59-B124-3F3A4C2C44E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48222532-167A-4DC6-810E-25BE1886736A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48222532-167A-4DC6-810E-25BE1886736A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48222532-167A-4DC6-810E-25BE1886736A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48222532-167A-4DC6-810E-25BE1886736A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C19759BE-CA03-4B43-9724-932DAD4BEAEA} = {51570DD9-10AB-477D-AD6A-AA4011969DF4}
+		{73A294BF-2659-4D59-B124-3F3A4C2C44E5} = {51570DD9-10AB-477D-AD6A-AA4011969DF4}
+		{48222532-167A-4DC6-810E-25BE1886736A} = {51570DD9-10AB-477D-AD6A-AA4011969DF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D1AB52B-7555-458C-9ED0-330A6DFC5F0F}
