@@ -33,28 +33,34 @@ namespace DATN_BackEndApi.Handlers
         {
             try
             {
-                // Update seat status in the database
-                var updateStatus = new UpdateSeatByShowTimeStatusReq
+                if (seatId != null)
                 {
-                    Id = Guid.Parse(seatId),
-                    Status = (SeatStatusEnum)status
-                };
-                var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
-                _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
-                if (responseCode != 200)
-                {
-                    await SendErrorMessage("Failed to update seat status.");
-                    return;
+                    // Cập nhật trạng thái ghế trong cơ sở dữ liệu
+                    var updateStatus = new UpdateSeatByShowTimeStatusReq
+                    {
+                        Id = Guid.Parse(seatId),
+                        Status = (SeatStatusEnum)status
+                    };
+                    var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
+                    _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
+                    if (responseCode != 200)
+                    {
+                        await SendErrorMessage("Failed to update seat status.");
+                        return;
+                    }
+
+                    // Cập nhật trạng thái trong lớp dịch vụ
+                    _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(seatId), (SeatStatusEnum)status);
                 }
 
-                // Update status in the service layer
-                _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(seatId), (SeatStatusEnum)status);
-
-                // Notify connected clients
+                // Thông báo cho các khách hàng kết nối
                 await SendStatusUpdate(seatId, status, hub);
 
-                // Start the wait and cancel process after 30 seconds if no further action is taken
-                _ = WaitAndCancelSeat(seatId); // Fire and forget approach
+                // Bắt đầu quá trình chờ và hủy sau 30 giây nếu không có hành động nào khác
+                if (seatId != null && status == (int)SeatStatusEnum.UnAvailable)
+                {
+                    _ = WaitAndCancelSeat(seatId); // Fire and forget approach
+                }
             }
             catch (Exception ex)
             {
@@ -62,10 +68,9 @@ namespace DATN_BackEndApi.Handlers
             }
         }
 
-        public async Task ReceiveMessages(string hub, string seatId)
+        public async Task ReceiveMessages(string hub, string userId)
         {
             var buffer = new byte[1024 * 4];
-
             while (_webSocket.State == WebSocketState.Open)
             {
                 try
@@ -73,8 +78,8 @@ namespace DATN_BackEndApi.Handlers
                     var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Client disconnected", CancellationToken.None);
-                        await _webSocketManager.RemoveUserSocketAsync(hub, seatId);
+                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                        await _webSocketManager.RemoveUserSocketAsync(hub, userId);
                         break;
                     }
 
@@ -87,9 +92,17 @@ namespace DATN_BackEndApi.Handlers
                         await HandleUpdateSeatStatusAsync(updateRequest.SeatId, (int)updateRequest.Status, hub);
                     }
                 }
+                catch (WebSocketException wsEx)
+                {
+                    await SendErrorMessage($"WebSocket error: {wsEx.Message}");
+                    await _webSocketManager.RemoveUserSocketAsync(hub, userId);
+                    break; // Exit the loop if a WebSocketException occurs
+                }
                 catch (Exception ex)
                 {
                     await SendErrorMessage($"An error occurred while receiving messages: {ex.Message}");
+                    await _webSocketManager.RemoveUserSocketAsync(hub, userId);
+                    break; // Exit the loop if a general exception occurs
                 }
             }
         }
@@ -121,7 +134,7 @@ namespace DATN_BackEndApi.Handlers
         {
             try
             {
-                await Task.Delay(30 * 1000); // Wait for 30 seconds
+                await Task.Delay(30 * 1000); // Chờ 30 giây
 
                 var currentStatus = _seatDAO.GetStatusById(Guid.Parse(seatId), out int response);
 
