@@ -29,32 +29,41 @@ namespace DATN_BackEndApi.Handlers
             _seatDAO = seatDAO;
         }
 
-        public async Task HandleUpdateSeatStatusAsync(string seatId, int status, string hub)
+        public async Task HandleUpdateSeatStatusAsync(List<SeatStatusUpdateRequest> seatStatusUpdateRequests, string hub)
         {
             try
             {
-                // Update seat status in the database
-                var updateStatus = new UpdateSeatByShowTimeStatusReq
+                foreach (var updateRequest in seatStatusUpdateRequests)
                 {
-                    Id = Guid.Parse(seatId),
-                    Status = (SeatStatusEnum)status
-                };
-                var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
-                _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
-                if (responseCode != 200)
-                {
-                    await SendErrorMessage("Failed to update seat status.");
-                    return;
+                    if (updateRequest.SeatId != null)
+                    {
+                        // Cập nhật trạng thái ghế trong cơ sở dữ liệu
+                        var updateStatus = new UpdateSeatByShowTimeStatusReq
+                        {
+                            Id = Guid.Parse(updateRequest.SeatId),
+                            Status = updateRequest.Status
+                        };
+                        var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
+                        _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
+                        if (responseCode != 200)
+                        {
+                            await SendErrorMessage("Failed to update seat status.");
+                            return;
+                        }
+
+                        // Cập nhật trạng thái trong lớp dịch vụ
+                        _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(updateRequest.SeatId), updateRequest.Status);
+                    }
+
+                    // Thông báo cho các khách hàng kết nối
+                    await SendStatusUpdate(updateRequest.SeatId, (int)updateRequest.Status, hub);
+
+                    // Bắt đầu quá trình chờ và hủy sau 30 giây nếu không có hành động nào khác
+                    if (updateRequest.SeatId != null && updateRequest.Status == SeatStatusEnum.UnAvailable)
+                    {
+                        _ = WaitAndCancelSeat(updateRequest.SeatId, hub); // Fire and forget approach
+                    }
                 }
-
-                // Update status in the service layer
-                _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(seatId), (SeatStatusEnum)status);
-
-                // Notify connected clients
-                await SendStatusUpdate(seatId, status, hub);
-
-                // Start the wait and cancel process after 120 seconds if no further action is taken
-                _ = WaitAndCancelSeat(seatId); // Fire and forget approach
             }
             catch (Exception ex)
             {
@@ -62,10 +71,10 @@ namespace DATN_BackEndApi.Handlers
             }
         }
 
-        private async Task ReceiveMessages(string hub, string seatId)
+
+        public async Task ReceiveMessages(string hub, string userId)
         {
             var buffer = new byte[1024 * 4];
-
             while (_webSocket.State == WebSocketState.Open)
             {
                 try
@@ -73,24 +82,62 @@ namespace DATN_BackEndApi.Handlers
                     var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Client disconnected", CancellationToken.None);
-                        await _webSocketManager.RemoveUserSocketAsync(hub, seatId);
+                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                        await _webSocketManager.RemoveUserSocketAsync(hub, userId);
                         break;
                     }
 
-                    // Process received message
                     var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    var updateRequest = JsonConvert.DeserializeObject<SeatStatusUpdateRequest>(receivedMessage);
+                    var updateRequests = JsonConvert.DeserializeObject<List<SeatStatusUpdateRequest>>(receivedMessage);
 
-                    if (updateRequest != null)
+                    if (updateRequests != null)
                     {
-                        await HandleUpdateSeatStatusAsync(updateRequest.SeatId, (int)updateRequest.Status, hub);
+                        await HandleUpdateSeatStatusAsync(updateRequests, hub);
                     }
+                }
+                catch (WebSocketException wsEx)
+                {
+                    await SendErrorMessage($"WebSocket error: {wsEx.Message}");
+                    await _webSocketManager.RemoveUserSocketAsync(hub, userId);
+                    break; // Exit the loop if a WebSocketException occurs
                 }
                 catch (Exception ex)
                 {
                     await SendErrorMessage($"An error occurred while receiving messages: {ex.Message}");
+                    await _webSocketManager.RemoveUserSocketAsync(hub, userId);
+                    break; // Exit the loop if a general exception occurs
                 }
+            }
+        }
+
+        private async Task WaitAndCancelSeat(string seatId, string hub)
+        {
+            try
+            {
+                await Task.Delay(30 * 1000); // Chờ 30 giây
+
+                var currentStatus = _seatDAO.GetStatusById(Guid.Parse(seatId), out int response);
+
+                if (currentStatus.Status != SeatStatusEnum.UnAvailable) return;
+
+                _seatDAO.UpdateSeatByShowTimeStatus(new UpdateSeatByShowTimeStatusDAL
+                {
+                    Id = Guid.Parse(seatId),
+                    Status = SeatStatusEnum.Available
+                }, out int responseCode);
+
+                if (responseCode == 200)
+                {
+                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, hub);
+                }
+                else
+                {
+                    await SendErrorMessage("Failed to cancel seat reservation after 30 seconds.");
+                }
+            }
+            catch (Exception ex)
+            {
+                await SendErrorMessage($"An error occurred during the cancellation process: {ex.Message}");
             }
         }
 
@@ -110,44 +157,15 @@ namespace DATN_BackEndApi.Handlers
 
                 // Send message to all clients in the specified hub
                 await _webSocketManager.SendMessageToAllUserAsync(hub, responseMessage);
+
+                // Send message back to the client who initiated the request
+                await _webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
             }
             catch (Exception ex)
             {
                 await SendErrorMessage($"Failed to send status update: {ex.Message}");
             }
         }
-
-        private async Task WaitAndCancelSeat(string seatId)
-        {
-            try
-            {
-                await Task.Delay(120 * 1000);
-
-                var currentStatus = _seatDAO.GetStatusById(Guid.Parse(seatId),out int response);
-
-                if (currentStatus.Status != SeatStatusEnum.UnAvailable) return; 
-
-                _seatDAO.UpdateSeatByShowTimeStatus(new UpdateSeatByShowTimeStatusDAL
-                {
-                    Id = Guid.Parse(seatId),
-                    Status = SeatStatusEnum.Available
-                }, out int responseCode);
-
-                if (responseCode == 200)
-                {
-                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, "seatHub"); 
-                }
-                else
-                {
-                    await SendErrorMessage("Failed to cancel seat reservation after 120 seconds.");
-                }
-            }
-            catch (Exception ex)
-            {
-                await SendErrorMessage($"An error occurred during the cancellation process: {ex.Message}");
-            }
-        }
-
         private async Task SendErrorMessage(string error)
         {
             var errorResponse = new

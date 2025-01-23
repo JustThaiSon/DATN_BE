@@ -5,6 +5,8 @@ using DATN_Helpers.Constants;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Services.WebSockets;
+using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System.Net.WebSockets;
 using System.Text;
 namespace DATN_BackEndApi.Extension
@@ -18,13 +20,15 @@ namespace DATN_BackEndApi.Extension
             private readonly IMapper _mapper;
             private readonly ISeatDAO _seatDAO;
             private readonly SeatStatusService _seatStatusService = new();
+            private readonly ILogger<WebSocketMiddleware> _logger;
 
-            public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager, IMapper mapper, ISeatDAO seatDAO)
+            public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager, IMapper mapper, ISeatDAO seatDAO, ILogger<WebSocketMiddleware> logger)
             {
                 _next = next;
                 _webSocketManager = webSocketManager;
                 _mapper = mapper;
                 _seatDAO = seatDAO;
+                _logger = logger;
             }
 
             public async Task InvokeAsync(HttpContext context)
@@ -34,6 +38,12 @@ namespace DATN_BackEndApi.Extension
                     var token = context.Request.Query["access_token"].ToString();
                     var utilsServices = context.RequestServices.GetService<IUltil>();
 
+                    if (utilsServices == null)
+                    {
+                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                        return;
+                    }
+
                     var (userId, ListRole) = utilsServices.ValidateToken(token);
                     if (userId == null)
                     {
@@ -41,31 +51,51 @@ namespace DATN_BackEndApi.Extension
                         return;
                     }
 
-                    var seatId = context.Request.Query["seatId"].ToString();
                     var displayName = GetDisplayNameById(userId.Value);
-                    using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                    WebSocket webSocket = null;
 
-                    // Handle WebSocket routes
-                    switch (context.Request.Path)
+                    try
                     {
-                        case "/ws/KeepSeat":
-                            {
-                                var chatHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
-                                await chatHandler.HandleUpdateSeatStatusAsync(seatId, (int)SeatStatusEnum.Available, "KeepSeat");
-                                break;
-                            }
+                        webSocket = await context.WebSockets.AcceptWebSocketAsync();
 
-                        case "/ws/Test":
-                            {
-                                await HandleTestWebSocketAsync(webSocket);
-                                break;
-                            }
+                        // Handle WebSocket routes
+                        switch (context.Request.Path)
+                        {
+                            case "/ws/KeepSeat":
+                                {
+                                    var chatHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
+                                    await chatHandler.ReceiveMessages("KeepSeat", userId.Value.ToString());
+                                    break;
+                                }
 
-                        default:
-                            {
-                                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                                break;
-                            }
+                            case "/ws/Test":
+                                {
+                                    await HandleTestWebSocketAsync(webSocket);
+                                    break;
+                                }
+
+                            default:
+                                {
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    break;
+                                }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "An error occurred while accepting the WebSocket connection.");
+                        if (webSocket != null)
+                        {
+                            await webSocket.CloseAsync(WebSocketCloseStatus.InternalServerError, "Internal Server Error", CancellationToken.None);
+                        }
+                    }
+                    finally
+                    {
+                        if (webSocket != null && webSocket.State != WebSocketState.Closed)
+                        {
+                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                            _logger.LogInformation("WebSocket connection closed.");
+                        }
                     }
                 }
                 else
@@ -73,30 +103,40 @@ namespace DATN_BackEndApi.Extension
                     await _next(context);
                 }
             }
+
             private async Task HandleTestWebSocketAsync(WebSocket webSocket)
             {
                 var buffer = new byte[1024 * 4];
                 while (webSocket.State == WebSocketState.Open)
                 {
-                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                    if (result.MessageType == WebSocketMessageType.Close)
+                    try
                     {
-                        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                        var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        if (result.MessageType == WebSocketMessageType.Close)
+                        {
+                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                            break;
+                        }
+                        var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                        var updateRequest = JsonConvert.DeserializeObject<SeatStatusUpdateRequest>(receivedMessage);
+
+                        if (updateRequest != null)
+                        {
+                            // Handle the received message
+                        }
+                    }
+                    catch (WebSocketException wsEx)
+                    {
+                        _logger.LogError(wsEx, "WebSocketException occurred while receiving messages.");
                         break;
                     }
-
-                    var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Console.WriteLine($"Received: {message}");
-
-                    var responseMessage = $"Server Echo: {message}";
-                    var responseBytes = Encoding.UTF8.GetBytes(responseMessage);
-                    await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
             }
-                private string GetDisplayNameById(Guid id)
-                {
-                    return "ThaiSonDepTrai";
-                }
+
+            private string GetDisplayNameById(Guid id)
+            {
+                return "ThaiSonDepTrai";
             }
         }
     }
+}
