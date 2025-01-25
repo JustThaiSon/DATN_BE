@@ -11,7 +11,7 @@ namespace DATN_Models.DAO
 {
     public class OrderDAO : IOrderDAO
     {
-        private static string connectionString = string.Empty;
+        private static string connectionString =  string.Empty;
 
         public OrderDAO()
         {
