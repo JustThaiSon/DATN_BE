@@ -22,6 +22,7 @@ namespace DATN_Models.DAO
         private readonly DATN_Context _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _memoryCache;
+     
         public LoginDAO(RoleManager<AppRoles> roleManager, UserManager<AppUsers> _userManager, SignInManager<AppUsers> _signInManager, DATN_Context _context, IHttpContextAccessor httpContextAccessor, IMemoryCache memoryCache)
         {
             _roleManager = roleManager;
@@ -100,7 +101,6 @@ namespace DATN_Models.DAO
             };
             _memoryCache.Set(request.Email, otpCacheEntry, TimeSpan.FromMinutes(5));
 
-            await SendOtpAsync(request.Email, otp);
             response = (int)ResponseCodeEnum.SUCCESS;
             return (response, otp);
         }
@@ -144,17 +144,7 @@ namespace DATN_Models.DAO
         private string GenerateOtp()
         {
             var random = new Random();
-            return random.Next(100000, 999999).ToString(); // Tạo OTP 6 chữ số
+            return random.Next(100000, 999999).ToString();
         }
-
-
-        private async Task SendOtpAsync(string email, string otp)
-        {
-            // Gửi email (có thể tích hợp với dịch vụ email như SendGrid, SMTP)
-            // Đây là ví dụ giả lập
-            Console.WriteLine($"Gửi OTP {otp} đến email {email}");
-        }
-
-
     }
 }
