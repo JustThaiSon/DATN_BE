@@ -58,7 +58,12 @@ namespace DATN_Models.Mapper
                 .ForMember(dest => dest.Banner, opt => opt.Ignore())    // ko map iformfile banner => string bannerURL
                 .ForMember(dest => dest.Trailer, opt => opt.Ignore())   // ko map iformfile trailer => string trailerURL
                 .ReverseMap();
-
+            CreateMap<GetMovieLandingDAL, GetMovieLandingRes>().ReverseMap();
+            CreateMap<ListActorLangdingDAL, ListActorRes>().ReverseMap();
+            CreateMap<ListGenreLangdingDAL, ListGenreRes>().ReverseMap();
+            CreateMap<GetDetailMovieLangdingDAL, GetDetailMovieLangdingRes>().ReverseMap();
+            CreateMap<GetShowTimeLandingDAL, GetShowTimeLangdingRes>().ReverseMap();
+            CreateMap<ShowtimesLangdingDAL, ShowtimesLangdingRes>().ReverseMap();
             #endregion
 
 
@@ -168,7 +173,7 @@ namespace DATN_Models.Mapper
 
             CreateMap<SignInDAL, SignInReq>().ReverseMap();
 
-           
+
         }
     }
 }

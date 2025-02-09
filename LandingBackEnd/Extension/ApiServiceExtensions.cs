@@ -19,6 +19,8 @@ using NekBigCore.Services.WebSockets;
 using FluentValidation.AspNetCore;
 using AutoMapper;
 using Microsoft.Extensions.Options;
+using DATN_Services.Service.Interfaces;
+using DATN_Services.Service;
 namespace DATN_BackEndApi.Extension
 {
     public static class ServiceExtensions
@@ -61,7 +63,6 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IMembershipDAO, MembershipDAO>();
 
             //_services.AddTransient<IMovieDAO, MovieTESTDAO>();
-
             services.AddTransient<IActorDAO, ActorDAO>();
             services.AddTransient<IRoomDAO, RoomDAO>();
             services.AddTransient<IServiceDAO, ServiceDAO>();
@@ -72,6 +73,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IMailService, MailService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();

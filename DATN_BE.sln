@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Services", "DATN_Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_Helpers", "DATN_Helpers\DATN_Helpers.csproj", "{1F1F192C-FB78-4FC4-A5FF-45D030517B37}"
 EndProject
+<<<<<<< HEAD
+=======
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DATN_BackEndApi", "DATN_BackEndApi\DATN_BackEndApi.csproj", "{C19759BE-CA03-4B43-9724-932DAD4BEAEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_LandingPage", "LandingBackEnd\DATN_LandingPage.csproj", "{73A294BF-2659-4D59-B124-3F3A4C2C44E5}"
@@ -17,6 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DATN_OfflineManager", "DATN
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DATN_BackEnd", "DATN_BackEnd", "{51570DD9-10AB-477D-AD6A-AA4011969DF4}"
 EndProject
+>>>>>>> c1be9ec3a7a1007171e3ed8d25133f51667410a1
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +38,8 @@ Global
 		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F1F192C-FB78-4FC4-A5FF-45D030517B37}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+=======
 		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C19759BE-CA03-4B43-9724-932DAD4BEAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,6 +52,7 @@ Global
 		{48222532-167A-4DC6-810E-25BE1886736A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48222532-167A-4DC6-810E-25BE1886736A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48222532-167A-4DC6-810E-25BE1886736A}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> c1be9ec3a7a1007171e3ed8d25133f51667410a1
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

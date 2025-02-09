@@ -19,6 +19,8 @@ using FluentValidation;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
+using DATN_Services.Service.Interfaces;
+using DATN_Services.Service;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -73,6 +75,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
+            services.AddTransient<IMailService, MailService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
