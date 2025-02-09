@@ -81,7 +81,17 @@ namespace DATN_LandingPage.Controllers
             };
             return res;
         }
-
+        [HttpGet]
+        [Route("GetTest")]
+        public async Task<CommonResponse<string>> GetTest()
+        {
+            var res = new CommonResponse<string>();
+            res.Data = "Test";
+            res.Message = "Success";
+            res.ResponseCode = 200;
+            await _mailService.SendQrCodeEmail("hoangthaisonqs@gmail.com", "Nụ hôn bạc tỉ", "ABCD");
+            return res;
+        }
     }
 }
 

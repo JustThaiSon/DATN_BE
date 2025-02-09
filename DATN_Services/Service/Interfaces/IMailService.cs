@@ -3,5 +3,7 @@
     public interface IMailService
     {
         Task<bool> SendMail(string email, string subject, string body);
+
+        Task<bool> SendQrCodeEmail(string email, string movieName, string ticketCode);
     }
 }

@@ -16,11 +16,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
 using FluentValidation;
-using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
-using DATN_Services.Service.Interfaces;
-using DATN_Services.Service;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -70,12 +67,10 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IRoomDAO, RoomDAO>();
             services.AddTransient<IServiceDAO, ServiceDAO>();
             services.AddTransient<ISeatDAO, SeatDAO>();
-            services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
-            services.AddTransient<IMailService, MailService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();

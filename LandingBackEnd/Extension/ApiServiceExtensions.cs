@@ -13,14 +13,13 @@ using DATN_Helpers.Common;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Identity;
 using FluentValidation;
-using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
 using FluentValidation.AspNetCore;
 using AutoMapper;
 using Microsoft.Extensions.Options;
-using DATN_Services.Service.Interfaces;
 using DATN_Services.Service;
+using DATN_Services.Service.Interfaces;
 namespace DATN_BackEndApi.Extension
 {
     public static class ServiceExtensions
@@ -63,11 +62,11 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IMembershipDAO, MembershipDAO>();
 
             //_services.AddTransient<IMovieDAO, MovieTESTDAO>();
+
             services.AddTransient<IActorDAO, ActorDAO>();
             services.AddTransient<IRoomDAO, RoomDAO>();
             services.AddTransient<IServiceDAO, ServiceDAO>();
             services.AddTransient<ISeatDAO, SeatDAO>();
-            services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
