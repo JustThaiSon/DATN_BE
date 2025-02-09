@@ -31,6 +31,29 @@ namespace DATN_BackEndApi.Controllers
             res.Data = null;
             return res;
         }
+
+
+        [HttpGet]
+        [Route("CheckQuyen")]
+        public async Task<CommonResponse<dynamic>> CheckQuyen()
+        {
+            var _langCode = GetLanguageCode();
+            var Roles = HttpContextHelper.GetRoles();
+            var res = new CommonResponse<dynamic>();
+            if (Roles.Contains("Admin"))
+            {
+                res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
+                res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, _langCode);
+                res.Data = null;
+            }
+            var í = HttpContextHelper.GetUserId();
+            var roles = HttpContextHelper.GetRoles();
+            res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
+            res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, _langCode);
+            res.Data = null;
+            return res;
+        }
+
         [HttpPost("Testt")]
         public async Task<CommonResponse<dynamic>> Testt(TemplateReq req)
         {
