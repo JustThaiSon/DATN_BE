@@ -5,6 +5,8 @@ using QRCoder;
 using MimeKit;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System;
 
 namespace DATN_Services.Service
 {
@@ -42,25 +44,155 @@ namespace DATN_Services.Service
             }
         }
 
-        public async Task<bool> SendQrCodeEmail(string email, string movieName, string ticketCode)
+        public async Task<bool> SendQrCodeEmail(string email, string movieName, string ticketCode, string cinemaName, string cinemaAddress,string sessionTime, string hall, string seatList)
         {
             try
             {
+                if (string.IsNullOrEmpty(movieName) || string.IsNullOrEmpty(ticketCode))
+                {
+                    throw new ArgumentException("Movie name and ticket code cannot be empty.");
+                }
+
+                // 1️⃣ Tạo mã QR
                 string qrText = $"Phim: {movieName}\nMã vé: {ticketCode}";
                 byte[] qrCodeImage = GenerateQrCode(qrText);
 
-                using (MemoryStream ms = new MemoryStream(qrCodeImage))
+                // 2️⃣ Tạo nội dung HTML
+                string emailBody = $@"
+      <!DOCTYPE html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Email Template</title>
+    <style>
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }}
+        .container {{
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }}
+        .header {{
+            text-align: center;
+        }}
+        .header img {{
+            max-width: 150px;
+        }}
+        .section {{
+            margin-top: 20px;
+        }}
+        .qr-code {{
+            text-align: center;
+            margin: 20px 0;
+        }}
+        .info {{
+            margin-top: 10px;
+        }}
+        .info table {{
+            width: 100%;
+            border-collapse: collapse;
+        }}
+        .info table td {{
+            padding: 10px;
+            border: 1px solid #ddd;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+            text-align: center;
+        }}
+    </style>
+</head>
+<body>
+    <div class=""container"">
+        <div class=""header"">
+            <img src=""https://banner2.cleanpng.com/20181203/orv/kisspng-cj-cgv-vietnam-cinema-cj-group-film-1713914319903.webp"" alt=""Logo"">
+            <h2>{movieName}</h2>
+            <p><strong>{cinemaName}</strong></p>
+            <p>{cinemaAddress}</p>
+        </div>
+        <div class=""qr-code"">
+            <h3>Mã Vé (Reservation Code)</h3>
+            <h2>{ticketCode}</h2>
+            <img src='cid:qrcode' alt='QR Code' width='150' height='150'>
+        </div>
+        <div class=""section"">
+            <h3>Suất Chiếu (Session)</h3>
+            <p><strong>{sessionTime}</strong></p>
+            <p>
+                Quý khách vui lòng tới quầy dịch vụ xuất trình mã vé này để được nhận vé.<br>
+                <em>Please go to the service counter and present your booking code to receive the physical ticket to check-in.</em>
+            </p>
+        </div>
+        <div class=""info"">
+            <table>
+                <tr>
+                    <td>Phòng Chiếu (Hall)</td>
+                    <td>{hall}</td>
+                </tr>
+                <tr>
+                    <td>Ghế (Seat)</td>
+                    <td>{seatList}</td>
+                </tr>
+                <tr>
+                    <td>Thời Gian Thanh Toán (Payment Time)</td>
+                    <td>{sessionTime}</td>
+                </tr>
+                <tr>
+                    <td>Tiền combo bỏng nước (Concession amount)</td>
+                    <td>{"1000 VND"}</td>
+                </tr>
+                <tr>
+                    <td>Tổng Tiền (Total amount)</td>
+                    <td>{"1000 VND"}</td>
+                </tr>
+                <tr>
+                    <td>Số tiền giảm giá (Discount amount)</td>
+                    <td>{"1000 VND"}</td>
+                </tr>
+                <tr>
+                    <td>Số tiền thanh toán (Payment amount)</td>
+                    <td>{"1000 VND"}</td>
+                </tr>
+            </table>
+        </div>
+        <div class=""footer"">
+            <p>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</p>
+        </div>
+    </div>
+</body>
+</html>
+";
+
+                // 3️⃣ Tạo email
+                using (MailMessage mail = new MailMessage())
                 {
-                    using (MailMessage mail = new MailMessage())
+                    mail.To.Add(email.Trim());
+                    mail.From = new MailAddress("thaothaobatbai123@gmail.com");
+                    mail.Subject = $"Vé xem phim: {movieName}";
+                    mail.IsBodyHtml = true;
+
+                    // 4️⃣ Nhúng mã QR vào email
+                    using (MemoryStream ms = new MemoryStream(qrCodeImage))
                     {
-                        mail.To.Add(email.Trim());
-                        mail.From = new MailAddress("thaothaobatbai123@gmail.com");
-                        mail.Subject = $"Vé xem phim: {movieName}";
-                        mail.IsBodyHtml = true;
-                        mail.Body = $"Cảm ơn bạn đã đặt vé xem phim <b>{movieName}</b>.<br/> Mã vé của bạn: <b>{ticketCode}</b><br/> Quét QR để check-in:";
+                        LinkedResource qrResource = new LinkedResource(ms, "image/png")
+                        {
+                            ContentId = "qrcode",
+                            TransferEncoding = System.Net.Mime.TransferEncoding.Base64
+                        };
 
-                        mail.Attachments.Add(new Attachment(ms, "qrcode.png", "image/png"));
+                        // 5️⃣ Tạo nội dung HTML với hình ảnh nhúng
+                        AlternateView htmlView = AlternateView.CreateAlternateViewFromString(emailBody, null, "text/html");
+                        htmlView.LinkedResources.Add(qrResource);
+                        mail.AlternateViews.Add(htmlView);
 
+                        // 6️⃣ Cấu hình SMTP
                         using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                         {
                             smtp.EnableSsl = true;
@@ -80,21 +212,24 @@ namespace DATN_Services.Service
                 return false;
             }
         }
+
+
         private byte[] GenerateQrCode(string text)
         {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
-            QRCode qrCode = new QRCode(qrCodeData);
-
-            using (Bitmap bitmap = qrCode.GetGraphic(10))
+            if (string.IsNullOrEmpty(text))
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    bitmap.Save(ms, ImageFormat.Png);
-                    return ms.ToArray();
-                }
+                throw new ArgumentException("Text cannot be null or empty.");
             }
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.L);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            return qrCode.GetGraphic(10); // Thay đổi độ phân giải nếu cần
         }
+
 
     }
 }
+
+
+  

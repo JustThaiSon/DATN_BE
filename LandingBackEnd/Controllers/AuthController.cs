@@ -86,12 +86,25 @@ namespace DATN_LandingPage.Controllers
         public async Task<CommonResponse<string>> GetTest()
         {
             var res = new CommonResponse<string>();
-            res.Data = "Test";
+            res.Data = "Fake Test";
             res.Message = "Success";
             res.ResponseCode = 200;
-            await _mailService.SendQrCodeEmail("hoangthaisonqs@gmail.com", "Nụ hôn bạc tỉ", "ABCD");
+
+            // Fake dữ liệu
+            await _mailService.SendQrCodeEmail(
+                "hoangthaisonqs@gmail.com",
+                "Phim Giả Lập",
+                "XYZ123",
+                "Rạp CGV Vincom",
+                "Tầng 4, Vincom Nguyễn Chí Thanh, Hà Nội",
+                "20:00 - 25/12/2025",
+                "Phòng 2",
+                "A5, A6"
+            );
+
             return res;
         }
+
     }
 }
 

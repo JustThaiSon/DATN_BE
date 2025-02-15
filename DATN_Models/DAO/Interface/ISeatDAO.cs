@@ -16,6 +16,7 @@ namespace DATN_Models.DAO.Interface
         void UpdateSeatTypeMultiplier(UpdateSeatTypeMultiplierDAL dataInput, out int response);
         void CreateSeatType(CreateSeatTypeDAL dataInput, out int response);
         void DeleteSeatType(Guid dataInput, out int response);
+        List<ListSeatByShowTimeDAL> GetListSeatByShowTimeID(Guid showTimeId, out int totalRecord, out int response);
 
     }
 }
