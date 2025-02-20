@@ -10,8 +10,6 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.HandleData;
 using DATN_Models.Mapper;
 using DATN_Models.Models;
-using DATN_Services.Orders;
-using DATN_Services.Orders.Interface;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;

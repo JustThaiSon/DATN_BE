@@ -81,30 +81,47 @@ namespace DATN_LandingPage.Controllers
             };
             return res;
         }
-        [HttpGet]
-        [Route("GetTest")]
-        public async Task<CommonResponse<string>> GetTest()
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<CommonResponse<dynamic>> RefreshToken(RefreshTokenReq req)
         {
-            var res = new CommonResponse<string>();
-            res.Data = "Fake Test";
-            res.Message = "Success";
-            res.ResponseCode = 200;
+            var res = new CommonResponse<dynamic>();
 
-            // Fake dữ liệu
-            await _mailService.SendQrCodeEmail(
-                "hoangthaisonqs@gmail.com",
-                "Phim Giả Lập",
-                "XYZ123",
-                "Rạp CGV Vincom",
-                "Tầng 4, Vincom Nguyễn Chí Thanh, Hà Nội",
-                "20:00 - 25/12/2025",
-                "Phòng 2",
-                "A5, A6"
-            );
+            var newAccessToken = _ultils.GenerateTokenFromRefreshToken(req.RefreshToken);
+            if (string.IsNullOrEmpty(newAccessToken))
+            {
+                res.ResponseCode = (int)ResponseCodeEnum.ERR_TOKEN_INVALID;
+                res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+                return res;
+            }
 
+            var (userId, roles) = _ultils.ValidateToken(newAccessToken);
+            if (userId == null || roles == null)
+            {
+                res.ResponseCode = (int)ResponseCodeEnum.ERR_TOKEN_INVALID;
+                res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+                return res;
+            }
+
+            var newRefreshToken = _ultils.GenerateRefreshToken(userId.Value, roles);
+
+            LoginRes loginRes = new LoginRes
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                Roles = roles,
+            };
+
+            res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
+            res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+            res.Data = loginRes;
             return res;
         }
 
     }
+}
+public class RefreshTokenReq
+{
+    public string RefreshToken { get; set; }
 }
 

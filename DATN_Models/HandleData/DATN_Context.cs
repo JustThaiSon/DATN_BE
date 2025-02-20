@@ -57,5 +57,6 @@ namespace DATN_Models.HandleData
         public DbSet<SeatByShowTime> SeatByShowTimes { get; set; }
         public DbSet<ErrorLog> ErrorLog { get; set; }
         public DbSet<ParamConfig> ParamConfig { get; set; }
+        public DbSet<ChangeLog> ChangeLogs { get; set; }
     }
 }

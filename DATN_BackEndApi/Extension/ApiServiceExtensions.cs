@@ -6,8 +6,6 @@ using DATN_Models.Mapper;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using DATN_Models.Models;
-using DATN_Services.Orders.Interface;
-using DATN_Services.Orders;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
 using CloudinaryDotNet;
@@ -18,6 +16,7 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -25,20 +24,22 @@ namespace DATN_BackEndApi.Extension
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            // Database
             var connectionString = configuration.GetConnectionString("Db");
-
-            // Core
             var migrationsAssemblyCore = typeof(DATN_Context).GetTypeInfo().Assembly.GetName().Name;
-            services.AddDbContext<DATN_Context>(builder =>
+
+            services.AddScoped<SessionContextInterceptor>();
+
+            services.AddDbContext<DATN_Context>((serviceProvider, options) =>
             {
-                builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssemblyCore));
-
-                builder.LogTo(Console.WriteLine);
+                options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssemblyCore));
+                options.AddInterceptors(serviceProvider.GetRequiredService<SessionContextInterceptor>());
+                options.LogTo(Console.WriteLine);
             });
-
+            services.AddScoped<ChangeLogInterceptor>();
             return services;
         }
+
+
         public static IServiceCollection AddServiceContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
@@ -71,7 +72,6 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
-            services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
@@ -79,6 +79,7 @@ namespace DATN_BackEndApi.Extension
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
+            services.AddScoped<BAuthorizeAttribute>();
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -95,8 +96,11 @@ namespace DATN_BackEndApi.Extension
             services.AddIdentity<AppUsers, AppRoles>()
                .AddEntityFrameworkStores<DATN_Context>()
                .AddDefaultTokenProviders();
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.IdleTimeout = TimeSpan.FromDays(8);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
             HttpContextHelper.Configure(httpContextAccessor);
             return services;

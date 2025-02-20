@@ -206,4 +206,7 @@
   <data name="-126" xml:space="preserve">
     <value>Order không tồn tại!</value>
   </data>
+  <data name="-405" xml:space="preserve">
+    <value>Lỗi Resfresh Token</value>
+  </data>
 </root>

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System;
+using DATN_Models.DAL.Orders;
 
 namespace DATN_Services.Service
 {
@@ -44,17 +45,14 @@ namespace DATN_Services.Service
             }
         }
 
-        public async Task<bool> SendQrCodeEmail(string email, string movieName, string ticketCode, string cinemaName, string cinemaAddress,string sessionTime, string hall, string seatList)
+        public async Task<bool> SendQrCodeEmail(OrderMailResultDAL req)
         {
             try
             {
-                if (string.IsNullOrEmpty(movieName) || string.IsNullOrEmpty(ticketCode))
-                {
-                    throw new ArgumentException("Movie name and ticket code cannot be empty.");
-                }
+              
 
                 // 1️⃣ Tạo mã QR
-                string qrText = $"Phim: {movieName}\nMã vé: {ticketCode}";
+                string qrText = $"Phim: {req.MovieName}\nMã vé: {req.OrderCode}";
                 byte[] qrCodeImage = GenerateQrCode(qrText);
 
                 // 2️⃣ Tạo nội dung HTML
@@ -113,18 +111,18 @@ namespace DATN_Services.Service
     <div class=""container"">
         <div class=""header"">
             <img src=""https://banner2.cleanpng.com/20181203/orv/kisspng-cj-cgv-vietnam-cinema-cj-group-film-1713914319903.webp"" alt=""Logo"">
-            <h2>{movieName}</h2>
-            <p><strong>{cinemaName}</strong></p>
-            <p>{cinemaAddress}</p>
+            <h2>{req.MovieName}</h2>
+            <p><strong>{req.CinemaName}</strong></p>
+            <p>{req.Address}</p>
         </div>
         <div class=""qr-code"">
             <h3>Mã Vé (Reservation Code)</h3>
-            <h2>{ticketCode}</h2>
+            <h2>{req.OrderCode}</h2>
             <img src='cid:qrcode' alt='QR Code' width='150' height='150'>
         </div>
         <div class=""section"">
             <h3>Suất Chiếu (Session)</h3>
-            <p><strong>{sessionTime}</strong></p>
+            <p><strong>{req.SessionTime}</strong></p>
             <p>
                 Quý khách vui lòng tới quầy dịch vụ xuất trình mã vé này để được nhận vé.<br>
                 <em>Please go to the service counter and present your booking code to receive the physical ticket to check-in.</em>
@@ -134,31 +132,31 @@ namespace DATN_Services.Service
             <table>
                 <tr>
                     <td>Phòng Chiếu (Hall)</td>
-                    <td>{hall}</td>
+                    <td>{req.RoomName}</td>
                 </tr>
                 <tr>
                     <td>Ghế (Seat)</td>
-                    <td>{seatList}</td>
+                    <td>{req.SeatList}</td>
                 </tr>
                 <tr>
                     <td>Thời Gian Thanh Toán (Payment Time)</td>
-                    <td>{sessionTime}</td>
+                    <td>{req.CreatedDate}</td>
                 </tr>
                 <tr>
                     <td>Tiền combo bỏng nước (Concession amount)</td>
-                    <td>{"1000 VND"}</td>
+                    <td>{req.ConcessionAmount} VND</td>
                 </tr>
                 <tr>
                     <td>Tổng Tiền (Total amount)</td>
-                    <td>{"1000 VND"}</td>
+                    <td>{req.TotalPrice} VND</td>
                 </tr>
                 <tr>
                     <td>Số tiền giảm giá (Discount amount)</td>
-                    <td>{"1000 VND"}</td>
+                    <td>{req.TotalPrice} VND</td>
                 </tr>
                 <tr>
                     <td>Số tiền thanh toán (Payment amount)</td>
-                    <td>{"1000 VND"}</td>
+                    <td>{req.TotalPrice} VND</td>
                 </tr>
             </table>
         </div>
@@ -173,9 +171,9 @@ namespace DATN_Services.Service
                 // 3️⃣ Tạo email
                 using (MailMessage mail = new MailMessage())
                 {
-                    mail.To.Add(email.Trim());
+                    mail.To.Add(req.Email.Trim());
                     mail.From = new MailAddress("thaothaobatbai123@gmail.com");
-                    mail.Subject = $"Vé xem phim: {movieName}";
+                    mail.Subject = $"Vé xem phim: {req.MovieName}";
                     mail.IsBodyHtml = true;
 
                     // 4️⃣ Nhúng mã QR vào email

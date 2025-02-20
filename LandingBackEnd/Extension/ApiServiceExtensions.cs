@@ -6,8 +6,6 @@ using DATN_Models.Mapper;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using DATN_Models.Models;
-using DATN_Services.Orders.Interface;
-using DATN_Services.Orders;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
 using CloudinaryDotNet;
@@ -71,7 +69,6 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
-            services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IMailService, MailService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();

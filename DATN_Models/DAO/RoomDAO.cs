@@ -1,5 +1,6 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
+using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
@@ -25,17 +26,17 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[6];
                 pars[0] = new SqlParameter("@_CinemaId", resquest.CinemaId);
                 pars[1] = new SqlParameter("@_Name", resquest.Name);
                 pars[2] = new SqlParameter("@_TotalColNumber", resquest.TotalColNumber);
                 pars[3] = new SqlParameter("@_TotalRowNumber", resquest.TotalRowNumber);
-                pars[3] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Room_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[5].Value);
             }
             catch (Exception ex)
             {
@@ -48,7 +49,29 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+        public void SaveSession(Guid userId)
+        {
 
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@key", SqlDbType.NVarChar) { Value = "UserId" };
+                pars[1] = new SqlParameter("@value", SqlDbType.UniqueIdentifier) { Value = userId };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("sp_set_session_context", pars);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
 
         public List<ListRoomDAL> GetListRoom(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
