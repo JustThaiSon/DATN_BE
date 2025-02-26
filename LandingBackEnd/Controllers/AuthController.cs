@@ -8,6 +8,8 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
 using Microsoft.AspNetCore.Mvc;
+using DATN_Services.Service.Interfaces;
+using DATN_Helpers.Extensions.Global;
 
 namespace DATN_LandingPage.Controllers
 {
@@ -19,23 +21,28 @@ namespace DATN_LandingPage.Controllers
         private readonly string _langCode;
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
-        public AuthController(ILoginDAO loginDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
+        private readonly IMailService _mailService;
+        public AuthController(ILoginDAO loginDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, IMailService mailService)
         {
             _loginDAO = loginDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
+            _mailService = mailService;
         }
-
         [HttpPost]
         [Route("Resgister")]
         public async Task<CommonResponse<dynamic>> Resgister(CreateAccountReq request)
         {
             var res = new CommonResponse<dynamic>();
             var (response, Opt) = await _loginDAO.RegisterUserAsync(request);
+            if (response == (int)ResponseCodeEnum.SUCCESS)
+            {
+                await _mailService.SendMail(request.Email, MailHelper.SubjectOPT, MailHelper.BodyOPT + Opt);
+            }
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.Data = Opt;
+            res.Data = null;
             return res;
         }
 
