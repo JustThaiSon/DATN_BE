@@ -33,6 +33,10 @@ using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DAL.Service;
 using DATN_Models.DTOS.Service.Response;
 using DATN_Models.DTOS.Order.Res;
+using DATN_Models.DAL.Cinemas;
+using DATN_Models.DTOS.Cinemas.Res;
+using DATN_Models.DAL.ShowTime;
+using DATN_Models.DTOS.ShowTime.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -119,6 +123,28 @@ namespace DATN_Models.Mapper
             CreateMap<AddMembershipDAL, AddMembershipReq>().ReverseMap();
 
             #endregion
+
+
+
+
+
+            #region Cinema
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+
+
+            #endregion
+
+
+            #region Showtime
+            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
+
+            #endregion
+
+
+
+
+
+
 
 
             #region ThaoDepTrai

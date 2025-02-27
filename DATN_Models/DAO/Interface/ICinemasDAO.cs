@@ -6,7 +6,7 @@ namespace DATN_Models.DAO.Interface
 {
     public interface ICinemasDAO
     {
-        void CreateCinemas(CinemasReq resquest, out int response);
+        void CreateCinemas(CinemasDAL resquest, out int response);
         public void UpdateCinemas(Guid CinemasId, CinemasReq request, out int response);
         List<CinemasDAL> GetListCinemas(int currentPage, int recordPerPage, out int totalRecord, out int response);
         public List<CinemasDAL> GetListCinemasByName(string nameCinemas, int currentPage, int recordPerPage, out int totalRecord, out int response);

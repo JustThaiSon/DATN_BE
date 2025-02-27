@@ -64,7 +64,12 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IMovieDAO, MovieDAO>();
             services.AddTransient<IMembershipDAO, MembershipDAO>();
 
+
             //_services.AddTransient<IMovieDAO, MovieTESTDAO>();
+            services.AddTransient<ICinemasDAO, CinemasDAO>();
+            services.AddTransient<IShowTimeDAO, ShowTimeDAO>();
+
+
 
             services.AddTransient<IActorDAO, ActorDAO>();
             services.AddTransient<IRoomDAO, RoomDAO>();
@@ -80,10 +85,24 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
+
+
+
+
+
+
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
+
+
+
+
+
+
+
+
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -100,7 +119,8 @@ namespace DATN_BackEndApi.Extension
             services.AddIdentity<AppUsers, AppRoles>()
                .AddEntityFrameworkStores<DATN_Context>()
                .AddDefaultTokenProviders();
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.IdleTimeout = TimeSpan.FromDays(8);
             });
             HttpContextHelper.Configure(httpContextAccessor);
