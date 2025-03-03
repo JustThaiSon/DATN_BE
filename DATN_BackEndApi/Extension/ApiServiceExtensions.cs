@@ -22,6 +22,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NekBigCore.Services.WebSockets;
 using System.Reflection;
+using DATN_Services.Service.Interfaces;
+using DATN_Services.Service;
+using DATN_BackEndApi.VNPay;
+using DATN_BackEndApi.Extension.Vnpay;
 
 namespace DATN_BackEndApi.Extension
 {
