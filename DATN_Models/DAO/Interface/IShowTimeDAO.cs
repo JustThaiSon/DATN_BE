@@ -8,7 +8,7 @@ namespace DATN_Models.DAO.Interface
         void CreateShowTime(ShowTimeReq resquest, out int response);
         public void UpdateShowTime(Guid ShowTimeId, ShowTimeReq request, out int response);
         public void DeleteShowTime(Guid showTimeId, out int response);
-        public List<ShowTimeDAL> GetListShowTime(Guid movieId, Guid roomId, int currentPage, int recordPerPage, out int totalRecord, out int response);
+        public List<ShowTimeDAL> GetListShowTime(int currentPage, int recordPerPage, out int totalRecord, out int response);
 
 
     }

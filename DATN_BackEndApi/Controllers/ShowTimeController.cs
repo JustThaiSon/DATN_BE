@@ -67,10 +67,10 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpGet]
         [Route("GetListShowTimes")]
-        public async Task<CommonPagination<List<ShowTimeRes>>> GetListShowTimes(Guid movieId, Guid roomId, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<ShowTimeRes>>> GetListShowTimes(int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<ShowTimeRes>>();
-            var result = _showtimeDAO.GetListShowTime(movieId, roomId, currentPage, recordPerPage, out int totalRecord, out int response);
+            var result = _showtimeDAO.GetListShowTime(currentPage, recordPerPage, out int totalRecord, out int response);
             var resultMapper = _mapper.Map<List<ShowTimeRes>>(result);
             res.Data = resultMapper;
             res.Message = MessageUtils.GetMessage(response, _langCode);
