@@ -21,6 +21,8 @@ using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
 using DATN_Services.Service.Interfaces;
 using DATN_Services.Service;
+using DATN_BackEndApi.VNPay;
+using DATN_BackEndApi.Extension.Vnpay;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -103,11 +105,19 @@ namespace DATN_BackEndApi.Extension
 
 
 
+
+
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var serviceProvider = services.BuildServiceProvider();
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+
+            services.Configure<VNPayConfig>(configuration.GetSection(VNPayConfig.ConfigName));
+            services.AddScoped<IVNPayService, VNPayService>();
+
 
             services.AddSingleton<Cloudinary>(serviceProvider =>
             {
