@@ -17,6 +17,7 @@ namespace DATN_Models.DAL.Seat
         public int RowNumber { get; set; }
         public int ColNumber { get; set; }
         public int SeatStatus { get; set; }
-      
+        public Guid? PairId { get; set; }
+
     }
 }

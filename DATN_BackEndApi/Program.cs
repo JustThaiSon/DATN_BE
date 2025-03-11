@@ -105,6 +105,8 @@ namespace DATN_BackEndApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+
             app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
             app.UseWebSockets(new WebSocketOptions

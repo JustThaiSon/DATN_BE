@@ -10,6 +10,7 @@ namespace DATN_Models.Models
         public int TotalColNumber { get; set; }
         public int TotalRowNumber { get; set; }
         public long SeatPrice { get; set; }
+        public bool Isdeleted { get; set; }
         public RoomStatusEnum Status { get; set; }
     }
 }

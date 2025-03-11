@@ -2,9 +2,11 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
+using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
+using DATN_Models.DTOS.Room.Res;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -51,19 +53,25 @@ namespace DATN_BackEndApi.Controllers
             res.ResponseCode = response;
             return res;
         }
+       
 
         [HttpGet]
         [Route("GetListCinemas")]
 
         public async Task<CommonPagination<List<CinemasRes>>> GetListCinemas(int currentPage, int recordPerPage)
         {
+
             var res = new CommonPagination<List<CinemasRes>>();
+
             var result = _cinemasDAO.GetListCinemas(currentPage, recordPerPage, out int TotalRecord, out int response);
+
             var resultMapper = _mapper.Map<List<CinemasRes>>(result);
+
             res.Data = resultMapper;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
             res.TotalRecord = TotalRecord;
+
             return res;
         }
 

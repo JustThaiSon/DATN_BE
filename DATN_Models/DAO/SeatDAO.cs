@@ -58,20 +58,19 @@ namespace DATN_Models.DAO
 
         }
 
-        public List<ListSeatByShowTimeDAL> GetListSeatByShowTime(Guid roomId, Guid showTimeId, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<ListSeatByShowTimeDAL> GetListSeatByShowTime( Guid showTimeId, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
             DBHelper db = null;
 
             try
             {
-                var pars = new SqlParameter[6];
-                pars[0] = new SqlParameter("@_RoomId", roomId);
-                pars[1] = new SqlParameter("@_ShowTimeId", showTimeId);
-                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[5];
+                pars[0] = new SqlParameter("@_ShowTimeId", showTimeId);
+                pars[1] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[2] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[3] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
 
@@ -79,8 +78,8 @@ namespace DATN_Models.DAO
                 var result = db.GetListSP<ListSeatByShowTimeDAL>("SP_SeatByShowTime_GetList", pars);
 
 
-                response = ConvertUtil.ToInt(pars[5].Value);
-                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[4].Value);
+                totalRecord = ConvertUtil.ToInt(pars[3].Value);
 
                 return result;
             }
@@ -213,5 +212,38 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        public void SetupPair(SetupPair dataInput, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[4];
+                pars[0] = new SqlParameter("@_SeatId1", dataInput.Seatid1);
+                pars[1] = new SqlParameter("@_SeatId2", dataInput.Seatid2);
+                pars[2] = new SqlParameter("@_RoomId", dataInput.RoomId);
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+
+                var result = db.ExecuteNonQuerySP("SP_Seat_SetupPair", pars);
+
+                response = ConvertUtil.ToInt(pars[3].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+
+        }
+
+
     }
 }

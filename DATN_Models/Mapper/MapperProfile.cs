@@ -33,6 +33,9 @@ using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DAL.Service;
 using DATN_Models.DTOS.Service.Response;
 using DATN_Models.DTOS.Order.Res;
+using DATN_Models.DTOS.Cinemas.Req;
+using DATN_Models.DAL.Cinemas;
+using DATN_Models.DTOS.Cinemas.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -122,6 +125,11 @@ namespace DATN_Models.Mapper
 
 
             #region ThaoDepTrai
+            #region 
+            CreateMap<CinemasReq, CinemasDAL>().ReverseMap();
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+            #endregion
+
             #region Room
             CreateMap<CreateRoomReq, CreateRoomDAL>().ReverseMap();
             CreateMap<ListRoomDAL, GetListRoomRes>().ReverseMap();
@@ -131,6 +139,7 @@ namespace DATN_Models.Mapper
             CreateMap<GetListSeatRes, ListSeatDAL>().ReverseMap();
             CreateMap<UpdateSeatStatusDAL, UpdateSeatStatusReq>().ReverseMap();
             CreateMap<UpdateSeatTypeDAL, UpdateSeatTypeReq>().ReverseMap();
+            CreateMap<SetupPair, SetupPairReq>().ReverseMap();
             #endregion
 
             // Phần Order

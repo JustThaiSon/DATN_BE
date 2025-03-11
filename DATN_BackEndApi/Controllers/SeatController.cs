@@ -51,12 +51,12 @@ namespace DATN_BackEndApi.Controllers
         [HttpGet]
         [Route("GetAllSeatByShowTime")]
 
-        public async Task<CommonPagination<List<GetListSeatByShowTimeRes>>> GetAllSeatByShowTime(Guid roomId, Guid showTimeId, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetListSeatByShowTimeRes>>> GetAllSeatByShowTime( Guid showTimeId, int currentPage, int recordPerPage)
         {
 
             var res = new CommonPagination<List<GetListSeatByShowTimeRes>>();
 
-            var result = _seatDAO.GetListSeatByShowTime( roomId, showTimeId, currentPage, recordPerPage, out int TotalRecord, out int response);
+            var result = _seatDAO.GetListSeatByShowTime( showTimeId, currentPage, recordPerPage, out int TotalRecord, out int response);
 
             var resultMapper = _mapper.Map<List<GetListSeatByShowTimeRes>>(result);
 
@@ -114,6 +114,20 @@ namespace DATN_BackEndApi.Controllers
 
         }
 
+
+        [HttpPost]
+        [Route("SetupPair")]
+        public async Task<CommonResponse<dynamic>> SetupPairSeat(SetupPairReq rq)
+        {
+            var res = new CommonResponse<dynamic>();
+            var resultMapper = _mapper.Map<SetupPair>(rq);
+            _seatDAO.SetupPair(resultMapper, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+
+        }
 
 
     }
