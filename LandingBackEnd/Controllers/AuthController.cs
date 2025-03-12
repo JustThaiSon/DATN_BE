@@ -81,7 +81,47 @@ namespace DATN_LandingPage.Controllers
             };
             return res;
         }
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<CommonResponse<dynamic>> RefreshToken(RefreshTokenReq req)
+        {
+            var res = new CommonResponse<dynamic>();
+
+            var newAccessToken = _ultils.GenerateTokenFromRefreshToken(req.RefreshToken);
+            if (string.IsNullOrEmpty(newAccessToken))
+            {
+                res.ResponseCode = (int)ResponseCodeEnum.ERR_TOKEN_INVALID;
+                res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+                return res;
+            }
+
+            var (userId, roles) = _ultils.ValidateToken(newAccessToken);
+            if (userId == null || roles == null)
+            {
+                res.ResponseCode = (int)ResponseCodeEnum.ERR_TOKEN_INVALID;
+                res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+                return res;
+            }
+
+            var newRefreshToken = _ultils.GenerateRefreshToken(userId.Value, roles);
+
+            LoginRes loginRes = new LoginRes
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken,
+                Roles = roles,
+            };
+
+            res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
+            res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+            res.Data = loginRes;
+            return res;
+        }
 
     }
+}
+public class RefreshTokenReq
+{
+    public string RefreshToken { get; set; }
 }
 

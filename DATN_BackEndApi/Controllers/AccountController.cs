@@ -26,7 +26,6 @@ namespace DATN_BackEndApi.Controllers
             _ultils = ultils;
             _mapper = mapper;
         }
-
         [HttpPost]
         [Route("Resgister")]
         public async Task<CommonResponse<dynamic>> Resgister(CreateAccountReq request)
@@ -38,7 +37,6 @@ namespace DATN_BackEndApi.Controllers
             res.Data = Opt;
             return res;
         }
-
         [HttpPost]
         [Route("Login")]
         public async Task<CommonResponse<dynamic>> Login(SignInReq req)
@@ -74,6 +72,5 @@ namespace DATN_BackEndApi.Controllers
             };
             return res;
         }
-     
     }
 }

@@ -135,9 +135,7 @@ namespace DATN_Models.Mapper
 
             // Phần Order
             #region
-            CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
             CreateMap<TicketDAL, TicketReq>().ReverseMap();
-            CreateMap<CreateTicketDAL, CreateTicketReq>().ReverseMap();
             CreateMap<CreateOrderServiceDAL, CreateOrderServiceReq>().ReverseMap();
             CreateMap<CreateServiceReq, CreateServiceDAL>().ReverseMap();
             CreateMap<UpdateServiceDAL, UpdateServiceReq>().ReverseMap();
@@ -146,6 +144,9 @@ namespace DATN_Models.Mapper
             CreateMap<GetListTicketDAL, GetListTicketRes>().ReverseMap();
             CreateMap<GetDetailOrderDAL, GetDetailOrderRes>().ReverseMap();
             CreateMap<GetStatusByIdDAL, GetStatusByIdRes>().ReverseMap();
+            CreateMap<CreateOrderReq , CreateOrderDAL>().ReverseMap();
+            CreateMap<TicketReq, TicketDAL>().ReverseMap();
+            CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();
@@ -172,6 +173,7 @@ namespace DATN_Models.Mapper
             #endregion
 
             CreateMap<SignInDAL, SignInReq>().ReverseMap();
+            CreateMap<GetAllNameMovieDAL, GetAllNameMovieRes>().ReverseMap();
 
 
         }

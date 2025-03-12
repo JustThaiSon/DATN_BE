@@ -3,7 +3,7 @@ using DATN_BackEndApi.Handlers;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Constants;
 using DATN_Models.DAO;
-using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Models.DAO.Interface;
 using DATN_Services.WebSockets;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;

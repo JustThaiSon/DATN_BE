@@ -1,6 +1,10 @@
-﻿using DATN_Helpers.Constants;
+﻿using Azure;
+using DATN_Helpers.Common;
+using DATN_Helpers.Constants;
+using DATN_Helpers.Database;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
@@ -9,8 +13,11 @@ using DATN_Models.HandleData;
 using DATN_Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Data;
 
 namespace DATN_Models.DAO
 {
@@ -22,7 +29,8 @@ namespace DATN_Models.DAO
         private readonly DATN_Context _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMemoryCache _memoryCache;
-     
+        private static string connectionString = string.Empty;
+
         public LoginDAO(RoleManager<AppRoles> roleManager, UserManager<AppUsers> _userManager, SignInManager<AppUsers> _signInManager, DATN_Context _context, IHttpContextAccessor httpContextAccessor, IMemoryCache memoryCache)
         {
             _roleManager = roleManager;
@@ -31,13 +39,17 @@ namespace DATN_Models.DAO
             this._context = _context;
             _httpContextAccessor = httpContextAccessor;
             _memoryCache = memoryCache;
+            var configuration = new ConfigurationBuilder()
+                   .AddJsonFile("appsettings.json")
+               .Build();
+            connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
 
         public async Task<(LoginDTO LoginDto, int Response)> login(SignInDAL req)
         {
             int response = 0;
-            var user = await _userManager.FindByNameAsync(req.UseName);
+            var user = await _userManager.FindByNameAsync(req.UserName);
             if (user == null)
             {
                 response = (int)ResponseCodeEnum.ERR_USER_NOT_FOUND;
@@ -67,6 +79,7 @@ namespace DATN_Models.DAO
                 Roles = roleNamesList
             };
             response = (int)ResponseCodeEnum.SUCCESS;
+            SaveSession(user.Id);
             return (loginDTO, response);
         }
 
@@ -105,6 +118,29 @@ namespace DATN_Models.DAO
             return (response, otp);
         }
 
+        public void SaveSession(Guid userId)
+        {
+
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@key", SqlDbType.NVarChar) { Value = "UserId" };
+                pars[1] = new SqlParameter("@value", SqlDbType.UniqueIdentifier) { Value = userId };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("sp_set_session_context", pars);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
 
         public async Task<int> VerifyOtpAndRegisterUserAsync(VerifyOtpReq req)
         {

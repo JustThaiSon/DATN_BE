@@ -3,11 +3,19 @@ namespace DATN_Models.DTOS.Order.Req
 {
     public class CreateOrderReq
     {
-        public long TotalPrice { get; set; }
-        public int Status { get; set; }
+        public string Email { get; set; }
         public int IsAnonymous { get; set; }
-        public Guid PaymentId { get; set; }
-        public int QuantityTicket { get; set; }
-        public long TotalPriceTicket { get; set; }
+        public Guid? PaymentId { get; set; }
+        public List<ServiceReq>? Services { get; set; }
+        public List<TicketReq>? Tickets { get; set; }
+    }
+    public class TicketReq
+    {
+        public Guid SeatByShowTimeId { get; set; }
+    }
+    public class ServiceReq
+    {
+        public Guid ServiceId { get; set; }
+        public int Quantity { get; set; }
     }
 }

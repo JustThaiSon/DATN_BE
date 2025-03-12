@@ -13,6 +13,7 @@
         ERR_USER_NOT_FOUND = -105,
         OTP_SENT = 106,
         ERR_INVALID_OTP = 107,
+        ERR_TOKEN_INVALID = -405,
         // Code Validator (-600< and >-700)
         VLD_REQUIRED = -601,
         VLD_MAX_LENGTH = -602,
