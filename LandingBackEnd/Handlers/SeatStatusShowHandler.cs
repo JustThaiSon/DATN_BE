@@ -2,7 +2,6 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Constants;
 using DATN_Models.DAL.Seat;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Seat.Req;
 using DATN_Services.WebSockets;
@@ -19,6 +18,11 @@ namespace DATN_LandingPage.Handlers
         private readonly IMapper _mapper;
         private readonly SeatStatusService _seatStatusService;
         private readonly ISeatDAO _seatDAO;
+        private string userId = Guid.NewGuid().ToString();
+        private Dictionary<string, SeatStatusEnum> initialSeatStatuses = new Dictionary<string, SeatStatusEnum>();
+        private CancellationTokenSource countdownCancellationTokenSource;
+        private static Dictionary<string, List<SeatStatusUpdateRequest>> userSeatUpdates = new Dictionary<string, List<SeatStatusUpdateRequest>>();
+        private static Dictionary<string, bool> userPaymentStatus = new Dictionary<string, bool>();
 
         public SeatStatusShowHandler(WebSocket webSocket, IWebSocketManager webSocketManager, IMapper mapper, SeatStatusService seatStatusService, ISeatDAO seatDAO)
         {
@@ -29,51 +33,12 @@ namespace DATN_LandingPage.Handlers
             _seatDAO = seatDAO;
         }
 
-        public async Task HandleUpdateSeatStatusAsync(List<SeatStatusUpdateRequest> seatStatusUpdateRequests, string hub)
+        public async Task HandleRequestAsync(string hub, Guid roomId)
         {
-            try
-            {
-                foreach (var updateRequest in seatStatusUpdateRequests)
-                {
-                    if (updateRequest.SeatId != null)
-                    {
-                        // Cập nhật trạng thái ghế trong cơ sở dữ liệu
-                        var updateStatus = new UpdateSeatByShowTimeStatusReq
-                        {
-                            Id = Guid.Parse(updateRequest.SeatId),
-                            Status = updateRequest.Status
-                        };
-                        var reqMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(updateStatus);
-                        _seatDAO.UpdateSeatByShowTimeStatus(reqMapper, out int responseCode);
-                        if (responseCode != 200)
-                        {
-                            await SendErrorMessage("Failed to update seat status.");
-                            return;
-                        }
+            Console.WriteLine($"[WebSocket] New client connected: Hub={hub}, UserId={userId}");
 
-                        // Cập nhật trạng thái trong lớp dịch vụ
-                        _seatStatusService.AddOrUpdateSeatStatus(Guid.Parse(updateRequest.SeatId), updateRequest.Status);
-                    }
+            await _webSocketManager.AddUserSocketAsync(hub, userId, _webSocket);
 
-                    // Thông báo cho các khách hàng kết nối
-                    await SendStatusUpdate(updateRequest.SeatId, (int)updateRequest.Status, hub);
-
-                    // Bắt đầu quá trình chờ và hủy sau 30 giây nếu không có hành động nào khác
-                    if (updateRequest.SeatId != null && updateRequest.Status == SeatStatusEnum.UnAvailable)
-                    {
-                        _ = WaitAndCancelSeat(updateRequest.SeatId, hub); // Fire and forget approach
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await SendErrorMessage($"An error occurred: {ex.Message}");
-            }
-        }
-
-
-        public async Task ReceiveMessages(string hub, string userId)
-        {
             var buffer = new byte[1024 * 4];
             while (_webSocket.State == WebSocketState.Open)
             {
@@ -82,106 +47,236 @@ namespace DATN_LandingPage.Handlers
                     var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
+                        Console.WriteLine($"[WebSocket] Client disconnected: {userId}");
                         await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
                         await _webSocketManager.RemoveUserSocketAsync(hub, userId);
+                        if (userSeatUpdates.ContainsKey(userId))
+                        {
+                            userSeatUpdates.Remove(userId);
+                        }
+                        countdownCancellationTokenSource?.Cancel();
                         break;
                     }
-
                     var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    var updateRequests = JsonConvert.DeserializeObject<List<SeatStatusUpdateRequest>>(receivedMessage);
+                    var request = JsonConvert.DeserializeObject<SeatActionRequest>(receivedMessage);
 
-                    if (updateRequests != null)
+                    if (request != null)
                     {
-                        await HandleUpdateSeatStatusAsync(updateRequests, hub);
+                        Console.WriteLine($"[WebSocket] Received action: {request.Action}");
+                        switch (request.Action)
+                        {
+                            case "GetList":
+                                var seatList = GenerateSeatList(roomId);
+                                await SendMessageToClient(seatList);
+                                break;
+
+                            case "UpdateStatus":
+                                Console.WriteLine("[WebSocket] UpdateStatus action received.");
+                                if (request.SeatStatusUpdateRequests != null)
+                                {
+                                    await HandleUpdateStatusAction(request.SeatStatusUpdateRequests, hub, roomId);
+                                }
+                                break;
+
+                            case "HoldSeat":
+                                await StartCountdownAsync(hub, roomId, userId);
+                                break;
+
+                            case "Paymented":
+                                await CompletePaymentAsync(userId);
+                                break;
+
+                            default:
+                                Console.WriteLine($"[WebSocket] Unknown action received: {request.Action}");
+                                break;
+                        }
                     }
-                }
-                catch (WebSocketException wsEx)
-                {
-                    await SendErrorMessage($"WebSocket error: {wsEx.Message}");
-                    await _webSocketManager.RemoveUserSocketAsync(hub, userId);
-                    break; // Exit the loop if a WebSocketException occurs
                 }
                 catch (Exception ex)
                 {
-                    await SendErrorMessage($"An error occurred while receiving messages: {ex.Message}");
-                    await _webSocketManager.RemoveUserSocketAsync(hub, userId);
-                    break; // Exit the loop if a general exception occurs
+                    Console.WriteLine($"[WebSocket] Error: {ex.Message}");
+                    await SendErrorMessage($"An error occurred: {ex.Message}");
                 }
             }
         }
 
-        private async Task WaitAndCancelSeat(string seatId, string hub)
+        private async Task StartCountdownAsync(string hub, Guid roomId, string userId)
         {
-            try
+            countdownCancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = countdownCancellationTokenSource.Token;
+
+            // Store original statuses before countdown
+            var originalStatuses = new Dictionary<string, SeatStatusEnum>();
+            if (userSeatUpdates.ContainsKey(userId))
             {
-                await Task.Delay(30 * 1000); // Chờ 30 giây
-
-                var currentStatus = _seatDAO.GetStatusById(Guid.Parse(seatId), out int response);
-
-                if (currentStatus.Status != SeatStatusEnum.UnAvailable) return;
-
-                _seatDAO.UpdateSeatByShowTimeStatus(new UpdateSeatByShowTimeStatusDAL
+                foreach (var update in userSeatUpdates[userId])
                 {
-                    Id = Guid.Parse(seatId),
-                    Status = SeatStatusEnum.Available
-                }, out int responseCode);
-
-                if (responseCode == 200)
-                {
-                    await SendStatusUpdate(seatId, (int)SeatStatusEnum.Available, hub);
-                }
-                else
-                {
-                    await SendErrorMessage("Failed to cancel seat reservation after 30 seconds.");
+                    var seatGuid = Guid.Parse(update.SeatId);
+                    originalStatuses[seatGuid.ToString()] = _seatStatusService.GetSeatStatus(seatGuid)?.Status ?? SeatStatusEnum.UnAvailable;
                 }
             }
-            catch (Exception ex)
+
+            for (int i = 60; i >= 0; i--)
             {
-                await SendErrorMessage($"An error occurred during the cancellation process: {ex.Message}");
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                var countdownData = new { Countdown = i };
+                await SendSeatsCountdownToClient(roomId, hub, countdownData);
+
+                await Task.Delay(1000, cancellationToken);
+            }
+
+            // After countdown, check if payment is completed
+            if (!userPaymentStatus.ContainsKey(userId) || !userPaymentStatus[userId])
+            {
+                // Revert statuses if payment is not completed
+                if (userSeatUpdates.ContainsKey(userId))
+                {
+                    foreach (var update in userSeatUpdates[userId])
+                    {
+                        var seatGuid = Guid.Parse(update.SeatId);
+                        if (originalStatuses.ContainsKey(update.SeatId))
+                        {
+                            _seatStatusService.AddOrUpdateSeatStatus(seatGuid, originalStatuses[update.SeatId]);
+                        }
+                    }
+                }
             }
         }
 
-        private async Task SendStatusUpdate(string seatId, int status, string hub)
+        public async Task CompletePaymentAsync(string userId)
         {
-            try
+            if (!userPaymentStatus.ContainsKey(userId))
             {
-                var response = new
-                {
-                    SeatId = seatId,
-                    Status = status,
-                    Message = "Seat status updated successfully"
-                };
-
-                var responseMessage = JsonConvert.SerializeObject(response);
-                var responseBuffer = Encoding.UTF8.GetBytes(responseMessage);
-
-                // Send message to all clients in the specified hub
-                await _webSocketManager.SendMessageToAllUserAsync(hub, responseMessage);
-
-                // Send message back to the client who initiated the request
-                await _webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+                userPaymentStatus[userId] = true; // Mark payment as completed for the user
             }
-            catch (Exception ex)
-            {
-                await SendErrorMessage($"Failed to send status update: {ex.Message}");
-            }
+
+            // Optionally, inform the user about payment success
+            await SendMessageToClient(new { Message = "Payment completed successfully!" });
         }
+
+        private async Task SendSeatsCountdownToClient(Guid roomId, string hub, object countdownData)
+        {
+            var responseJson = JsonConvert.SerializeObject(countdownData);
+            await _webSocketManager.SendMessageToUserAsync(hub, userId, responseJson);
+        }
+
+        private async Task HandleUpdateStatusAction(List<SeatStatusUpdateRequest> seatStatusUpdateRequests, string hub, Guid roomId)
+        {
+            if (!userSeatUpdates.ContainsKey(userId))
+            {
+                userSeatUpdates[userId] = new List<SeatStatusUpdateRequest>();
+            }
+
+            foreach (var updateRequest in seatStatusUpdateRequests)
+            {
+                if (updateRequest.SeatId != null)
+                {
+                    var seatGuid = Guid.Parse(updateRequest.SeatId);
+                    var currentStatus = _seatStatusService.GetSeatStatus(seatGuid);
+
+                    if (currentStatus == null || currentStatus.Status != updateRequest.Status)
+                    {
+                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, updateRequest.Status);
+                        userSeatUpdates[userId].Add(updateRequest);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[WebSocket] No update needed for SeatId={seatGuid} as status is already {currentStatus.Status}");
+                    }
+                }
+            }
+
+            var seatListForOthers = GenerateSeatList(roomId);
+            await SendSeatsToOthers(roomId, hub, seatListForOthers);
+            await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[userId]);
+        }
+
+        private object GenerateSeatList(Guid roomId, List<SeatStatusUpdateRequest>? updatedSeats = null)
+        {
+            var seats = _seatStatusService.GenerateSeats(roomId);
+
+            var modifiedSeats = seats.Select(seat =>
+            {
+                var seatStatus = _seatStatusService.GetSeatStatus(seat.Id);
+                if (seatStatus != null)
+                {
+                    if (updatedSeats != null)
+                    {
+                        var updatedSeat = updatedSeats.FirstOrDefault(us => us.SeatId == seat.Id.ToString());
+                        if (updatedSeat != null)
+                        {
+                            seat.Status = updatedSeat.Status;
+                        }
+                        else if (_seatStatusService.GetHeldSeatsByUser(userId).Contains(seat.Id.ToString()))
+                        {
+                            seat.Status = seatStatus.Status;
+                        }
+                        else
+                        {
+                            seat.Status = seatStatus.Status == SeatStatusEnum.UnAvailable ? SeatStatusEnum.Reserved : seatStatus.Status; // Reserved for others
+                        }
+                    }
+                    else
+                    {
+                        if (_seatStatusService.GetHeldSeatsByUser(userId).Contains(seat.Id.ToString()))
+                        {
+                            seat.Status = seatStatus.Status;
+                        }
+                        else
+                        {
+                            seat.Status = seatStatus.Status == SeatStatusEnum.UnAvailable ? SeatStatusEnum.Reserved : seatStatus.Status; // Reserved for others
+                        }
+                    }
+                }
+                return seat;
+            }).ToList();
+
+            return new { Seats = modifiedSeats };
+        }
+
+        private async Task SendMessageToClient(object message)
+        {
+            var responseJson = JsonConvert.SerializeObject(message);
+            var buffer = Encoding.UTF8.GetBytes(responseJson);
+            await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
         private async Task SendErrorMessage(string error)
         {
-            var errorResponse = new
-            {
-                Error = error
-            };
-
-            var errorMessage = JsonConvert.SerializeObject(errorResponse);
-            var errorBuffer = Encoding.UTF8.GetBytes(errorMessage);
-            await _webSocket.SendAsync(new ArraySegment<byte>(errorBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            var errorResponse = new { Error = error };
+            await SendMessageToClient(errorResponse);
         }
-    }
 
-    public class SeatStatusUpdateRequest
-    {
-        public string SeatId { get; set; }
-        public SeatStatusEnum Status { get; set; }
+        private async Task SendUpdatedStatusToClient(Guid roomId, string hub, List<SeatStatusUpdateRequest> updatedSeats)
+        {
+            var seatList = GenerateSeatList(roomId, updatedSeats);
+
+            var responseJson = JsonConvert.SerializeObject(seatList, Formatting.Indented);
+            var buffer = Encoding.UTF8.GetBytes(responseJson);
+            await _webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
+        private async Task SendSeatsToOthers(Guid roomId, string hub, object seatList)
+        {
+            var responseJson = JsonConvert.SerializeObject(seatList);
+            await _webSocketManager.SendMessageToAllExceptUserAsync(hub, userId, responseJson);
+        }
+
+        public class SeatActionRequest
+        {
+            public string Action { get; set; } = string.Empty;
+            public string? SeatId { get; set; }
+            public List<SeatStatusUpdateRequest>? SeatStatusUpdateRequests { get; set; }
+        }
+
+        public class SeatStatusUpdateRequest
+        {
+            public string SeatId { get; set; }
+            public SeatStatusEnum Status { get; set; }
+        }
     }
 }

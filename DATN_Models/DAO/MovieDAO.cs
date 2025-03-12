@@ -328,21 +328,22 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
-
-        public List<GetShowTimeLandingDAL> GetShowTimeLanding(string location, DateTime date, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<GetShowTimeLandingDAL> GetShowTimeLanding(Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
             totalRecord = 0;
             DBHelper? db = null;
             try
             {
-                var pars = new SqlParameter[6];
-                pars[0] = new SqlParameter("@_Location", location);
-                pars[1] = new SqlParameter("@_Date", date);
-                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[7];
+                pars[0] = new SqlParameter("@_MovieID", movieId == Guid.Empty ? (object)DBNull.Value : movieId);
+                pars[1] = new SqlParameter("@_Location", location);
+                pars[2] = new SqlParameter("@_Date", date);
+                pars[3] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[4] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[5] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
                 var result = db.GetListSP<GetShowTimeLandingDAL>("SP_Langding_GetShowTime", pars);
                 if (result != null)
@@ -360,9 +361,35 @@ namespace DATN_Models.DAO
                             .ToList();
                     }
                 }
-                response = ConvertUtil.ToInt(pars[5].Value);
-                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[6].Value);
+                totalRecord = ConvertUtil.ToInt(pars[5].Value);
                 return result ?? new List<GetShowTimeLandingDAL>();
+            }
+            catch (Exception)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
+
+        public List<GetAllNameMovieDAL> GetAllNameMovie(out int response)
+        {
+            response = 0;
+            DBHelper? db = null;
+            try
+            {
+                var pars = new SqlParameter[1];
+                pars[0] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetAllNameMovieDAL>("SP_Movie_GetNameMovie", pars);
+
+                response = ConvertUtil.ToInt(pars[0].Value);
+                return result ?? new List<GetAllNameMovieDAL>();
             }
             catch (Exception)
             {

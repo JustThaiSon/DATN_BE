@@ -33,23 +33,6 @@ namespace DATN_LandingPage.Extension
         {
             if (context.WebSockets.IsWebSocketRequest)
             {
-                var token = context.Request.Query["access_token"].ToString();
-                var utilsServices = context.RequestServices.GetService<IUltil>();
-
-                if (utilsServices == null)
-                {
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    return;
-                }
-
-                var (userId, ListRole) = utilsServices.ValidateToken(token);
-                if (userId == null)
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
-
-                var displayName = GetDisplayNameById(userId.Value);
                 WebSocket webSocket = null;
 
                 try
@@ -61,8 +44,24 @@ namespace DATN_LandingPage.Extension
                     {
                         case "/ws/KeepSeat":
                             {
-                                var chatHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
-                                await chatHandler.ReceiveMessages("KeepSeat", userId.Value.ToString());
+                                var roomIdString = context.Request.Query["roomId"].ToString();
+                                if (Guid.TryParse(roomIdString, out Guid roomId))
+                                {
+                                    Guid userId = Guid.NewGuid();
+                                    var seatStatusHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
+                                    await seatStatusHandler.HandleRequestAsync("KeepSeat", roomId);
+                                }
+                                else
+                                {
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync("Invalid roomId parameter.");
+                                }
+                                break;
+                            }
+                        case "/ws/TestWebSocket":
+                            {
+                                var testWebSocket = new TestWebSocket();
+                                await testWebSocket.HandleWebSocketAsync(context);
                                 break;
                             }
                         default:

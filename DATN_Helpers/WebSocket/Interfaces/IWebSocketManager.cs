@@ -1,4 +1,5 @@
-﻿using System.Net.WebSockets;
+﻿using Microsoft.AspNetCore.Http;
+using System.Net.WebSockets;
 
 
     public interface IWebSocketManager
@@ -11,5 +12,7 @@
         Task HandleDisconnectAsync(WebSocket webSocket);
         Task SendMessageToAllUserAsync(string hub, string message);
         Task SendMessageToNewUserAsync(string hub, string userId, string message);
-    }
+        Task SendMessageToAllExceptUserAsync(string hub, string userId, string message); 
+
+}
 

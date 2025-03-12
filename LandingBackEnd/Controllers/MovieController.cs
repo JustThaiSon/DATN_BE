@@ -70,10 +70,10 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetShowTimeLanding")]
-        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(string location, DateTime date, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? movieId,string? location, DateTime? date, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetShowTimeLangdingRes>>();
-            var data = _movieDAO.GetShowTimeLanding(location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);
+            var data = _movieDAO.GetShowTimeLanding(movieId, location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);
             var resultMapper = _mapper.Map<List<GetShowTimeLangdingRes>>(data);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
@@ -121,6 +121,18 @@ namespace DATN_LandingPage.Controllers
             {
                 await _mailService.SendQrCodeEmail(result);
             }
+            return res;
+        }
+        [HttpGet]
+        [Route("GetAllNameMovie")]
+        public async Task<CommonResponse<List<GetAllNameMovieRes>>> GetAllNameMovie()
+        {
+            var res = new CommonResponse<List<GetAllNameMovieRes>>();
+            var data = _movieDAO.GetAllNameMovie(out int responseCode);
+            var resultMapper = _mapper.Map<List<GetAllNameMovieRes>>(data);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = resultMapper;
             return res;
         }
     }
