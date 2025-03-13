@@ -6,6 +6,7 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Seat.Req;
 using DATN_Services.WebSockets;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -18,11 +19,10 @@ namespace DATN_LandingPage.Handlers
         private readonly IMapper _mapper;
         private readonly SeatStatusService _seatStatusService;
         private readonly ISeatDAO _seatDAO;
-        private string userId = Guid.NewGuid().ToString();
-        private Dictionary<string, SeatStatusEnum> initialSeatStatuses = new Dictionary<string, SeatStatusEnum>();
-        private CancellationTokenSource countdownCancellationTokenSource;
-        private static Dictionary<string, List<SeatStatusUpdateRequest>> userSeatUpdates = new Dictionary<string, List<SeatStatusUpdateRequest>>();
-        private static Dictionary<string, bool> userPaymentStatus = new Dictionary<string, bool>();
+        private CancellationTokenSource countdownCancellationTokenSource = new CancellationTokenSource();
+        private static ConcurrentDictionary<string, List<SeatStatusUpdateRequest>> userSeatUpdates = new ConcurrentDictionary<string, List<SeatStatusUpdateRequest>>();
+        private static ConcurrentDictionary<string, bool> userPaymentStatus = new ConcurrentDictionary<string, bool>();
+        private string currentUserId;
 
         public SeatStatusShowHandler(WebSocket webSocket, IWebSocketManager webSocketManager, IMapper mapper, SeatStatusService seatStatusService, ISeatDAO seatDAO)
         {
@@ -33,11 +33,12 @@ namespace DATN_LandingPage.Handlers
             _seatDAO = seatDAO;
         }
 
-        public async Task HandleRequestAsync(string hub, Guid roomId)
+        public async Task HandleRequestAsync(string hub, Guid roomId, Guid userId)
         {
-            Console.WriteLine($"[WebSocket] New client connected: Hub={hub}, UserId={userId}");
+            currentUserId = userId.ToString();
+            Console.WriteLine($"[WebSocket] New client connected: Hub={hub}, UserId={currentUserId}");
 
-            await _webSocketManager.AddUserSocketAsync(hub, userId, _webSocket);
+            await _webSocketManager.AddUserSocketAsync(hub, currentUserId, _webSocket);
 
             var buffer = new byte[1024 * 4];
             while (_webSocket.State == WebSocketState.Open)
@@ -47,12 +48,12 @@ namespace DATN_LandingPage.Handlers
                     var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
-                        Console.WriteLine($"[WebSocket] Client disconnected: {userId}");
+                        Console.WriteLine($"[WebSocket] Client disconnected: {currentUserId}");
                         await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
-                        await _webSocketManager.RemoveUserSocketAsync(hub, userId);
-                        if (userSeatUpdates.ContainsKey(userId))
+                        await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
+                        if (userSeatUpdates.ContainsKey(currentUserId))
                         {
-                            userSeatUpdates.Remove(userId);
+                            userSeatUpdates.TryRemove(currentUserId, out _);
                         }
                         countdownCancellationTokenSource?.Cancel();
                         break;
@@ -78,14 +79,9 @@ namespace DATN_LandingPage.Handlers
                                 }
                                 break;
 
-                            case "HoldSeat":
-                                await StartCountdownAsync(hub, roomId, userId);
+                            case "JoinRoom":
+                                await StartCountdownAsync(hub, roomId, currentUserId);
                                 break;
-
-                            case "Paymented":
-                                await CompletePaymentAsync(userId);
-                                break;
-
                             default:
                                 Console.WriteLine($"[WebSocket] Unknown action received: {request.Action}");
                                 break;
@@ -105,8 +101,7 @@ namespace DATN_LandingPage.Handlers
             countdownCancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = countdownCancellationTokenSource.Token;
 
-            // Store original statuses before countdown
-            var originalStatuses = new Dictionary<string, SeatStatusEnum>();
+            var originalStatuses = new ConcurrentDictionary<string, SeatStatusEnum>();
             if (userSeatUpdates.ContainsKey(userId))
             {
                 foreach (var update in userSeatUpdates[userId])
@@ -129,46 +124,35 @@ namespace DATN_LandingPage.Handlers
                 await Task.Delay(1000, cancellationToken);
             }
 
-            // After countdown, check if payment is completed
             if (!userPaymentStatus.ContainsKey(userId) || !userPaymentStatus[userId])
             {
-                // Revert statuses if payment is not completed
                 if (userSeatUpdates.ContainsKey(userId))
                 {
                     foreach (var update in userSeatUpdates[userId])
                     {
                         var seatGuid = Guid.Parse(update.SeatId);
-                        if (originalStatuses.ContainsKey(update.SeatId))
-                        {
-                            _seatStatusService.AddOrUpdateSeatStatus(seatGuid, originalStatuses[update.SeatId]);
-                        }
+                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, SeatStatusEnum.Available);
                     }
+                    userSeatUpdates.TryRemove(userId, out _); // Remove the user's seat updates after reverting
+
+                    // Send updated seat list to all users
+                    var updatedSeatList = GenerateSeatList(roomId);
+                    await SendMessageToAllUsers(hub, updatedSeatList);
                 }
             }
-        }
-
-        public async Task CompletePaymentAsync(string userId)
-        {
-            if (!userPaymentStatus.ContainsKey(userId))
-            {
-                userPaymentStatus[userId] = true; // Mark payment as completed for the user
-            }
-
-            // Optionally, inform the user about payment success
-            await SendMessageToClient(new { Message = "Payment completed successfully!" });
         }
 
         private async Task SendSeatsCountdownToClient(Guid roomId, string hub, object countdownData)
         {
             var responseJson = JsonConvert.SerializeObject(countdownData);
-            await _webSocketManager.SendMessageToUserAsync(hub, userId, responseJson);
+            await _webSocketManager.SendMessageToUserAsync(hub, currentUserId, responseJson);
         }
 
         private async Task HandleUpdateStatusAction(List<SeatStatusUpdateRequest> seatStatusUpdateRequests, string hub, Guid roomId)
         {
-            if (!userSeatUpdates.ContainsKey(userId))
+            if (!userSeatUpdates.ContainsKey(currentUserId))
             {
-                userSeatUpdates[userId] = new List<SeatStatusUpdateRequest>();
+                userSeatUpdates[currentUserId] = new List<SeatStatusUpdateRequest>();
             }
 
             foreach (var updateRequest in seatStatusUpdateRequests)
@@ -181,7 +165,7 @@ namespace DATN_LandingPage.Handlers
                     if (currentStatus == null || currentStatus.Status != updateRequest.Status)
                     {
                         _seatStatusService.AddOrUpdateSeatStatus(seatGuid, updateRequest.Status);
-                        userSeatUpdates[userId].Add(updateRequest);
+                        userSeatUpdates[currentUserId].Add(updateRequest);
                     }
                     else
                     {
@@ -192,7 +176,7 @@ namespace DATN_LandingPage.Handlers
 
             var seatListForOthers = GenerateSeatList(roomId);
             await SendSeatsToOthers(roomId, hub, seatListForOthers);
-            await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[userId]);
+            await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
         }
 
         private object GenerateSeatList(Guid roomId, List<SeatStatusUpdateRequest>? updatedSeats = null)
@@ -211,7 +195,7 @@ namespace DATN_LandingPage.Handlers
                         {
                             seat.Status = updatedSeat.Status;
                         }
-                        else if (_seatStatusService.GetHeldSeatsByUser(userId).Contains(seat.Id.ToString()))
+                        else if (_seatStatusService.GetHeldSeatsByUser(currentUserId).Contains(seat.Id.ToString()))
                         {
                             seat.Status = seatStatus.Status;
                         }
@@ -222,7 +206,7 @@ namespace DATN_LandingPage.Handlers
                     }
                     else
                     {
-                        if (_seatStatusService.GetHeldSeatsByUser(userId).Contains(seat.Id.ToString()))
+                        if (_seatStatusService.GetHeldSeatsByUser(currentUserId).Contains(seat.Id.ToString()))
                         {
                             seat.Status = seatStatus.Status;
                         }
@@ -263,7 +247,13 @@ namespace DATN_LandingPage.Handlers
         private async Task SendSeatsToOthers(Guid roomId, string hub, object seatList)
         {
             var responseJson = JsonConvert.SerializeObject(seatList);
-            await _webSocketManager.SendMessageToAllExceptUserAsync(hub, userId, responseJson);
+            await _webSocketManager.SendMessageToAllExceptUserAsync(hub, currentUserId, responseJson);
+        }
+
+        private async Task SendMessageToAllUsers(string hub, object message)
+        {
+            var responseJson = JsonConvert.SerializeObject(message);
+            await _webSocketManager.SendMessageToAllUserAsync(hub, responseJson);
         }
 
         public class SeatActionRequest
@@ -275,7 +265,7 @@ namespace DATN_LandingPage.Handlers
 
         public class SeatStatusUpdateRequest
         {
-            public string SeatId { get; set; }
+            public string SeatId { get; set; } = string.Empty;
             public SeatStatusEnum Status { get; set; }
         }
     }

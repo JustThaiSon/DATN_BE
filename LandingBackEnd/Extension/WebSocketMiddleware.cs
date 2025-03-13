@@ -45,23 +45,17 @@ namespace DATN_LandingPage.Extension
                         case "/ws/KeepSeat":
                             {
                                 var roomIdString = context.Request.Query["roomId"].ToString();
-                                if (Guid.TryParse(roomIdString, out Guid roomId))
+                                var userIdString = context.Request.Query["userId"].ToString();
+                                if (Guid.TryParse(roomIdString, out Guid roomId) && Guid.TryParse(userIdString, out Guid userId))
                                 {
-                                    Guid userId = Guid.NewGuid();
                                     var seatStatusHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
-                                    await seatStatusHandler.HandleRequestAsync("KeepSeat", roomId);
+                                    await seatStatusHandler.HandleRequestAsync("KeepSeat", roomId, userId);
                                 }
                                 else
                                 {
                                     context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                                    await context.Response.WriteAsync("Invalid roomId parameter.");
+                                    await context.Response.WriteAsync("Invalid roomId or userId parameter.");
                                 }
-                                break;
-                            }
-                        case "/ws/TestWebSocket":
-                            {
-                                var testWebSocket = new TestWebSocket();
-                                await testWebSocket.HandleWebSocketAsync(context);
                                 break;
                             }
                         default:
