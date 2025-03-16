@@ -6,5 +6,6 @@ namespace DATN_Models.DAO.Interface
     {
         void CreateRoom(CreateRoomDAL resquest, out int response);
         List<ListRoomDAL> GetListRoom(int currentPage, int recordPerPage, out int totalRecord, out int response);
+        void DeleteRoom(Guid Id, out int response);
     }
 }

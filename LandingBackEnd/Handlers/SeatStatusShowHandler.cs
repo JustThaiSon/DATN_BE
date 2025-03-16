@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using DATN_Helpers.Common;
 using DATN_Helpers.Constants;
-using DATN_Models.DAL.Seat;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Seat.Req;
+using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Services.WebSockets;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
@@ -20,7 +19,7 @@ namespace DATN_LandingPage.Handlers
         private readonly SeatStatusService _seatStatusService;
         private readonly ISeatDAO _seatDAO;
         private CancellationTokenSource countdownCancellationTokenSource = new CancellationTokenSource();
-        private static ConcurrentDictionary<string, List<SeatStatusUpdateRequest>> userSeatUpdates = new ConcurrentDictionary<string, List<SeatStatusUpdateRequest>>();
+        private static ConcurrentDictionary<string, List<SeatStatusUpdateRequest>> userSeatUpdates = new();
         private static ConcurrentDictionary<string, bool> userPaymentStatus = new ConcurrentDictionary<string, bool>();
         private string currentUserId;
 
@@ -51,10 +50,6 @@ namespace DATN_LandingPage.Handlers
                         Console.WriteLine($"[WebSocket] Client disconnected: {currentUserId}");
                         await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
                         await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
-                        if (userSeatUpdates.ContainsKey(currentUserId))
-                        {
-                            userSeatUpdates.TryRemove(currentUserId, out _);
-                        }
                         countdownCancellationTokenSource?.Cancel();
                         break;
                     }
@@ -67,10 +62,17 @@ namespace DATN_LandingPage.Handlers
                         switch (request.Action)
                         {
                             case "GetList":
-                                var seatList = GenerateSeatList(roomId);
-                                await SendMessageToClient(seatList);
+                                // Sử dụng TryGetValue để an toàn truy cập userSeatUpdates
+                                if (!userSeatUpdates.ContainsKey(userId.ToString()))
+                                {
+                                    var seatList = GenerateSeatList(roomId);
+                                    await SendMessageToClient(seatList);
+                                }
+                                else
+                                {
+                                    await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
+                                }
                                 break;
-
                             case "UpdateStatus":
                                 Console.WriteLine("[WebSocket] UpdateStatus action received.");
                                 if (request.SeatStatusUpdateRequests != null)
@@ -107,7 +109,7 @@ namespace DATN_LandingPage.Handlers
                 foreach (var update in userSeatUpdates[userId])
                 {
                     var seatGuid = Guid.Parse(update.SeatId);
-                    originalStatuses[seatGuid.ToString()] = _seatStatusService.GetSeatStatus(seatGuid)?.Status ?? SeatStatusEnum.UnAvailable;
+                    originalStatuses[seatGuid.ToString()] = (SeatStatusEnum)(_seatStatusService.GetSeatStatus(seatGuid)?.Status ?? (int)SeatStatusEnum.UnAvailable);
                 }
             }
 
@@ -131,7 +133,7 @@ namespace DATN_LandingPage.Handlers
                     foreach (var update in userSeatUpdates[userId])
                     {
                         var seatGuid = Guid.Parse(update.SeatId);
-                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, SeatStatusEnum.Available);
+                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)SeatStatusEnum.Available);
                     }
                     userSeatUpdates.TryRemove(userId, out _); // Remove the user's seat updates after reverting
 
@@ -155,6 +157,8 @@ namespace DATN_LandingPage.Handlers
                 userSeatUpdates[currentUserId] = new List<SeatStatusUpdateRequest>();
             }
 
+            bool isFirstSeatUpdate = !userSeatUpdates.Values.Any(seatUpdates => seatUpdates.Count > 0);
+
             foreach (var updateRequest in seatStatusUpdateRequests)
             {
                 if (updateRequest.SeatId != null)
@@ -162,9 +166,9 @@ namespace DATN_LandingPage.Handlers
                     var seatGuid = Guid.Parse(updateRequest.SeatId);
                     var currentStatus = _seatStatusService.GetSeatStatus(seatGuid);
 
-                    if (currentStatus == null || currentStatus.Status != updateRequest.Status)
+                    if (currentStatus == null || currentStatus.Status != (int)updateRequest.Status)
                     {
-                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, updateRequest.Status);
+                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)updateRequest.Status);
                         userSeatUpdates[currentUserId].Add(updateRequest);
                     }
                     else
@@ -175,9 +179,16 @@ namespace DATN_LandingPage.Handlers
             }
 
             var seatListForOthers = GenerateSeatList(roomId);
-            await SendSeatsToOthers(roomId, hub, seatListForOthers);
+
+            if (isFirstSeatUpdate)
+            {
+                await SendSeatsToOthers(roomId, hub, seatListForOthers);
+            }
+
+            await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
             await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
         }
+
 
         private object GenerateSeatList(Guid roomId, List<SeatStatusUpdateRequest>? updatedSeats = null)
         {
@@ -185,34 +196,34 @@ namespace DATN_LandingPage.Handlers
 
             var modifiedSeats = seats.Select(seat =>
             {
-                var seatStatus = _seatStatusService.GetSeatStatus(seat.Id);
+                var seatStatus = _seatStatusService.GetSeatStatus(seat.SeatStatusByShowTimeId);
                 if (seatStatus != null)
                 {
                     if (updatedSeats != null)
                     {
-                        var updatedSeat = updatedSeats.FirstOrDefault(us => us.SeatId == seat.Id.ToString());
+                        var updatedSeat = updatedSeats.FirstOrDefault(us => us.SeatId == seat.SeatStatusByShowTimeId.ToString());
                         if (updatedSeat != null)
                         {
-                            seat.Status = updatedSeat.Status;
+                            seat.Status = (int)updatedSeat.Status;
                         }
-                        else if (_seatStatusService.GetHeldSeatsByUser(currentUserId).Contains(seat.Id.ToString()))
+                        else if (_seatStatusService.GetHeldSeatsByUser(currentUserId).Contains(seat.SeatStatusByShowTimeId.ToString()))
                         {
                             seat.Status = seatStatus.Status;
                         }
                         else
                         {
-                            seat.Status = seatStatus.Status == SeatStatusEnum.UnAvailable ? SeatStatusEnum.Reserved : seatStatus.Status; // Reserved for others
+                            seat.Status = seatStatus.Status == (int)SeatStatusEnum.UnAvailable ? (int)SeatStatusEnum.Reserved : seatStatus.Status; // Reserved for others
                         }
                     }
                     else
                     {
-                        if (_seatStatusService.GetHeldSeatsByUser(currentUserId).Contains(seat.Id.ToString()))
+                        if (_seatStatusService.GetHeldSeatsByUser(currentUserId).Contains(seat.SeatStatusByShowTimeId.ToString()))
                         {
                             seat.Status = seatStatus.Status;
                         }
                         else
                         {
-                            seat.Status = seatStatus.Status == SeatStatusEnum.UnAvailable ? SeatStatusEnum.Reserved : seatStatus.Status; // Reserved for others
+                            seat.Status = seatStatus.Status == (int)SeatStatusEnum.UnAvailable ? (int)SeatStatusEnum.Reserved : seatStatus.Status; // Reserved for others
                         }
                     }
                 }
@@ -250,6 +261,70 @@ namespace DATN_LandingPage.Handlers
             await _webSocketManager.SendMessageToAllExceptUserAsync(hub, currentUserId, responseJson);
         }
 
+        private async Task SendSeatStatusToAllUsersExceptSelf(Guid roomId, string hub)
+        {
+            // Lấy danh sách ghế của phòng từ dịch vụ
+            var seats = _seatStatusService.GenerateSeats(roomId);
+
+            // Duyệt qua tất cả các user trong bộ nhớ và gửi thông tin ghế cho từng người dùng
+            foreach (var userEntry in userSeatUpdates)
+            {
+                var userId = userEntry.Key;
+
+                // Kiểm tra nếu userId là chính người gọi (bản thân mình) thì bỏ qua
+                if (userId == currentUserId)
+                {
+                    continue;
+                }
+
+                var userSeatUpdates = userEntry.Value;
+
+                // Nếu người dùng chưa đặt ghế, gửi danh sách ghế mới cho họ
+                if (!userSeatUpdates.Any()) // Kiểm tra nếu người dùng chưa có thông tin cập nhật ghế
+                {
+                    var seatListForOthers = GenerateSeatList(roomId);
+                    await SendSeatsToOthers(roomId, hub, seatListForOthers);
+                }
+                else
+                {
+                    // Nếu người dùng đã đặt ghế, tiếp tục xử lý như cũ
+                    var modifiedSeats = seats.Select(seat =>
+                    {
+                        var seatStatus = _seatStatusService.GetSeatStatus(seat.SeatStatusByShowTimeId);
+                        if (seatStatus != null)
+                        {
+                            var updatedSeat = userSeatUpdates.FirstOrDefault(us => us.SeatId == seat.SeatStatusByShowTimeId.ToString());
+                            if (updatedSeat != null)
+                            {
+                                seat.Status = (int)updatedSeat.Status;
+                            }
+                            else
+                            {
+                                var heldSeat = _seatStatusService.GetHeldSeatsByUser(userId).Contains(seat.SeatStatusByShowTimeId.ToString());
+                                if (heldSeat)
+                                {
+                                    seat.Status = seatStatus.Status;
+                                }
+                                else
+                                {
+                                    seat.Status = seatStatus.Status == (int)SeatStatusEnum.UnAvailable ? (int)SeatStatusEnum.Reserved : seatStatus.Status;
+                                }
+                            }
+                        }
+                        return seat;
+                    }).ToList();
+
+                    // Tạo thông điệp để gửi cho người dùng
+                    var response = new { Seats = modifiedSeats };
+
+                    // Chuyển đối tượng thành chuỗi JSON hoặc định dạng bạn muốn gửi
+                    var message = JsonConvert.SerializeObject(response);
+
+                    // Gửi thông điệp cho tất cả người dùng trừ bản thân mình
+                    await _webSocketManager.SendMessageToAllExceptUserAsync(hub, currentUserId, message);
+                }
+            }
+        }
         private async Task SendMessageToAllUsers(string hub, object message)
         {
             var responseJson = JsonConvert.SerializeObject(message);

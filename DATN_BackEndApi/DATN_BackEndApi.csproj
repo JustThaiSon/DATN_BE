@@ -32,4 +32,8 @@
     <ProjectReference Include="..\DATN_Services\DATN_Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\" />
+  </ItemGroup>
+
 </Project>

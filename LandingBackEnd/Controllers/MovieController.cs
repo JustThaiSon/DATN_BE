@@ -8,6 +8,7 @@ using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -82,19 +83,6 @@ namespace DATN_LandingPage.Controllers
             return res;
         }
         [HttpGet]
-        [Route("GetAllSeatByShowTime")]
-        public async Task<CommonPagination<List<GetListSeatByShowTimeRes>>> GetAllSeatByShowTime(Guid showTimeId)
-        {
-            var res = new CommonPagination<List<GetListSeatByShowTimeRes>>();
-            var result = _seatDAO.GetListSeatByShowTimeID(showTimeId, out int TotalRecord, out int response);
-            var resultMapper = _mapper.Map<List<GetListSeatByShowTimeRes>>(result);
-            res.Data = resultMapper;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-            res.TotalRecord = TotalRecord;
-            return res;
-        }
-        [HttpGet]
         [Route("GetService")]
         public async Task<CommonPagination<List<GetServiceRes>>> GetService(int currentPage, int recordPerPage)
         {
@@ -130,6 +118,18 @@ namespace DATN_LandingPage.Controllers
             var res = new CommonResponse<List<GetAllNameMovieRes>>();
             var data = _movieDAO.GetAllNameMovie(out int responseCode);
             var resultMapper = _mapper.Map<List<GetAllNameMovieRes>>(data);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = resultMapper;
+            return res;
+        }
+        [HttpGet]
+        [Route("GetSeatByShowTime")]
+        public async Task<CommonResponse<List<GetSeatByShowTimeRes>>> GetSeatByShowTime(Guid showTimeId)
+        {
+            var res = new CommonResponse<List<GetSeatByShowTimeRes>>();
+            var data = _seatDAO.GetSeatByShowTime(showTimeId, out int totalRecord, out int responseCode);
+            var resultMapper = _mapper.Map<List<GetSeatByShowTimeRes>>(data);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = resultMapper;

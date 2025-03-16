@@ -17,6 +17,7 @@ using FluentValidation;
 using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
 using Microsoft.Extensions.DependencyInjection;
+using DATN_Models.DAO.Interface.SeatAbout;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -75,6 +76,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
+            services.AddTransient<ICinemasDAO, CinemasDAO>();
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();

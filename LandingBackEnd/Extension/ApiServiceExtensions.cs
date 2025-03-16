@@ -1,5 +1,4 @@
 ﻿using DATN_Helpers.Module;
-using DATN_Models.DAO.Interface;
 using DATN_Models.DAO;
 using DATN_Models.HandleData;
 using DATN_Models.Mapper;
@@ -8,16 +7,16 @@ using System.Reflection;
 using DATN_Models.Models;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
-using CloudinaryDotNet;
 using Microsoft.AspNetCore.Identity;
 using FluentValidation;
 using DATN_Helpers.Extensions;
 using NekBigCore.Services.WebSockets;
 using FluentValidation.AspNetCore;
-using AutoMapper;
-using Microsoft.Extensions.Options;
 using DATN_Services.Service;
 using DATN_Services.Service.Interfaces;
+using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Services.WebSockets;
 namespace DATN_BackEndApi.Extension
 {
     public static class ServiceExtensions
@@ -68,6 +67,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
+            services.AddSingleton<SeatStatusService>();
             services.AddTransient<IRatingDAO, RatingDAO>();
             services.AddTransient<IMailService, MailService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();

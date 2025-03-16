@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DATN_Helpers.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace DATN_Models.DAL.Seat
         public int RowNumber { get; set; }
         public int ColNumber { get; set; }
         public int SeatStatus { get; set; }
-      
+        public Guid? PairId { get; set; }
+
     }
 }

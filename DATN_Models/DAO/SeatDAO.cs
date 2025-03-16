@@ -1,9 +1,7 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Seat;
-using DATN_Models.DAL.SeatType;
-using DATN_Models.DAO.Interface;
-using DATN_Models.Models;
+using DATN_Models.DAO.Interface.SeatAbout;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -60,20 +58,19 @@ namespace DATN_Models.DAO
 
         }
 
-        public List<ListSeatByShowTimeDAL> GetListSeatByShowTime(Guid roomId, Guid showTimeId, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<ListSeatByShowTimeDAL> GetListSeatByShowTime(Guid showTimeId, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
             DBHelper db = null;
 
             try
             {
-                var pars = new SqlParameter[6];
-                pars[0] = new SqlParameter("@_RoomId", roomId);
-                pars[1] = new SqlParameter("@_ShowTimeId", showTimeId);
-                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[5];
+                pars[0] = new SqlParameter("@_ShowTimeId", showTimeId);
+                pars[1] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[2] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[3] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
 
@@ -81,8 +78,8 @@ namespace DATN_Models.DAO
                 var result = db.GetListSP<ListSeatByShowTimeDAL>("SP_SeatByShowTime_GetList", pars);
 
 
-                response = ConvertUtil.ToInt(pars[5].Value);
-                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[4].Value);
+                totalRecord = ConvertUtil.ToInt(pars[3].Value);
 
                 return result;
             }
@@ -216,7 +213,7 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<GetListSeatTypeDAL> GetListSeatType(int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public void SetupPair(SetupPair dataInput, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -224,20 +221,15 @@ namespace DATN_Models.DAO
             try
             {
                 var pars = new SqlParameter[4];
-                pars[0] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[1] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[2] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[0] = new SqlParameter("@_SeatId1", dataInput.Seatid1);
+                pars[1] = new SqlParameter("@_SeatId2", dataInput.Seatid2);
+                pars[2] = new SqlParameter("@_RoomId", dataInput.RoomId);
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-
-                var result = db.GetListSP<GetListSeatTypeDAL>("SP_SeatType_GetList", pars);
-
+                var result = db.ExecuteNonQuerySP("SP_Seat_SetupPair", pars);
 
                 response = ConvertUtil.ToInt(pars[3].Value);
-                totalRecord = ConvertUtil.ToInt(pars[2].Value);
-
-                return result;
             }
             catch (Exception ex)
             {
@@ -249,108 +241,26 @@ namespace DATN_Models.DAO
                 if (db != null)
                     db.Close();
             }
+
         }
-        public void UpdateSeatTypeMultiplier(UpdateSeatTypeMultiplierDAL dataInput, out int response)
+
+        public List<GetSeatByShowTimeDAL> GetSeatByShowTime(Guid showTimeId, out int totalRecord, out int response)
         {
             response = 0;
+            totalRecord = 0;
             DBHelper db = null;
-
             try
             {
                 var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@_SeatTypeId", dataInput.Id);
-                pars[1] = new SqlParameter("@_Multiplier", dataInput.Multiplier);
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[0] = new SqlParameter("@ShowTimeId", showTimeId);
+                pars[1] = new SqlParameter("@TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[2] = new SqlParameter("@Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetSeatByShowTimeDAL>("SP_GetSeatByShowTime", pars);
 
-                var result = db.ExecuteNonQuerySP("SP_SeatType_Update", pars);
-
-                response = ConvertUtil.ToInt(pars[2].Value);
-            }
-            catch (Exception ex)
-            {
-                response = -99;
-                throw;
-            }
-            finally
-            {
-                if (db != null)
-                    db.Close();
-            }
-        }
-
-        public void CreateSeatType(CreateSeatTypeDAL dataInput, out int response)
-        {
-            response = 0;
-            DBHelper db = null;
-
-            try
-            {
-                var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@_SeatTypeName", dataInput.SeatTypeName);
-                pars[1] = new SqlParameter("@_Multiplier", dataInput.Multiplier);
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                db = new DBHelper(connectionString);
-
-                var result = db.ExecuteNonQuerySP("SP_SeatType_Create", pars);
-
-                response = ConvertUtil.ToInt(pars[2].Value);
-            }
-            catch (Exception ex)
-            {
-                response = -99;
-                throw;
-            }
-            finally
-            {
-                if (db != null)
-                    db.Close();
-            }
-        }
-
-        public void DeleteSeatType(Guid dataInput, out int response)
-        {
-            response = 0;
-            DBHelper db = null;
-            try
-            {
-                var pars = new SqlParameter[2];
-
-                pars[0] = new SqlParameter("@_SeatTypeId", dataInput);
-                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                db = new DBHelper(connectionString);
-
-                var result = db.ExecuteNonQuerySP("SP_SeatType_Delete", pars);
-
-                response = ConvertUtil.ToInt(pars[1].Value);
-            }
-            catch (Exception ex)
-            {
-                response = -99;
-                throw;
-            }
-            finally
-            {
-                if (db != null)
-                    db.Close();
-            }
-        }
-
-        public List<ListSeatByShowTimeDAL> GetListSeatByShowTimeID(Guid showTimeId, out int totalRecord,out int response)
-        {
-            response = 0;
-            DBHelper db = null;
-
-            try
-            {
-                var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@_ShowTimeId", showTimeId);
-                pars[1] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                db = new DBHelper(connectionString);
-                var result = db.GetListSP<ListSeatByShowTimeDAL>("SP_SeatByShowTime_GetListByShowTime", pars);
                 response = ConvertUtil.ToInt(pars[2].Value);
                 totalRecord = ConvertUtil.ToInt(pars[1].Value);
+
                 return result;
             }
             catch (Exception ex)

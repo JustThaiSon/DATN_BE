@@ -1,7 +1,6 @@
 ﻿using CloudinaryDotNet;
 using DATN_BackEndApi.Extension;
 using DATN_BackEndApi.Extension.CloudinarySett;
-using DATN_BackEndApi.Extension.DATN_BackEndApi.Extension;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Module;
@@ -103,6 +102,8 @@ namespace DATN_BackEndApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+
             app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
             app.UseWebSockets(new WebSocketOptions
@@ -114,7 +115,6 @@ namespace DATN_BackEndApi
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<ErrorHandlerMiddleware>();
-            app.UseMiddleware<WebSocketMiddleware>();
             app.MapControllers();
 
             app.Run();

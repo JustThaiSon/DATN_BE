@@ -35,11 +35,20 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> CreateRoom(CreateRoomReq rq)
         {
             var res = new CommonResponse<dynamic>();
-            var resultMapper = _mapper.Map<CreateRoomDAL>(rq);
-            _roomDAO.CreateRoom(resultMapper, out int response);
-            res.Data = null;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
+            try
+            {
+                var resultMapper = _mapper.Map<CreateRoomDAL>(rq);
+                _roomDAO.CreateRoom(resultMapper, out int response);
+                res.Data = null;
+                res.Message = MessageUtils.GetMessage(response, _langCode);
+                res.ResponseCode = response;
+            }
+            catch (Exception ex)
+            {
+                res.Data = null;
+                res.Message = ex.Message;  // Log lỗi để biết lỗi gì
+                res.ResponseCode = -500;
+            }
             return res;
         }
 
@@ -63,6 +72,16 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
+        [HttpPost]
+        [Route("DeleteRoom")]
+        public async Task<CommonResponse<dynamic>> DeleteRoom(Guid RoomId)
+        {
+            var res = new CommonResponse<dynamic>();
+            _roomDAO.DeleteRoom(RoomId, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
     }
 }

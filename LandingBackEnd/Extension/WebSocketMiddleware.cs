@@ -4,6 +4,7 @@ using DATN_Helpers.Constants;
 using DATN_LandingPage.Handlers;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Services.WebSockets;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -17,16 +18,17 @@ namespace DATN_LandingPage.Extension
         private readonly IWebSocketManager _webSocketManager;
         private readonly IMapper _mapper;
         private readonly ISeatDAO _seatDAO;
-        private readonly SeatStatusService _seatStatusService = new();
+        private readonly SeatStatusService _seatStatusService;
         private readonly ILogger<WebSocketMiddleware> _logger;
 
-        public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager, IMapper mapper, ISeatDAO seatDAO, ILogger<WebSocketMiddleware> logger)
+        public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager, IMapper mapper, ISeatDAO seatDAO, ILogger<WebSocketMiddleware> logger, SeatStatusService seatStatusService)
         {
             _next = next;
             _webSocketManager = webSocketManager;
             _mapper = mapper;
             _seatDAO = seatDAO;
             _logger = logger;
+            _seatStatusService = seatStatusService;
         }
 
         public async Task InvokeAsync(HttpContext context)
