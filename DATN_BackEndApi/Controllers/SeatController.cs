@@ -51,12 +51,12 @@ namespace DATN_BackEndApi.Controllers
         [HttpGet]
         [Route("GetAllSeatByShowTime")]
 
-        public async Task<CommonPagination<List<GetListSeatByShowTimeRes>>> GetAllSeatByShowTime( Guid showTimeId, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetListSeatByShowTimeRes>>> GetAllSeatByShowTime(Guid showTimeId, int currentPage, int recordPerPage)
         {
 
             var res = new CommonPagination<List<GetListSeatByShowTimeRes>>();
 
-            var result = _seatDAO.GetListSeatByShowTime( showTimeId, currentPage, recordPerPage, out int TotalRecord, out int response);
+            var result = _seatDAO.GetListSeatByShowTime(showTimeId, currentPage, recordPerPage, out int TotalRecord, out int response);
 
             var resultMapper = _mapper.Map<List<GetListSeatByShowTimeRes>>(result);
 
@@ -68,10 +68,8 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
         [HttpPost]
         [Route("UpdateStatusSeat")]
-
         public async Task<CommonResponse<dynamic>> UpdateStatusSeat(UpdateSeatStatusReq rq)
         {
             var res = new CommonResponse<dynamic>();
@@ -84,10 +82,8 @@ namespace DATN_BackEndApi.Controllers
 
         }
 
-
         [HttpPost]
         [Route("UpdateStatusSeatByShowTime")]
-
         public async Task<CommonResponse<dynamic>> UpdateStatusSeatByShowTime(UpdateSeatByShowTimeStatusReq rq)
         {
             var res = new CommonResponse<dynamic>();
@@ -99,7 +95,6 @@ namespace DATN_BackEndApi.Controllers
             return res;
 
         }
-
         [HttpPost]
         [Route("UpdateTypeSeat")]
         public async Task<CommonResponse<dynamic>> UpdateTypeSeat(UpdateSeatTypeReq rq)
@@ -114,7 +109,6 @@ namespace DATN_BackEndApi.Controllers
 
         }
 
-
         [HttpPost]
         [Route("SetupPair")]
         public async Task<CommonResponse<dynamic>> SetupPairSeat(SetupPairReq rq)
@@ -128,7 +122,5 @@ namespace DATN_BackEndApi.Controllers
             return res;
 
         }
-
-
     }
 }

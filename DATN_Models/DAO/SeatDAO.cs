@@ -58,7 +58,7 @@ namespace DATN_Models.DAO
 
         }
 
-        public List<ListSeatByShowTimeDAL> GetListSeatByShowTime( Guid showTimeId, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<ListSeatByShowTimeDAL> GetListSeatByShowTime(Guid showTimeId, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -244,6 +244,35 @@ namespace DATN_Models.DAO
 
         }
 
+        public List<GetSeatByShowTimeDAL> GetSeatByShowTime(Guid showTimeId, out int totalRecord, out int response)
+        {
+            response = 0;
+            totalRecord = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@ShowTimeId", showTimeId);
+                pars[1] = new SqlParameter("@TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[2] = new SqlParameter("@Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetSeatByShowTimeDAL>("SP_GetSeatByShowTime", pars);
 
+                response = ConvertUtil.ToInt(pars[2].Value);
+                totalRecord = ConvertUtil.ToInt(pars[1].Value);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 }

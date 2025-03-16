@@ -2,7 +2,6 @@
 
 namespace DATN_Models.DAO.Interface.SeatAbout
 {
-
     public interface ISeatDAO
     {
         List<ListSeatDAL> GetListSeat(Guid id, int currentPage, int recordPerPage, out int totalRecord, out int response);
@@ -12,6 +11,7 @@ namespace DATN_Models.DAO.Interface.SeatAbout
         void UpdateSeatType(UpdateSeatTypeDAL dataInput, out int response);
         GetStatusByIdDAL GetStatusById(Guid Id, out int response);
         void SetupPair(SetupPair dataINput, out int response);
+        List<GetSeatByShowTimeDAL> GetSeatByShowTime(Guid showTimeId, out int totalRecord, out int response);
 
     }
 }

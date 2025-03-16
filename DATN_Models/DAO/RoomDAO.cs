@@ -1,5 +1,6 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
+using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
@@ -48,7 +49,29 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+        public void SaveSession(Guid userId)
+        {
 
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@key", SqlDbType.NVarChar) { Value = "UserId" };
+                pars[1] = new SqlParameter("@value", SqlDbType.UniqueIdentifier) { Value = userId };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("sp_set_session_context", pars);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
 
         public List<ListRoomDAL> GetListRoom(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {

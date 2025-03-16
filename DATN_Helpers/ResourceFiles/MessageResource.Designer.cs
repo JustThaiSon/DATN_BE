@@ -250,6 +250,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lỗi Resfresh Token.
+        /// </summary>
+        internal static string _405 {
+            get {
+                return ResourceManager.GetString("-405", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} được yêu cầu..
         /// </summary>
         internal static string _601 {
