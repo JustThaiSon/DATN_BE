@@ -37,6 +37,10 @@ namespace DATN_BackEndApi.Controllers
             res.Data = Opt;
             return res;
         }
+
+
+
+
         [HttpPost]
         [Route("Login")]
         public async Task<CommonResponse<dynamic>> Login(SignInReq req)
@@ -55,12 +59,19 @@ namespace DATN_BackEndApi.Controllers
                 AccessToken = _ultils.GenerateToken(loginDto.ID, loginDto.Roles),
                 RefreshToken = _ultils.GenerateRefreshToken(loginDto.ID, loginDto.Roles),
                 Roles = loginDto.Roles,
+
+                UserId = loginDto.ID.ToString(),
+                UserName = loginDto.UserName,
+                DisplayName = loginDto.DisplayName
             };
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = loginCms;
             return res;
         }
+
+
+
         [HttpPost("verify-otp")]
         public async Task<CommonResponse<dynamic>> VerifyOtp(VerifyOtpReq req)
         {
@@ -72,5 +83,6 @@ namespace DATN_BackEndApi.Controllers
             };
             return res;
         }
+
     }
 }

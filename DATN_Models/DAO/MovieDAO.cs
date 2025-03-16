@@ -217,9 +217,9 @@ namespace DATN_Models.DAO
                     actorTable.Rows.Add(actorId);
                 }
 
-                var pars = new SqlParameter[10];
+                var pars = new SqlParameter[11];
 
-                pars[0] = new SqlParameter("@_MovieID", req.MovieName);
+                pars[0] = new SqlParameter("@_MovieID", req.MovieID);
                 pars[1] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[2] = new SqlParameter("@_Description", req.Description);
                 pars[3] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
@@ -231,6 +231,8 @@ namespace DATN_Models.DAO
 
                 // Thêm id actor vào trong bảng MovieActor
                 pars[9] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+
+
                 pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);

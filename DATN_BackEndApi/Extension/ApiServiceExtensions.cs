@@ -1,11 +1,24 @@
-﻿using DATN_Helpers.Module;
-using DATN_Models.DAO.Interface;
+﻿using CloudinaryDotNet;
+using DATN_BackEndApi.Extension.CloudinarySett;
+using DATN_BackEndApi.Extension.Vnpay;
+using DATN_Helpers.Common;
+using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Extensions;
+using DATN_Helpers.Module;
 using DATN_Models.DAO;
+using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.HandleData;
 using DATN_Models.Mapper;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using DATN_Models.Models;
+using DATN_Services.Orders;
+using DATN_Services.Orders.Interface;
+using DATN_Services.Service;
+using DATN_Services.Service.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
 using CloudinaryDotNet;
@@ -15,9 +28,18 @@ using Microsoft.AspNetCore.Identity;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using DATN_Helpers.Extensions;
-using NekBigCore.Services.WebSockets;
+using DATN_Helpers.Extensions;
+using System.Reflection;
+using DATN_Services.Service.Interfaces;
+using DATN_Services.Service;
+using DATN_BackEndApi.VNPay;
+using DATN_BackEndApi.Extension.Vnpay;
 using Microsoft.Extensions.DependencyInjection;
 using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Services.Service;
+using DATN_Services.Service;
+using DATN_Services.Service;
+using DATN_Services.Service;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -63,7 +85,12 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IMovieDAO, MovieDAO>();
             services.AddTransient<IMembershipDAO, MembershipDAO>();
 
+
             //_services.AddTransient<IMovieDAO, MovieTESTDAO>();
+            services.AddTransient<ICinemasDAO, CinemasDAO>();
+            services.AddTransient<IShowTimeDAO, ShowTimeDAO>();
+
+
 
             services.AddTransient<IActorDAO, ActorDAO>();
             services.AddTransient<IRoomDAO, RoomDAO>();
@@ -72,21 +99,43 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
+
+
+
+
+
+
+            services.AddTransient<ICinemasDAO, CinemasDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
-            services.AddTransient<ICinemasDAO, CinemasDAO>();
+
+
+
+
+
+
+
+
+
+
+            services.AddScoped<BAuthorizeAttribute>();
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
-            services.AddScoped<BAuthorizeAttribute>();
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var serviceProvider = services.BuildServiceProvider();
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+
+            services.Configure<VNPayConfig>(configuration.GetSection(VNPayConfig.ConfigName));
+            services.AddScoped<IVNPayService, VNPayService>();
+
 
             services.AddSingleton<Cloudinary>(serviceProvider =>
             {
@@ -95,7 +144,15 @@ namespace DATN_BackEndApi.Extension
                 return new Cloudinary(account); // Cái này là account của nghĩa.
             });
             services.AddScoped<CloudService>();
-            services.AddIdentity<AppUsers, AppRoles>()
+            services.AddIdentity<AppUsers, AppRoles>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 0;
+            })
                .AddEntityFrameworkStores<DATN_Context>()
                .AddDefaultTokenProviders();
             services.AddSession(options =>
