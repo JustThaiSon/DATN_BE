@@ -1,5 +1,17 @@
 ﻿using DATN_BackEndApi.Extension;
+using DATN_BackEndApi.Extension.CloudinarySett;
+using DATN_Helpers.Common;
+using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Module;
+using DATN_Models.DAO;
+using DATN_Models.DAO.Interface;
+using DATN_Models.HandleData;
+using DATN_Models.Mapper;
+using DATN_Models.Models;
 using DATN_BackEndApi.Extension.DATN_BackEndApi.Extension;
+using DATN_Models.Models;
+using DATN_Services.Orders;
+using DATN_Services.Orders.Interface;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.OpenApi.Models;
@@ -90,6 +102,8 @@ namespace DATN_BackEndApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+
             app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
             app.UseWebSockets(new WebSocketOptions
@@ -101,7 +115,6 @@ namespace DATN_BackEndApi
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware<ErrorHandlerMiddleware>();
-            app.UseMiddleware<WebSocketMiddleware>();
             app.MapControllers();
 
             app.Run();

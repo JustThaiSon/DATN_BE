@@ -19,13 +19,27 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Common;
+using CloudinaryDotNet;
+using DATN_BackEndApi.Extension.CloudinarySett;
 using Microsoft.Extensions.Options;
-using NekBigCore.Services.WebSockets;
+using Microsoft.AspNetCore.Identity;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using DATN_Helpers.Extensions;
+using DATN_Helpers.Extensions;
 using System.Reflection;
 using DATN_Services.Service.Interfaces;
 using DATN_Services.Service;
 using DATN_BackEndApi.VNPay;
 using DATN_BackEndApi.Extension.Vnpay;
+using Microsoft.Extensions.DependencyInjection;
+using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Services.Service;
+using DATN_Services.Service;
+using DATN_Services.Service;
+using DATN_Services.Service;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -33,20 +47,22 @@ namespace DATN_BackEndApi.Extension
     {
         public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            // Database
             var connectionString = configuration.GetConnectionString("Db");
-
-            // Core
             var migrationsAssemblyCore = typeof(DATN_Context).GetTypeInfo().Assembly.GetName().Name;
-            services.AddDbContext<DATN_Context>(builder =>
+
+            services.AddScoped<SessionContextInterceptor>();
+
+            services.AddDbContext<DATN_Context>((serviceProvider, options) =>
             {
-                builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssemblyCore));
-
-                builder.LogTo(Console.WriteLine);
+                options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssemblyCore));
+                options.AddInterceptors(serviceProvider.GetRequiredService<SessionContextInterceptor>());
+                options.LogTo(Console.WriteLine);
             });
-
+            services.AddScoped<ChangeLogInterceptor>();
             return services;
         }
+
+
         public static IServiceCollection AddServiceContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
@@ -80,13 +96,17 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IRoomDAO, RoomDAO>();
             services.AddTransient<IServiceDAO, ServiceDAO>();
             services.AddTransient<ISeatDAO, SeatDAO>();
-            services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
+
+
+
+
+
+
+            services.AddTransient<ICinemasDAO, CinemasDAO>();
             services.AddTransient<IRatingDAO, RatingDAO>();
-            services.AddTransient<IMailService, MailService>();
-            services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
@@ -96,20 +116,15 @@ namespace DATN_BackEndApi.Extension
 
 
 
+
+
+
+
+            services.AddScoped<BAuthorizeAttribute>();
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
-
-
-
-
-
-
-
-
-
-
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -143,6 +158,8 @@ namespace DATN_BackEndApi.Extension
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromDays(8);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
             HttpContextHelper.Configure(httpContextAccessor);
             return services;

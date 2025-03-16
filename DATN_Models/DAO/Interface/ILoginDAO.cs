@@ -11,5 +11,6 @@ namespace DATN_Models.DAO.Interface
 
         Task<(LoginDTO LoginDto, int Response)> login(SignInDAL req);
         Task<int> VerifyOtpAndRegisterUserAsync(VerifyOtpReq req);
+        //void SaveSession(Guid userId);
     }
 }

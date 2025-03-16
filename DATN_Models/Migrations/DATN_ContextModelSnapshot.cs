@@ -194,7 +194,7 @@ namespace DATN_Models.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChangeLog");
+                    b.ToTable("ChangeLogs");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.Cinemas", b =>
@@ -492,7 +492,7 @@ namespace DATN_Models.Migrations
                     b.Property<long>("TotalPrice")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -508,6 +508,10 @@ namespace DATN_Models.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IsAnonymous")
                         .HasColumnType("int");
@@ -658,6 +662,9 @@ namespace DATN_Models.Migrations
                     b.Property<Guid>("CinemaId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -738,6 +745,9 @@ namespace DATN_Models.Migrations
 
                     b.Property<int>("ColNumber")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("PairId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
@@ -856,7 +866,7 @@ namespace DATN_Models.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdateDate")
+                    b.Property<DateTime?>("UpdateDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");

@@ -26,7 +26,6 @@ namespace DATN_BackEndApi.Controllers
             _ultils = ultils;
             _mapper = mapper;
         }
-
         [HttpPost]
         [Route("Resgister")]
         public async Task<CommonResponse<dynamic>> Resgister(CreateAccountReq request)

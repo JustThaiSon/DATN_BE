@@ -17,5 +17,7 @@ namespace DATN_Models.DTOS.Seat.Res
         public int RowNumber { get; set; }
         public int ColNumber { get; set; }
         public int SeatStatus { get; set; }
+        public Guid? PairId { get; set; }
+
     }
 }

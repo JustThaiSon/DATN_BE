@@ -8,9 +8,9 @@ using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Order.Res;
-using DATN_Services.Orders.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,14 +25,12 @@ namespace DATN_BackEndApi.Controllers
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
         private readonly IOrderDAO _orderDAO;
-        private readonly IOrderService _orderService;
-        public OrderController(IConfiguration configuration, IUltil ultils, IMapper mapper, IOrderDAO orderDAO, IOrderService orderService)
+        public OrderController(IConfiguration configuration, IUltil ultils, IMapper mapper, IOrderDAO orderDAO)
         {
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
             _orderDAO = orderDAO;
-            _orderService = orderService;
         }
         //[HttpPost]
         //[Route("CreateOrder")]
@@ -48,19 +46,7 @@ namespace DATN_BackEndApi.Controllers
         //    return res;
         //}
 
-        [HttpPost]
-        [Route("CreateTicket")]
-        public async Task<CommonResponse<string>> CreateTicket(CreateTicketReq req)
-        {
-            var res = new CommonResponse<string>();
-            var reqMapper = _mapper.Map<CreateTicketDAL>(req);
-            _orderService.AddTicket(HttpContextHelper.GetUserId(), reqMapper, out int response);
-            res.Data = null;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-            return res;
-        }
-
+   
         [HttpGet]
         [Route("GetDetailOrder")]
         public async Task<CommonResponse<GetDetailOrderRes>> GetDetailOrder(Guid OrderId)
