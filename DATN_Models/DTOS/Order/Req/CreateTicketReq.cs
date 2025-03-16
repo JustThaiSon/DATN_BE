@@ -7,7 +7,7 @@
         public int IsAnonymous { get; set; }
         public Guid PaymentId { get; set; }
         public long TotalPriceTicket { get; set; }
-        public List<TicketReq> Tickets {  get; set; }
+        public List<TicketReq> Tickets { get; set; }
         public List<CreateOrderServiceReq> Services { get; set; }
     }
 }

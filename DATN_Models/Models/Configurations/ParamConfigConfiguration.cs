@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace DATN_Models.Models.Configurations
 {
     public class ParamConfigConfiguration : IEntityTypeConfiguration<ParamConfig>

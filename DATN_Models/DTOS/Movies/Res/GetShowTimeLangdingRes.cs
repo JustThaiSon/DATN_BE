@@ -10,7 +10,7 @@
         public int Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Name { get; set; }
-        public string Address { get; set; } 
+        public string Address { get; set; }
         public List<ShowtimesLangdingRes> Showtimes { get; set; }
     }
 }

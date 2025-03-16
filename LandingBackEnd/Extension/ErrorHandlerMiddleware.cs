@@ -2,10 +2,8 @@
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
 using DATN_Models.HandleData.Interface;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
-using FluentValidation;
 using ValidationException = FluentValidation.ValidationException;
 namespace DATN_LandingPage.Extension
 {

@@ -3,13 +3,10 @@ using DATN_BackEndApi.Extension.CloudinarySett;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
-using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Service;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DTOS.Service.Response;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -42,7 +39,7 @@ namespace DATN_BackEndApi.Controllers
             {
                 reqMapper.ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false);
             }
-            _serviceDAO.CreateService(reqMapper,out int response);
+            _serviceDAO.CreateService(reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
@@ -84,8 +81,8 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonPagination<List<GetServiceRes>>> GetService(int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetServiceRes>>();
-            var result = _serviceDAO.GetService(currentPage, recordPerPage,out int totalRecord, out int response);
-            var resultMapper = _mapper.Map<List<GetServiceRes>>(result);   
+            var result = _serviceDAO.GetService(currentPage, recordPerPage, out int totalRecord, out int response);
+            var resultMapper = _mapper.Map<List<GetServiceRes>>(result);
             res.Data = resultMapper;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;

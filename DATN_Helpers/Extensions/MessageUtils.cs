@@ -10,7 +10,7 @@ namespace DATN_Helpers.Extensions
         {
             if (string.IsNullOrEmpty(language))
             {
-                language = "vi"; 
+                language = "vi";
             }
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DATN_BackEndApi.Extension.Vnpay;
+﻿using DATN_BackEndApi.VNPay;
 using DATN_Helpers.Common;
-using DATN_Models.DAL;
-using DATN_BackEndApi.VNPay;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
 {

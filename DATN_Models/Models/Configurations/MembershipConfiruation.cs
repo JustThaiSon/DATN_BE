@@ -1,5 +1,4 @@
-﻿using DATN_Models.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DATN_Models.Models.Configurations
