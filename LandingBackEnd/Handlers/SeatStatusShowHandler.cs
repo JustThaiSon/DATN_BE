@@ -120,12 +120,11 @@ namespace DATN_LandingPage.Handlers
                     break;
                 }
 
-                var countdownData = new { Countdown = i };
+                var countdownData = new {  i };
                 await SendSeatsCountdownToClient(roomId, hub, countdownData);
 
                 await Task.Delay(1000, cancellationToken);
             }
-
             if (!userPaymentStatus.ContainsKey(userId) || !userPaymentStatus[userId])
             {
                 if (userSeatUpdates.ContainsKey(userId))
@@ -143,21 +142,22 @@ namespace DATN_LandingPage.Handlers
                 }
             }
         }
-
         private async Task SendSeatsCountdownToClient(Guid roomId, string hub, object countdownData)
         {
             var responseJson = JsonConvert.SerializeObject(countdownData);
             await _webSocketManager.SendMessageToUserAsync(hub, currentUserId, responseJson);
         }
-
         private async Task HandleUpdateStatusAction(List<SeatStatusUpdateRequest> seatStatusUpdateRequests, string hub, Guid roomId)
         {
+            // Nếu chưa có user update nào, khởi tạo danh sách cho currentUserId
             if (!userSeatUpdates.ContainsKey(currentUserId))
             {
                 userSeatUpdates[currentUserId] = new List<SeatStatusUpdateRequest>();
             }
 
+            // Kiểm tra nếu chưa có update nào từ bất kỳ user nào
             bool isFirstSeatUpdate = !userSeatUpdates.Values.Any(seatUpdates => seatUpdates.Count > 0);
+            bool onlyCurrentUser = (userSeatUpdates.Count == 1 && userSeatUpdates.ContainsKey(currentUserId));
 
             foreach (var updateRequest in seatStatusUpdateRequests)
             {
@@ -166,10 +166,22 @@ namespace DATN_LandingPage.Handlers
                     var seatGuid = Guid.Parse(updateRequest.SeatId);
                     var currentStatus = _seatStatusService.GetSeatStatus(seatGuid);
 
+                    // Nếu trạng thái mới khác trạng thái hiện tại, cập nhật
                     if (currentStatus == null || currentStatus.Status != (int)updateRequest.Status)
                     {
                         _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)updateRequest.Status);
-                        userSeatUpdates[currentUserId].Add(updateRequest);
+
+                        // Nếu cập nhật thành Available (bỏ chọn), loại bỏ update cũ nếu có
+                        if (updateRequest.Status == (int)SeatStatusEnum.Available)
+                        {
+                            userSeatUpdates[currentUserId].RemoveAll(r => r.SeatId == updateRequest.SeatId);
+                        }
+                        else
+                        {
+                            // Nếu cập nhật trạng thái khác (ví dụ: Selected), đảm bảo loại bỏ update cũ rồi thêm update mới
+                            userSeatUpdates[currentUserId].RemoveAll(r => r.SeatId == updateRequest.SeatId);
+                            userSeatUpdates[currentUserId].Add(updateRequest);
+                        }
                     }
                     else
                     {
@@ -178,16 +190,20 @@ namespace DATN_LandingPage.Handlers
                 }
             }
 
+            // Tạo danh sách ghế đã cập nhật từ roomId
             var seatListForOthers = GenerateSeatList(roomId);
 
-            if (isFirstSeatUpdate)
+            // Chỉ gửi danh sách ghế nếu đây là lần cập nhật đầu tiên hoặc chỉ có currentUser trong dictionary
+            if (isFirstSeatUpdate || onlyCurrentUser)
             {
                 await SendSeatsToOthers(roomId, hub, seatListForOthers);
             }
 
             await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
+            // Gửi trạng thái ghế đã cập nhật cho client của currentUser
             await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
         }
+
 
 
         private object GenerateSeatList(Guid roomId, List<SeatStatusUpdateRequest>? updatedSeats = null)
