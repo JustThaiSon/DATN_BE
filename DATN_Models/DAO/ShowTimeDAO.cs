@@ -132,7 +132,7 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<ShowTimeDAL> GetListShowTime(Guid movieId, Guid roomId, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<ShowTimeDAL> GetListShowTime(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -141,21 +141,20 @@ namespace DATN_Models.DAO
             try
             {
                 // Tạo tham số cho Stored Procedure
-                var pars = new SqlParameter[6];
-                pars[0] = new SqlParameter("@_MovieId", movieId);  // Không còn kiểm tra Nullable
-                pars[1] = new SqlParameter("@_RoomId", roomId);    // Không còn kiểm tra Nullable
-                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[4];
+
+                pars[0] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[1] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[2] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 // Kết nối đến cơ sở dữ liệu và gọi Stored Procedure
                 db = new DBHelper(connectionString);
                 var result = db.GetListSP<ShowTimeDAL>("SP_ShowTime_GetList", pars);
 
                 // Lấy kết quả từ các tham số OUTPUT
-                response = ConvertUtil.ToInt(pars[5].Value);
-                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[3].Value);
+                totalRecord = ConvertUtil.ToInt(pars[2].Value);
 
                 // Trả về danh sách lịch chiếu
                 return result;

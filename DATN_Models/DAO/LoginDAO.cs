@@ -1,10 +1,7 @@
-﻿using Azure;
-using DATN_Helpers.Common;
-using DATN_Helpers.Constants;
+﻿using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Account;
-using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
@@ -16,7 +13,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 using System.Data;
 
 namespace DATN_Models.DAO

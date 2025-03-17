@@ -8,7 +8,7 @@ namespace DATN_Models.DTOS.Service.Request
         public Guid? Id { get; set; }
     }
     public class DeleteServiceReqValidator : AbstractValidator<DeleteServiceReq>
-    { 
+    {
         public DeleteServiceReqValidator()
         {
             RuleFor(_ => _.Id).NotNegative().NotNullOrEmpty();

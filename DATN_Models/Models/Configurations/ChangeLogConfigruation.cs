@@ -1,5 +1,4 @@
-﻿using DATN_Models.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DATN_Models.Models.Configurations
@@ -8,7 +7,7 @@ namespace DATN_Models.Models.Configurations
     {
         public void Configure(EntityTypeBuilder<ChangeLog> builder)
         {
-            builder.HasKey(e => e.Id); 
+            builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Action)
                   .IsRequired()

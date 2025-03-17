@@ -119,8 +119,24 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<dynamic>> UpdateMovie(UpdateMovieReq req)
         {
             var res = new CommonResponse<dynamic>();
-
             var reqMapper = _mapper.Map<UpdateMovieDAL>(req);
+
+
+            if (req.Thumbnail != null)
+            {
+                reqMapper.ThumbnailURL = await _cloudService.UploadImageAsync(req.Thumbnail).ConfigureAwait(false);
+            }
+
+            if (req.Banner != null)
+            {
+                reqMapper.BannerURL = await _cloudService.UploadImageAsync(req.Banner).ConfigureAwait(false);
+            }
+
+            if (req.Trailer != null)
+            {
+                reqMapper.TrailerURL = await _cloudService.UploadVideoAsync(req.Trailer).ConfigureAwait(false);
+            }
+
 
             _movieDAO.UpdateMovie(reqMapper, out int response);
             res.Data = null;
@@ -157,6 +173,7 @@ namespace DATN_BackEndApi.Controllers
         //    res.ResponseCode = response;
         //    return res;
         //}
+
 
 
         #endregion

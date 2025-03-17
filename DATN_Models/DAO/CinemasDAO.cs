@@ -22,7 +22,7 @@ namespace DATN_Models.DAO
 
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
-        public void CreateCinemas(CinemasReq resquest, out int response)
+        public void CreateCinemas(CinemasDAL resquest, out int response)
         {
             response = 0;
             DBHelper db = null;

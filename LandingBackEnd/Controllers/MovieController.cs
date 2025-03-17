@@ -1,21 +1,15 @@
 ﻿using AutoMapper;
-using Azure;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
-using DATN_LandingPage.Extension;
-using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
-using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.Service.Response;
 using DATN_Services.Service.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_LandingPage.Controllers
@@ -71,7 +65,7 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetShowTimeLanding")]
-        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? movieId,string? location, DateTime? date, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetShowTimeLangdingRes>>();
             var data = _movieDAO.GetShowTimeLanding(movieId, location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);

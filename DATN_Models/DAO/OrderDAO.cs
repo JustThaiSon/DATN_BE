@@ -3,11 +3,8 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Order.Req;
-using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using NLog.Internal;
 using System.Data;
 using System.Xml.Linq;
 namespace DATN_Models.DAO
@@ -24,7 +21,7 @@ namespace DATN_Models.DAO
 
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
-       
+
         public void CreateOrderService(Guid orderId, CreateOrderServiceDAL req, out int response)
         {
             response = 0;

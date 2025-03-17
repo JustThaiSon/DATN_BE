@@ -1,22 +1,22 @@
-﻿using DATN_Helpers.Module;
-using DATN_Models.DAO;
-using DATN_Models.HandleData;
-using DATN_Models.Mapper;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using DATN_Models.Models;
+﻿using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Common;
-using Microsoft.AspNetCore.Identity;
-using FluentValidation;
 using DATN_Helpers.Extensions;
-using NekBigCore.Services.WebSockets;
-using FluentValidation.AspNetCore;
-using DATN_Services.Service;
-using DATN_Services.Service.Interfaces;
+using DATN_Helpers.Module;
+using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Models.HandleData;
+using DATN_Models.Mapper;
+using DATN_Models.Models;
+using DATN_Services.Service;
+using DATN_Services.Service.Interfaces;
 using DATN_Services.WebSockets;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using NekBigCore.Services.WebSockets;
+using System.Reflection;
 namespace DATN_BackEndApi.Extension
 {
     public static class ServiceExtensions
@@ -82,11 +82,12 @@ namespace DATN_BackEndApi.Extension
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             var serviceProvider = services.BuildServiceProvider();
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-        
+
             services.AddIdentity<AppUsers, AppRoles>()
                .AddEntityFrameworkStores<DATN_Context>()
                .AddDefaultTokenProviders();
-            services.AddSession(options => {
+            services.AddSession(options =>
+            {
                 options.IdleTimeout = TimeSpan.FromDays(8);
             });
             HttpContextHelper.Configure(httpContextAccessor);

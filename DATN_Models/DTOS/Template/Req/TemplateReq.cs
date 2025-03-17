@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using DATN_Helpers.Extensions;
+﻿using DATN_Helpers.Extensions;
+using FluentValidation;
 namespace DATN_Models.DTOS.Template.Req
 {
     public class TemplateReq

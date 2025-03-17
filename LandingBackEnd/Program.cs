@@ -1,10 +1,9 @@
 using DATN_BackEndApi.Extension;
+using DATN_LandingPage.Extension;
+using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation;
-using DATN_LandingPage.Extension;
 using ValidationException = FluentValidation.ValidationException;
 
 var builder = WebApplication.CreateBuilder(args);

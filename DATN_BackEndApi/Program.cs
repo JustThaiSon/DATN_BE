@@ -1,19 +1,6 @@
-﻿using CloudinaryDotNet;
-using DATN_BackEndApi.Extension;
-using DATN_BackEndApi.Extension.CloudinarySett;
-using DATN_Helpers.Common;
-using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Module;
-using DATN_Models.DAO;
-using DATN_Models.DAO.Interface;
-using DATN_Models.HandleData;
-using DATN_Models.Mapper;
-using DATN_Models.Models;
+﻿using DATN_BackEndApi.Extension;
 using FluentValidation;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
