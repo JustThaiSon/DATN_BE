@@ -39,22 +39,31 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpGet]
         [Route("payment-callback")]
-        public async Task<CommonResponse<PaymentResponse>> PaymentCallback()
+        public IActionResult PaymentCallback()
         {
-            var res = new CommonResponse<PaymentResponse>();
-            try
-            {
-                var response = _vnPayService.ProcessPaymentCallback(Request.Query);
-                res.Data = response;
-                res.ResponseCode = 1;
-                res.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                res.ResponseCode = -99;
-                res.Message = ex.Message;
-            }
-            return res;
+            //var res = new CommonResponse<PaymentResponse>();
+            //try
+            //{
+            //    var response = _vnPayService.ProcessPaymentCallback(Request.Query);
+            //    res.Data = response;
+            //    res.ResponseCode = 1;
+            //    res.Message = "Success";
+            //}
+            //catch (Exception ex)
+            //{
+            //    res.ResponseCode = -99;
+            //    res.Message = ex.Message;
+            //}
+            //return res;
+
+
+            var response = _vnPayService.ProcessPaymentCallback(Request.Query);
+
+            // Redirect back to Angular with payment result
+            var redirectUrl = "http://localhost:4200/payment-callback";
+            var queryString = $"?vnp_ResponseCode={response.VnPayResponseCode}&vnp_TxnRef={response.OrderId}";
+
+            return Redirect(redirectUrl + queryString);
         }
 
 
