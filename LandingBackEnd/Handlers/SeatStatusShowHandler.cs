@@ -4,6 +4,7 @@ using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Services.WebSockets;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -104,6 +105,23 @@ namespace DATN_LandingPage.Handlers
                                 // Chạy countdown dưới dạng background task để không chặn vòng lặp xử lý message
                                 _ = StartCountdownAsync(hub, roomId, currentUserId);
                                 break;
+                            case "Payment":
+                                if (userSeatUpdates.ContainsKey(currentUserId))
+                                {
+                                    userSeatUpdates.TryRemove(currentUserId, out _);
+                                }
+
+                                if (!userSeatUpdates.ContainsKey(currentUserId))
+                                {
+                                    var seatList = GenerateSeatList(roomId);
+                                    await SendMessageToAllUsers(hub, seatList);
+                                }
+                                else
+                                {
+                                    // Gửi danh sách ghế kèm trạng thái update cũ
+                                    await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
+                                }
+                                break;
 
                             default:
                                 Console.WriteLine($"[WebSocket] Unknown action received: {request.Action}");
@@ -151,7 +169,7 @@ namespace DATN_LandingPage.Handlers
             userPaymentStatus[userId] = false;
 
             // 3. Bắt đầu đếm ngược 60 giây
-            for (int i = 60; i >= 0; i--)
+            for (int i = 120; i >= 0; i--)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -341,6 +359,8 @@ namespace DATN_LandingPage.Handlers
                 CancellationToken.None
             );
         }
+
+       
 
         /// <summary>
         /// Gửi message báo lỗi cho chính user
