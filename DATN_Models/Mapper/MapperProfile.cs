@@ -38,8 +38,9 @@ using DATN_Models.DTOS.Cinemas.Res;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DTOS.ShowTime.Res;
 using DATN_Models.DTOS.Cinemas.Req;
-using DATN_Models.DAL.Cinemas;
-using DATN_Models.DTOS.Cinemas.Res;
+using DATN_Models.DAL.Employee;
+using DATN_Models.DTOS.Employee.Req;
+using DATN_Models.DTOS.Employee.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -120,7 +121,13 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-
+            // Phần nhân viên
+            #region Nghia_Employee
+            CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
+            CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
+            CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
+            #endregion
 
 
 
@@ -165,7 +172,7 @@ namespace DATN_Models.Mapper
             CreateMap<GetListTicketDAL, GetListTicketRes>().ReverseMap();
             CreateMap<GetDetailOrderDAL, GetDetailOrderRes>().ReverseMap();
             CreateMap<GetStatusByIdDAL, GetStatusByIdRes>().ReverseMap();
-            CreateMap<CreateOrderReq , CreateOrderDAL>().ReverseMap();
+            CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
             CreateMap<TicketReq, TicketDAL>().ReverseMap();
             CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
             #endregion

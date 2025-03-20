@@ -11,35 +11,13 @@ using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.HandleData;
 using DATN_Models.Mapper;
 using DATN_Models.Models;
-using DATN_Services.Orders;
-using DATN_Services.Orders.Interface;
-using DATN_Services.Service;
-using DATN_Services.Service.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Common;
-using CloudinaryDotNet;
-using DATN_BackEndApi.Extension.CloudinarySett;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Identity;
-using FluentValidation.AspNetCore;
-using FluentValidation;
-using DATN_Helpers.Extensions;
-using DATN_Helpers.Extensions;
+using NekBigCore.Services.WebSockets;
 using System.Reflection;
-using DATN_Services.Service.Interfaces;
-using DATN_Services.Service;
-using DATN_BackEndApi.VNPay;
-using DATN_BackEndApi.Extension.Vnpay;
-using Microsoft.Extensions.DependencyInjection;
-using DATN_Models.DAO.Interface.SeatAbout;
-using DATN_Services.Service;
-using DATN_Services.Service;
-using DATN_Services.Service;
-using DATN_Services.Service;
 
 namespace DATN_BackEndApi.Extension
 {
@@ -99,7 +77,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
-
+            services.AddTransient<IEmployeeDAO, EmployeeDAO>();
 
 
 

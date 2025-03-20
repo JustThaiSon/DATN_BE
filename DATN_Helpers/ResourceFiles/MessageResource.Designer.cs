@@ -259,6 +259,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lỗi hệ thống.
+        /// </summary>
+        internal static string _500 {
+            get {
+                return ResourceManager.GetString("-500", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} được yêu cầu..
         /// </summary>
         internal static string _601 {
@@ -318,6 +327,24 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _607 {
             get {
                 return ResourceManager.GetString("-607", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mật khẩu có thể không đúng.
+        /// </summary>
+        internal static string _999998 {
+            get {
+                return ResourceManager.GetString("-999998", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Người dùng không tồn tại (đổi mật khẩu).
+        /// </summary>
+        internal static string _999999 {
+            get {
+                return ResourceManager.GetString("-999999", resourceCulture);
             }
         }
     }
