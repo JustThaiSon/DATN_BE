@@ -179,6 +179,14 @@
   <data name="-1993" xml:space="preserve">
     <value>Không tìm thấy movie</value>
   </data>
+  <data name="-1700" xml:space="preserve">
+    <value>Ngày tìm kiếm không hợp lệ </value>
+    <comment>lỗi  Ngày bắt đầu &gt; ngày kết thúc</comment>
+  </data>
+  <data name="-1720" xml:space="preserve">
+    <value>Không có dữ liệu tìm kiếm</value>
+    <comment>Theo khoảng ngày</comment>
+  </data>
   <data name="-601" xml:space="preserve">
     <value>{0} được yêu cầu.</value>
   </data>
@@ -208,5 +216,14 @@
   </data>
   <data name="-405" xml:space="preserve">
     <value>Lỗi Resfresh Token</value>
+  </data>
+  <data name="-999998" xml:space="preserve">
+    <value>Mật khẩu có thể không đúng</value>
+  </data>
+  <data name="-999999" xml:space="preserve">
+    <value>Người dùng không tồn tại (đổi mật khẩu)</value>
+  </data>
+  <data name="-500" xml:space="preserve">
+    <value>Lỗi hệ thống</value>
   </data>
 </root>

@@ -35,4 +35,8 @@
     <Folder Include="DTOS\Template\Res\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOS\Statistic\Req\" />
+  </ItemGroup>
+
 </Project>
