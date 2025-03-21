@@ -25,6 +25,7 @@ using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Employee.Req;
 using DATN_Models.DTOS.Employee.Res;
+using DATN_Models.DTOS.Logs.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -157,6 +158,8 @@ namespace DATN_Models.Mapper
             #region Nghia_Statistic
             CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
             CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
+
+            CreateMap<ChangeLog, GetLogRes>().ReverseMap();
 
             #endregion
 

@@ -1,4 +1,7 @@
 ﻿using DATN_Models.DAL.Statistic;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DATN_Models.DAO.Interface
 {
@@ -13,14 +16,5 @@ namespace DATN_Models.DAO.Interface
         List<StatisticPeakHoursDAL> GetPeakHours(DateTime? startDate, DateTime? endDate, out int response);
         List<StatisticCustomerGenderDAL> GetCustomerGender(DateTime? startDate, DateTime? endDate, out int response);
         List<StatisticBundledServicesDAL> GetBundledServices(DateTime? startDate, DateTime? endDate, out int response);
-        List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response);
-        List<Statistic_MovieDetailDAL> Movie_DateRange(Guid MovieID, DateTime? start_date, DateTime? end_date, out int response);
-        #region phụ
-        Task Summary(out int response);
-
-        Task Movie(out int response);
-
-        #endregion
-
     }
 }
