@@ -1,16 +1,12 @@
 ﻿using DATN_Models.DAL.Statistic;
-<<<<<<< HEAD
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-=======
->>>>>>> main
 
 namespace DATN_Models.DAO.Interface
 {
     public interface IStatisticDAO
     {
-<<<<<<< HEAD
         List<StatisticTopServicesDAL> GetTopServices(DateTime? startDate, DateTime? endDate, out int response);
         List<StatisticSeatProfitabilityDAL> GetSeatProfitability(DateTime? startDate, DateTime? endDate, out int response);
         List<StatisticSeatOccupancyDAL> GetSeatOccupancy(DateTime? startDate, DateTime? endDate, out int response);
@@ -22,21 +18,3 @@ namespace DATN_Models.DAO.Interface
         List<StatisticBundledServicesDAL> GetBundledServices(DateTime? startDate, DateTime? endDate, out int response);
     }
 }
-=======
-        List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response);
-
-        // Cái này bao gồm cả số lượng thông tin vé bán ra theo ngày luôn rồi
-        List<Statistic_MovieDetailDAL> Movie_DateRange(Guid MovieID, DateTime? start_date, DateTime? end_date, out int response);
-
-
-
-        #region phụ
-        Task Summary(out int response);
-
-        Task Movie(out int response);
-
-        #endregion
-
-    }
-}
->>>>>>> main
