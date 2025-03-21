@@ -40,5 +40,6 @@ namespace DATN_Models.DAL.Employee
         public int Sex { get; set; }
         public string Address { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int Status { get; set; }
     }
 }

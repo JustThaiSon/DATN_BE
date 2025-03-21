@@ -78,8 +78,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
-
-
+            services.AddTransient<IStatisticDAO, StatisticDAO>();
 
 
 
@@ -88,13 +87,6 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<UserManager<AppUsers>, UserManager<AppUsers>>();
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
-
-
-
-
-
-
-
 
 
 
