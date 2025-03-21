@@ -1,4 +1,5 @@
-﻿using DATN_Models.DTOS.Account;
+﻿using DATN_Models.DAL.Account;
+using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
 
 namespace DATN_Models.DAO.Interface
@@ -8,7 +9,8 @@ namespace DATN_Models.DAO.Interface
 
         Task<(int, string)> RegisterUserAsync(CreateAccountReq request);
 
-        Task<(LoginDTO LoginDto, int Response)> login(string userName, string passWord);
-        Task<int> VerifyOtpAndRegisterUserAsync(string email, string otp);
+        Task<(LoginDTO LoginDto, int Response)> login(SignInDAL req);
+        Task<int> VerifyOtpAndRegisterUserAsync(VerifyOtpReq req);
+        //void SaveSession(Guid userId);
     }
 }

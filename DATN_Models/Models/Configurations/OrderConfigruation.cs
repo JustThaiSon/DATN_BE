@@ -12,14 +12,11 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.CreatedDate)
                 .IsRequired();
             builder.Property(x => x.UpdatedDate).IsRequired(false);
-
             builder.Property(x => x.TotalPrice)
                 .IsRequired();
-
             builder.Property(x => x.Status)
                 .IsRequired();
-
-            builder.Property(x => x.PaymentId)
+            builder.Property(x => x.OrderCode)
                 .IsRequired();
             builder.Property(x => x.IsAnonymous)
                 .IsRequired();

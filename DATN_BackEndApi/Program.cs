@@ -1,19 +1,6 @@
-﻿using CloudinaryDotNet;
-using DATN_BackEndApi.Extension;
-using DATN_BackEndApi.Extension.CloudinarySett;
-using DATN_Helpers.Common;
-using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Module;
-using DATN_Models.DAO;
-using DATN_Models.DAO.Interface;
-using DATN_Models.HandleData;
-using DATN_Models.Mapper;
-using DATN_Models.Models;
-using DATN_Services.Orders;
-using DATN_Services.Orders.Interface;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+﻿using DATN_BackEndApi.Extension;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -45,7 +32,21 @@ namespace DATN_BackEndApi
             _services.AddCoreService();
             _services.AddMemoryCache();
 
-            _services.AddControllers();
+            _services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState
+                        .Where(ms => ms.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            ms => ms.Key,
+                            ms => ms.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+                    throw new ValidationException(
+                        errors.SelectMany(kv => kv.Value.Select(error => new ValidationFailure(kv.Key, error)))
+                    );
+                };
+            });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             _services.AddEndpointsApiExplorer();
             _services.AddSwaggerGen(options =>
@@ -89,18 +90,18 @@ namespace DATN_BackEndApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+
             app.UseCors(MyAllowSpecificOrigins);
             app.UseStaticFiles();
-            //app.UseWebSockets(new WebSocketOptions
-            //{
-            //    KeepAliveInterval = TimeSpan.FromSeconds(30),
-            //});
-
+            app.UseWebSockets(new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(30),
+            });
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.MapControllers();
 

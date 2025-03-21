@@ -13,5 +13,14 @@
         ERR_USER_NOT_FOUND = -105,
         OTP_SENT = 106,
         ERR_INVALID_OTP = 107,
+        ERR_TOKEN_INVALID = -405,
+        // Code Validator (-600< and >-700)
+        VLD_REQUIRED = -601,
+        VLD_MAX_LENGTH = -602,
+        VLD_MIN_LENGTH = -603,
+        VLD_RANGE_LENGTH = -604,
+        VLD_NOT_NEGATIVE = -605,
+        VLD_GREATER_THAN_ZERO = -606,
+        VLD_MUST_BE_INTEGER = -607
     }
 }

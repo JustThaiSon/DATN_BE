@@ -88,6 +88,24 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<UpdateMovieDAL>(req);
+
+
+            if (req.Thumbnail != null)
+            {
+                reqMapper.ThumbnailURL = await _cloudService.UploadImageAsync(req.Thumbnail).ConfigureAwait(false);
+            }
+
+            if (req.Banner != null)
+            {
+                reqMapper.BannerURL = await _cloudService.UploadImageAsync(req.Banner).ConfigureAwait(false);
+            }
+
+            if (req.Trailer != null)
+            {
+                reqMapper.TrailerURL = await _cloudService.UploadVideoAsync(req.Trailer).ConfigureAwait(false);
+            }
+
+
             _movieDAO.UpdateMovie(reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -105,6 +123,23 @@ namespace DATN_BackEndApi.Controllers
             res.ResponseCode = response;
             return res;
         }
+
+
+
+        //[HttpPost]
+        //[Route("TestMovie")]
+        //public async Task<CommonResponse<dynamic>> TestMovie([FromBody] ActorReq rq, [FromQuery] params Guid[] ActorIDs)
+        //{
+        //    var res = new CommonResponse<dynamic>();
+        //    _movieDAO.CreateActor(rq, out int response);
+        //    res.Data = null;
+        //    res.Message = MessageUtils.GetMessage(response, _langCode);
+        //    res.ResponseCode = response;
+        //    return res;
+        //}
+
+
+
         #endregion
     }
 }

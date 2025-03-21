@@ -88,6 +88,60 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Showtime không tồn tại !.
+        /// </summary>
+        internal static string _120 {
+            get {
+                return ResourceManager.GetString("-120", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ghế không tồn tại !.
+        /// </summary>
+        internal static string _121 {
+            get {
+                return ResourceManager.GetString("-121", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trạng thái ghế không hợp lệ để đặt!.
+        /// </summary>
+        internal static string _122 {
+            get {
+                return ResourceManager.GetString("-122", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserID không tồn tại.
+        /// </summary>
+        internal static string _123 {
+            get {
+                return ResourceManager.GetString("-123", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Service Không tồn tại.
+        /// </summary>
+        internal static string _125 {
+            get {
+                return ResourceManager.GetString("-125", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order không tồn tại!.
+        /// </summary>
+        internal static string _126 {
+            get {
+                return ResourceManager.GetString("-126", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ngày tìm kiếm không hợp lệ .
         /// </summary>
         internal static string _1700 {
@@ -196,43 +250,6 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Showtime không tồn tại !.
-        /// </summary>
-        internal static string _120 {
-            get {
-                return ResourceManager.GetString("-120", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ghế không tồn tại !.
-        /// </summary>
-        internal static string _121 {
-            get {
-                return ResourceManager.GetString("-121", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Trạng thái ghế không hợp lệ để đặt!.
-        /// </summary>
-        internal static string _122 {
-            get {
-                return ResourceManager.GetString("-122", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UserID không tồn tại.
-        /// </summary>
-        internal static string _123 {
-            get {
-                return ResourceManager.GetString("-123", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Thành Công.
         ///   Looks up a localized string similar to Thành công.
         /// </summary>
         internal static string _200 {
@@ -247,6 +264,107 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _404 {
             get {
                 return ResourceManager.GetString("-404", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lỗi Resfresh Token.
+        /// </summary>
+        internal static string _405 {
+            get {
+                return ResourceManager.GetString("-405", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lỗi hệ thống.
+        /// </summary>
+        internal static string _500 {
+            get {
+                return ResourceManager.GetString("-500", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} được yêu cầu..
+        /// </summary>
+        internal static string _601 {
+            get {
+                return ResourceManager.GetString("-601", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không được nhập quá {0} ký tự..
+        /// </summary>
+        internal static string _602 {
+            get {
+                return ResourceManager.GetString("-602", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhập ít nhất {0} ký tự..
+        /// </summary>
+        internal static string _603 {
+            get {
+                return ResourceManager.GetString("-603", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhập trong khoảng từ {0} đến {1} ký tự..
+        /// </summary>
+        internal static string _604 {
+            get {
+                return ResourceManager.GetString("-604", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá trị không được âm..
+        /// </summary>
+        internal static string _605 {
+            get {
+                return ResourceManager.GetString("-605", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá trị phải lớn hơn 0.
+        /// </summary>
+        internal static string _606 {
+            get {
+                return ResourceManager.GetString("-606", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giá trị phải là số nguyên.
+        /// </summary>
+        internal static string _607 {
+            get {
+                return ResourceManager.GetString("-607", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mật khẩu có thể không đúng.
+        ///   Looks up a localized string similar to Thành Công.
+        ///   Looks up a localized string similar to Thành công.
+        /// </summary>
+        internal static string _999998 {
+            get {
+                return ResourceManager.GetString("-999998", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Người dùng không tồn tại (đổi mật khẩu).
+        /// </summary>
+        internal static string _999999 {
+            get {
+                return ResourceManager.GetString("-999999", resourceCulture);
             }
         }
     }

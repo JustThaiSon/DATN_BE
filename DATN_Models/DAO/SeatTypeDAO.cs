@@ -1,7 +1,7 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.SeatType;
-using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;

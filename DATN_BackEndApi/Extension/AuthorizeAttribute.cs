@@ -1,6 +1,8 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Database;
 using DATN_Helpers.Extensions;
+using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account.Res;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -17,34 +19,33 @@ namespace DATN_BackEndApi.Extension
         {
             private readonly IUltil _ultils;
             private readonly string _langCode;
-            public AuthorizeAttributeImpl(IUltil ultils, IConfiguration configuration)
+            private readonly ILoginDAO _loginDAO;
+            public AuthorizeAttributeImpl(IUltil ultils, IConfiguration configuration, ILoginDAO loginDAO)
             {
                 _ultils = ultils;
                 _langCode = configuration["ProjectSettings:LanguageCode"] ?? "vi";
+                _loginDAO = loginDAO;
             }
 
             public void OnActionExecuting(ActionExecutingContext context)
             {
-
             }
 
             public void OnActionExecuted(ActionExecutedContext context)
             {
-                // Do something after the action executes.
             }
 
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 var check = CheckUserPemission(context);
                 if (!check) return;
-
                 await next();
             }
 
             #region Private method
             private bool CheckUserPemission(ActionExecutingContext context)
             {
-                int INVALID_TOKEN = 1015;
+                int INVALID_TOKEN = -401;
 
                 HttpRequest httpRequest = context.HttpContext.Request;
                 string path = context.ActionDescriptor.AttributeRouteInfo.Template;

@@ -217,9 +217,9 @@ namespace DATN_Models.DAO
                     actorTable.Rows.Add(actorId);
                 }
 
-                var pars = new SqlParameter[10];
+                var pars = new SqlParameter[11];
 
-                pars[0] = new SqlParameter("@_MovieID", req.MovieName);
+                pars[0] = new SqlParameter("@_MovieID", req.MovieID);
                 pars[1] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[2] = new SqlParameter("@_Description", req.Description);
                 pars[3] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
@@ -231,6 +231,8 @@ namespace DATN_Models.DAO
 
                 // Thêm id actor vào trong bảng MovieActor
                 pars[9] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
+
+
                 pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
@@ -247,6 +249,158 @@ namespace DATN_Models.DAO
             {
                 if (db != null)
                     db.Close();
+            }
+        }
+
+        public List<GetMovieLandingDAL> GetMovieLanding(int type, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[5];
+                pars[0] = new SqlParameter("@_Type", type);
+                pars[1] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[2] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[3] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetMovieLandingDAL>("SP_Langding_GetMovie", pars);
+                response = ConvertUtil.ToInt(pars[4].Value);
+                totalRecord = ConvertUtil.ToInt(pars[3].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public GetDetailMovieLangdingDAL GetDetailMovieLangding(Guid movieId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_MovieID", movieId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetDetailMovieLangdingDAL>("SP_Langding_GetDetailMovie", pars);
+                if (result != null)
+                {
+                    result.Genres = result.GenreList.Split(',')
+                  .Select(x => x.Split(':'))
+                  .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
+                  .Select(parts => new ListGenreLangdingDAL
+                  {
+                      Id = Guid.Parse(parts[0].Trim()),
+                      GenreName = parts[1].Trim()
+                  })
+                  .ToList();
+
+                    result.Actors = result.ActorList.Split(',')
+                        .Select(x => x.Split(':'))
+                        .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
+                        .Select(parts => new ListActorLangdingDAL
+                        {
+                            Id = Guid.Parse(parts[0].Trim()),
+                            ActorName = parts[1].Trim()
+                        })
+                        .ToList();
+                }
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+        public List<GetShowTimeLandingDAL> GetShowTimeLanding(Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        {
+            response = 0;
+            totalRecord = 0;
+            DBHelper? db = null;
+            try
+            {
+                var pars = new SqlParameter[7];
+                pars[0] = new SqlParameter("@_MovieID", movieId == Guid.Empty ? (object)DBNull.Value : movieId);
+                pars[1] = new SqlParameter("@_Location", location);
+                pars[2] = new SqlParameter("@_Date", date);
+                pars[3] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[4] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[5] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetShowTimeLandingDAL>("SP_Langding_GetShowTime", pars);
+                if (result != null)
+                {
+                    foreach (var item in result)
+                    {
+                        item.Showtimes = item.ListShowTime.Split(',')
+                            .Select(x => x.Split('|'))
+                            .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
+                            .Select(parts => new ShowtimesLangdingDAL
+                            {
+                                Id = Guid.Parse(parts[0].Trim()),
+                                StartTime = TimeSpan.Parse(parts[1].Trim())
+                            })
+                            .ToList();
+                    }
+                }
+                response = ConvertUtil.ToInt(pars[6].Value);
+                totalRecord = ConvertUtil.ToInt(pars[5].Value);
+                return result ?? new List<GetShowTimeLandingDAL>();
+            }
+            catch (Exception)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
+
+        public List<GetAllNameMovieDAL> GetAllNameMovie(out int response)
+        {
+            response = 0;
+            DBHelper? db = null;
+            try
+            {
+                var pars = new SqlParameter[1];
+                pars[0] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetAllNameMovieDAL>("SP_Movie_GetNameMovie", pars);
+
+                response = ConvertUtil.ToInt(pars[0].Value);
+                return result ?? new List<GetAllNameMovieDAL>();
+            }
+            catch (Exception)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                db?.Close();
             }
         }
 

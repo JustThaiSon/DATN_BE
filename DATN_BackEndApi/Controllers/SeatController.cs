@@ -3,7 +3,7 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Seat;
-using DATN_Models.DAO.Interface;
+using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.Seat.Res;
 using Microsoft.AspNetCore.Mvc;
@@ -47,9 +47,29 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+
+        [HttpGet]
+        [Route("GetAllSeatByShowTime")]
+
+        public async Task<CommonPagination<List<GetListSeatByShowTimeRes>>> GetAllSeatByShowTime(Guid showTimeId, int currentPage, int recordPerPage)
+        {
+
+            var res = new CommonPagination<List<GetListSeatByShowTimeRes>>();
+
+            var result = _seatDAO.GetListSeatByShowTime(showTimeId, currentPage, recordPerPage, out int TotalRecord, out int response);
+
+            var resultMapper = _mapper.Map<List<GetListSeatByShowTimeRes>>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            res.TotalRecord = TotalRecord;
+
+            return res;
+        }
+
         [HttpPost]
         [Route("UpdateStatusSeat")]
-
         public async Task<CommonResponse<dynamic>> UpdateStatusSeat(UpdateSeatStatusReq rq)
         {
             var res = new CommonResponse<dynamic>();
@@ -63,13 +83,39 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpPost]
-        [Route("UpdateTypeSeat")]
+        [Route("UpdateStatusSeatByShowTime")]
+        public async Task<CommonResponse<dynamic>> UpdateStatusSeatByShowTime(UpdateSeatByShowTimeStatusReq rq)
+        {
+            var res = new CommonResponse<dynamic>();
+            var resultMapper = _mapper.Map<UpdateSeatByShowTimeStatusDAL>(rq);
+            _seatDAO.UpdateSeatByShowTimeStatus(resultMapper, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
 
+        }
+        [HttpPost]
+        [Route("UpdateTypeSeat")]
         public async Task<CommonResponse<dynamic>> UpdateTypeSeat(UpdateSeatTypeReq rq)
         {
             var res = new CommonResponse<dynamic>();
             var resultMapper = _mapper.Map<UpdateSeatTypeDAL>(rq);
             _seatDAO.UpdateSeatType(resultMapper, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+
+        }
+
+        [HttpPost]
+        [Route("SetupPair")]
+        public async Task<CommonResponse<dynamic>> SetupPairSeat(SetupPairReq rq)
+        {
+            var res = new CommonResponse<dynamic>();
+            var resultMapper = _mapper.Map<SetupPair>(rq);
+            _seatDAO.SetupPair(resultMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;

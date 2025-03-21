@@ -9,8 +9,9 @@ namespace DATN_Models.DTOS.Room.Res
         public string Name { get; set; }
         public int TotalColNumber { get; set; }
         public int TotalRowNumber { get; set; }
+        public long SeatPrice { get; set; }
         public int TotalSeats { get; set; }
-        public int RoomCapacity { get; set; }
+        public bool Isdeleted { get; set; }
         public RoomStatusEnum Status { get; set; }
     }
 }

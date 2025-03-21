@@ -1,4 +1,6 @@
-﻿namespace DATN_Helpers.Common
+﻿using Newtonsoft.Json;
+
+namespace DATN_Helpers.Common
 {
 
     /// <summary>
@@ -48,4 +50,14 @@
         /// </summary>
         public int TotalRecord { get; set; }
     }
+    public class CommonMessage<T>
+    {
+        [JsonProperty("i")]
+        public long MessageId { get; set; }
+        [JsonProperty("m")]
+        public string Method { get; set; }
+        [JsonProperty("dt")]
+        public T Data { get; set; }
+    }
+
 }
