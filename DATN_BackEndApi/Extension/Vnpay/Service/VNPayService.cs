@@ -1,5 +1,5 @@
 ﻿using DATN_BackEndApi.Extension.Vnpay;
-using DATN_BackEndApi.VNPay;
+using DATN_BackEndApi.Extension.Vnpay.DATN_BackEndApi.VNPay;
 
 public interface IVNPayService
 {
@@ -45,7 +45,10 @@ public class VNPayService : IVNPayService
         pay.AddRequestData("vnp_ReturnUrl", returnUrl);
         pay.AddRequestData("vnp_TxnRef", tick);
 
-
+        // Sử dụng URL callback đúng
+        //var returnUrl = _options.ReturnUrl;
+        //pay.AddRequestData("vnp_ReturnUrl", returnUrl);
+        //pay.AddRequestData("vnp_TxnRef", tick);
 
 
         var paymentUrl = pay.CreateRequestUrl(_options.PaymentUrl, _options.HashSecret);

@@ -41,7 +41,7 @@ public class VNPayService : IVNPayService
 
 
         // Sử dụng URL tạm thời cho vnp_ReturnUrl
-        var returnUrl = $"{context.Request.Scheme}://{context.Request.Host}/api/payment/payment-callback";
+        var returnUrl = $"{context.Request.Scheme}://{context.Request.Host}/api/Movie/payment-callback";
         pay.AddRequestData("vnp_ReturnUrl", returnUrl);
         pay.AddRequestData("vnp_TxnRef", tick);
 
