@@ -7,7 +7,7 @@ namespace DATN_Helpers.Database
     public class DBHelper
     {
         private string _cnnString = string.Empty;
-
+       
         public string cnnString
         {
             get
@@ -658,6 +658,8 @@ namespace DATN_Helpers.Database
             ;
             return GetList<T>(sqlCommand, Parameters);
         }
+
+
 
         #endregion
 

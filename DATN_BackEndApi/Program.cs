@@ -82,6 +82,7 @@ namespace DATN_BackEndApi
                     }
                 });
             });
+
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

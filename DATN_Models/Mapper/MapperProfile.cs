@@ -13,6 +13,7 @@ using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.ShowTime;
+using DATN_Models.DAL.Statistic;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Cinemas.Req;
@@ -37,7 +38,10 @@ using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DTOS.Service.Response;
+using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
+using DATN_Models.Models;
+using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 
 namespace DATN_Models.Mapper
 {
@@ -118,6 +122,14 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+            // Phần nhân viên
+            #region Nghia_Employee
+            CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
+            CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
+            CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
+            #endregion
+
 
 
 
@@ -125,6 +137,28 @@ namespace DATN_Models.Mapper
             #region Cinema
             CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
 
+
+            #endregion
+
+
+
+            #region Cinema
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+
+
+            #endregion
+
+
+            // Phần Thống kê
+            #region Nghia_Statistic
+            CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
+            CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
+
+            #endregion
+
+
+            #region Showtime
+            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
 
             #endregion
 
@@ -179,22 +213,49 @@ namespace DATN_Models.Mapper
             #endregion
             #region PricingRule
             CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
-                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.StartTime) ? (TimeSpan?)null : TimeSpan.Parse(src.StartTime)))
-                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.EndTime) ? (TimeSpan?)null : TimeSpan.Parse(src.EndTime)))
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.StartDate) ? (DateTime?)null : DateTime.Parse(src.StartDate)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.EndDate) ? (DateTime?)null : DateTime.Parse(src.EndDate)))
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Date) ? (DateTime?)null : DateTime.Parse(src.Date)))
+              
                 .ReverseMap();
             CreateMap<UpdatePricingRuleDAL, UpdatePricingRuleReq>().ReverseMap();
             CreateMap<GetListPricingRuleDAL, GetListPricingRuleRes>().ReverseMap();
             #endregion
 
             #endregion
+            #region statistic
+            CreateMap<StatisticTopServicesDAL, StatisticTopServicesRes>().ReverseMap();
+            CreateMap<StatisticSeatProfitabilityDAL, StatisticSeatProfitabilityRes>().ReverseMap();
+            CreateMap<StatisticSeatOccupancyDAL, StatisticSeatOccupancyRes>().ReverseMap();
+            CreateMap<StatisticRevenueByTimeDAL, StatisticRevenueByTimeRes>().ReverseMap();
+            CreateMap<StatisticRevenueByCinemaDAL, StatisticRevenueByCinemaRes>().ReverseMap();
+            CreateMap<StatisticPopularGenresDAL, StatisticPopularGenresRes>().ReverseMap();
+            CreateMap<StatisticPeakHoursDAL, StatisticPeakHoursRes>().ReverseMap();
+            CreateMap<StatisticCustomerGenderDAL, StatisticCustomerGenderRes>().ReverseMap();
+            CreateMap<StatisticBundledServicesDAL, StatisticBundledServicesRes>().ReverseMap();
+            #endregion
+
 
             CreateMap<SignInDAL, SignInReq>().ReverseMap();
             CreateMap<GetAllNameMovieDAL, GetAllNameMovieRes>().ReverseMap();
             CreateMap<GetSeatByShowTimeRes, GetSeatByShowTimeDAL>().ReverseMap();
 
+            #region ShowTime
+            // Entity <-> DAL mappings
+            CreateMap<ShowTime, ShowTimeDAL>()
+                .ReverseMap();
+
+            // DAL <-> DTO mappings
+            CreateMap<ShowTimeDAL, ShowTimeRes>()
+                .ReverseMap();
+            CreateMap<AvailableRoomDAL, AvailableRoomRes>()
+                .ReverseMap();
+            CreateMap<TimeSlotDAL, TimeSlotRes>()
+                .ForMember(dest => dest.IsAvailable, opt => opt.MapFrom(src => src.IsAvailable == 1))
+                .ReverseMap()
+                .ForMember(dest => dest.IsAvailable, opt => opt.MapFrom(src => src.IsAvailable ? 1 : 0));
+
+            // Request mappings
+            CreateMap<ShowTimeReq, ShowTimeDAL>();
+            CreateMap<ShowTimeReq, ShowTime>();
+            #endregion
 
         }
     }

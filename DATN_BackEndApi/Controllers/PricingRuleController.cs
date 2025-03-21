@@ -6,6 +6,7 @@ using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -49,10 +50,11 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("CreateRule")]
-
-        public async Task<CommonResponse<dynamic>> CreateRule(CreatePricingRuleReq rq)
+        public async Task<CommonResponse<dynamic>> CreateRule( CreatePricingRuleReq rq)
         {
             var res = new CommonResponse<dynamic>();
+
+
             var resultMapper = _mapper.Map<CreatePricingRuleDAL>(rq);
             _pricingRuleDAO.CreatePricingRule(resultMapper, out int response);
             res.Data = null;
@@ -89,4 +91,5 @@ namespace DATN_BackEndApi.Controllers
         }
 
     }
+
 }

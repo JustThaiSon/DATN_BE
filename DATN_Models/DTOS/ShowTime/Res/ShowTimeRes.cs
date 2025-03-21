@@ -10,5 +10,6 @@
         public int Status { get; set; }
         public string MovieName { get; set; }
         public string RoomName { get; set; }
+        public int Capacity { get; set; }
     }
 }
