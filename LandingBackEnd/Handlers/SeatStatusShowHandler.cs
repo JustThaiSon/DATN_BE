@@ -196,10 +196,8 @@ namespace DATN_LandingPage.Handlers
                             var seatGuid = Guid.Parse(update.SeatId);
                             _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)SeatStatusEnum.Available);
                         }
-
                         // Xóa thông tin ghế của user
                         userSeatUpdates.TryRemove(userId, out _);
-
                         // Gửi danh sách ghế mới nhất cho tất cả user
                         var updatedSeatList = GenerateSeatList(roomId);
                         await SendMessageToAllUsers(hub, updatedSeatList);
