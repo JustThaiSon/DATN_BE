@@ -1,10 +1,5 @@
 ﻿using DATN_Helpers.CacheCore.Interface;
 using Microsoft.Extensions.Caching.Memory;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DATN_Helpers.CacheCore
 {
@@ -27,7 +22,7 @@ namespace DATN_Helpers.CacheCore
             var cacheOptions = new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = expiration,
-                 SlidingExpiration = slidingExpiration
+                SlidingExpiration = slidingExpiration
             };
 
             _memoryCache.Set(key, value, cacheOptions);

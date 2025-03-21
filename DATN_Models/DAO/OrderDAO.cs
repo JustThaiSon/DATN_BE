@@ -3,16 +3,9 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Order.Req;
-using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Xml.Linq;
-using System.Xml.Linq;
+using System.Data;
 using System.Xml.Linq;
 namespace DATN_Models.DAO
 {
@@ -24,11 +17,11 @@ namespace DATN_Models.DAO
         {
             var configuration = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json")
+                .Build();
+
+            connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
-       
-        public void CreateOrderService(Guid orderId, CreateOrderServiceDAL req, out int response)
-        public void CreateOrderService(Guid orderId, CreateOrderServiceDAL req, out int response)
-        public void CreateOrderService(Guid orderId, CreateOrderServiceDAL req, out int response)
+
         public void CreateOrderService(Guid orderId, CreateOrderServiceDAL req, out int response)
         {
             response = 0;

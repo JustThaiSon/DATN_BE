@@ -1,7 +1,6 @@
 ﻿using DATN_Helpers.Extensions;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Data.Common;
 
 namespace DATN_Helpers.Database
 {
@@ -57,7 +56,7 @@ namespace DATN_Helpers.Database
 
         public DBHelper()
         {
-            
+
         }
 
         /// <summary>
@@ -470,7 +469,7 @@ namespace DATN_Helpers.Database
         public int ExecuteNonQuerySP(string SPName)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
-                 var userId = HttpContextHelper.GetUserId();
+            var userId = HttpContextHelper.GetUserId();
             if (userId != Guid.Empty)
             {
                 SetSessionContext(userId);
