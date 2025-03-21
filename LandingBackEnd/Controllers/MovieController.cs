@@ -152,5 +152,15 @@ namespace DATN_LandingPage.Controllers
             }
             return res;
         }
+        [HttpGet]
+        [Route("payment-callback")]
+        public IActionResult PaymentCallback()
+        {
+            var response = _vnPayService.ProcessPaymentCallback(Request.Query);
+            // Redirect back to Angular with payment result
+            var redirectUrl = "http://localhost:4200/payment-callback";
+            var queryString = $"?vnp_ResponseCode={response.VnPayResponseCode}&vnp_TxnRef={response.OrderId}";
+            return Redirect(redirectUrl + queryString);
+        }
     }
 }

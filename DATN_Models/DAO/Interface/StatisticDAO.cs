@@ -101,6 +101,51 @@ namespace DATN_Models.DAO.Interface
 
 
         public Task Summary(out int response) { throw new NotImplementedException(); }
+
+        public List<StatisticTopServicesDAL> GetTopServices(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticSeatProfitabilityDAL> GetSeatProfitability(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticSeatOccupancyDAL> GetSeatOccupancy(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticRevenueByTimeDAL> GetRevenueByTime(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticRevenueByCinemaDAL> GetRevenueByCinema(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticPopularGenresDAL> GetPopularGenres(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticPeakHoursDAL> GetPeakHours(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticCustomerGenderDAL> GetCustomerGender(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<StatisticBundledServicesDAL> GetBundledServices(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }
