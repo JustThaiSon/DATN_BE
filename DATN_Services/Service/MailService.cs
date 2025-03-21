@@ -1,13 +1,8 @@
-﻿using DATN_Services.Service.Interfaces;
-using System.Net.Mail;
-using System.Net;
+﻿using DATN_Models.DAL.Orders;
+using DATN_Services.Service.Interfaces;
 using QRCoder;
-using MimeKit;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System;
-using DATN_Models.DAL.Orders;
+using System.Net;
+using System.Net.Mail;
 
 namespace DATN_Services.Service
 {
@@ -33,7 +28,7 @@ namespace DATN_Services.Service
                         smtp.UseDefaultCredentials = false;
                         smtp.Credentials = new NetworkCredential("thaothaobatbai123@gmail.com", "kaefdapftqcriiwj");
 
-                        await smtp.SendMailAsync(mail); 
+                        await smtp.SendMailAsync(mail);
                     }
                 }
                 return true;
@@ -49,7 +44,7 @@ namespace DATN_Services.Service
         {
             try
             {
-              
+
 
                 // 1️⃣ Tạo mã QR
                 string qrText = $"Phim: {req.MovieName}\nMã vé: {req.OrderCode}";
@@ -230,4 +225,3 @@ namespace DATN_Services.Service
 }
 
 
-  

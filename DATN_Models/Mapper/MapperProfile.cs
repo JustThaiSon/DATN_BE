@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
@@ -12,8 +13,12 @@ using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.Statistic;
+using DATN_Models.DAL.Service;
+using DATN_Models.DAL.ShowTime;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
+using DATN_Models.DTOS.Cinemas.Req;
+using DATN_Models.DTOS.Cinemas.Res;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
 using DATN_Models.DTOS.Customer.Req;
@@ -21,6 +26,8 @@ using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
 using DATN_Models.DTOS.Rating.Req;
@@ -43,6 +50,7 @@ using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DTOS.Employee.Req;
 using DATN_Models.DTOS.Employee.Res;
+using DATN_Models.DTOS.ShowTime.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -133,6 +141,16 @@ namespace DATN_Models.Mapper
 
 
 
+
+
+            #region Cinema
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+
+
+            #endregion
+
+
+
             #region Cinema
             CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
 
@@ -144,6 +162,12 @@ namespace DATN_Models.Mapper
             #region Nghia_Statistic
             CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
             CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
+
+            #endregion
+
+
+            #region Showtime
+            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
 
             #endregion
 

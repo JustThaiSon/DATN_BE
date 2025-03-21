@@ -135,7 +135,7 @@ namespace DATN_BackEndApi.Extension.Vnpay
         public string HashSecret { get; set; } = "5QV88EXQ18V2V8473WMNBS3IVOLJFVTW";
         public string PaymentUrl { get; set; } = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         // public string ReturnUrl { get; set; } = "http://localhost:4200/payment-callback"; // thay cái này thành 1 route trong angular (hiện tại để tạm thế này đã)
-        public string ReturnUrl { get; set; } = "https://localhost:7263/swagger/payment-callback"; 
+        public string ReturnUrl { get; set; } = "https://localhost:7263/swagger/payment-callback";
         public string ApiUrl { get; set; } = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     }
 }

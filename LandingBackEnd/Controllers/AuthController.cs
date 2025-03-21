@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Common;
+using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
+using DATN_Helpers.Extensions.Global;
 using DATN_Models.DAL.Account;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
-using Microsoft.AspNetCore.Mvc;
 using DATN_Services.Service.Interfaces;
-using DATN_Helpers.Extensions.Global;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_LandingPage.Controllers
 {

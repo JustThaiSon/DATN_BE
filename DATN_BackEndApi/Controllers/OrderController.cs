@@ -5,10 +5,7 @@ using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DTOS.Comments.Req;
-using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Order.Res;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -43,7 +40,7 @@ namespace DATN_BackEndApi.Controllers
         //    return res;
         //}
 
-   
+
         [HttpGet]
         [Route("GetDetailOrder")]
         public async Task<CommonResponse<GetDetailOrderRes>> GetDetailOrder(Guid OrderId)
