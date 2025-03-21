@@ -3,9 +3,7 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAO.Interface;
-using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.HandleData;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 
@@ -16,7 +14,7 @@ namespace DATN_BackEndApi.Controllers
     public class StatisticController : ControllerBase
     {
         private readonly string _langCode;
-        private readonly IUltil _ultils; 
+        private readonly IUltil _ultils;
         private readonly IMapper _mapper;
         private readonly IStatisticDAO _statisticDAO;
         private readonly DATN_Context _db;

@@ -6,4 +6,4 @@ namespace DATN_Models.DTOS.ShowTime.Req
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
     }
-} 
+}

@@ -217,7 +217,7 @@ namespace DATN_Models.Mapper
             #endregion
             #region PricingRule
             CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
-              
+
                 .ReverseMap();
             CreateMap<UpdatePricingRuleDAL, UpdatePricingRuleReq>().ReverseMap();
             CreateMap<GetListPricingRuleDAL, GetListPricingRuleRes>().ReverseMap();

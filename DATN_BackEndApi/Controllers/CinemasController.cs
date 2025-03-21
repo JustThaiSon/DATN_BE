@@ -3,13 +3,10 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Cinemas;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
-using DATN_Models.DTOS.Room.Res;
 using DATN_Models.HandleData;
-using DATN_Models.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +63,7 @@ namespace DATN_BackEndApi.Controllers
                 {
                     ResponseCode = 200
                 };
-                
+
             }
             catch (Exception ex)
             {
@@ -76,8 +73,8 @@ namespace DATN_BackEndApi.Controllers
                     Message = $"có lỗi rồi : {ex}"
                 };
             }
-           
-            
+
+
         }
 
         [HttpPost]

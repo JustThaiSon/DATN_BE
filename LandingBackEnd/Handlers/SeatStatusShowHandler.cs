@@ -4,7 +4,6 @@ using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Services.WebSockets;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 
@@ -358,7 +357,7 @@ namespace DATN_LandingPage.Handlers
             );
         }
 
-       
+
 
         /// <summary>
         /// Gửi message báo lỗi cho chính user

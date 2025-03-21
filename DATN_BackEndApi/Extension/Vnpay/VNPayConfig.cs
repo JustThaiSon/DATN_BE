@@ -1,4 +1,4 @@
-using DATN_BackEndApi.VNPay;
+using DATN_BackEndApi.Extension.Vnpay.DATN_BackEndApi.VNPay;
 using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
@@ -165,3 +165,4 @@ namespace DATN_BackEndApi.Extension.Vnpay
             public string VnPayResponseCode { get; set; }
         }
     }
+}
