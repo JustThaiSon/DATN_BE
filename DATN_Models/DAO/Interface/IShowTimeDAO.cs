@@ -5,11 +5,12 @@ namespace DATN_Models.DAO.Interface
 {
     public interface IShowTimeDAO
     {
-        void CreateShowTime(ShowTimeReq resquest, out int response);
-        public void UpdateShowTime(Guid ShowTimeId, ShowTimeReq request, out int response);
-        public void DeleteShowTime(Guid showTimeId, out int response);
-        public List<ShowTimeDAL> GetListShowTime(Guid movieId, Guid roomId, int currentPage, int recordPerPage, out int totalRecord, out int response);
-
-
+        void CreateShowTime(ShowTimeReq request, out int response);
+        void UpdateShowTime(Guid showTimeId, UpdateShowTimeReq request, out int response);
+        void DeleteShowTime(Guid showTimeId, out int response);
+        List<ShowTimeDAL> GetListShowTimes(int currentPage, int recordPerPage, out int totalRecord, out int response);
+        ShowTimeDAL GetShowTimeById(Guid showTimeId, out int response);
+        List<AvailableRoomDAL> GetAvailableRooms(DateTime startTime, DateTime endTime, out int response);
+        List<TimeSlotDAL> GetAvailableTimes(Guid roomId, DateTime date, out int response);
     }
 }

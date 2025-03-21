@@ -59,7 +59,7 @@ namespace DATN_Models.DAO
             }
         }
 
-        public void UpdateShowTime(Guid ShowTimeId, ShowTimeReq request, out int response)
+        public void UpdateShowTime(Guid ShowTimeId, UpdateShowTimeReq request, out int response)
         {
             response = 0; // Khởi tạo mã phản hồi
             DBHelper db = null;
@@ -67,14 +67,12 @@ namespace DATN_Models.DAO
             try
             {
                 // Tạo danh sách tham số cho Stored Procedure
-                var pars = new SqlParameter[7];
+                var pars = new SqlParameter[5];
                 pars[0] = new SqlParameter("@_ShowTimeId", ShowTimeId);
-                pars[1] = new SqlParameter("@_MovieId", request.MovieId);
-                pars[2] = new SqlParameter("@_RoomId", request.RoomId);
-                pars[3] = new SqlParameter("@_StartTime", request.StartTime);
-                pars[4] = new SqlParameter("@_EndTime", request.EndTime);
-                pars[5] = new SqlParameter("@_Status", request.Status);
-                pars[6] = new SqlParameter("@_Response", SqlDbType.Int)
+                pars[1] = new SqlParameter("@_RoomId", request.RoomId);
+                pars[2] = new SqlParameter("@_StartTime", request.StartTime);
+                pars[3] = new SqlParameter("@_EndTime", request.EndTime);
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
                 };
@@ -84,7 +82,24 @@ namespace DATN_Models.DAO
                 db.ExecuteNonQuerySP("SP_ShowTime_Update", pars);
 
                 // Lấy mã phản hồi từ tham số OUTPUT
-                response = ConvertUtil.ToInt(pars[6].Value);
+                response = Convert.ToInt32(pars[4].Value);
+
+                // Log thông tin để debug
+                if (response == -1) // Lỗi trùng lịch
+                {
+                    // Kiểm tra các lịch chiếu trong phòng
+                    var checkPars = new SqlParameter[1];
+                    checkPars[0] = new SqlParameter("@_RoomId", request.RoomId);
+                    var existingShowtimes = db.GetListSP<ShowTimeDAL>("SP_ShowTime_GetListByRoom", checkPars);
+                    
+                    if (existingShowtimes != null)
+                    {
+                        foreach (var showtime in existingShowtimes)
+                        {
+                            Console.WriteLine($"Existing showtime: ID={showtime.Id}, Start={showtime.StartTime}, End={showtime.EndTime}");
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -132,45 +147,127 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<ShowTimeDAL> GetListShowTime(Guid movieId, Guid roomId, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<ShowTimeDAL> GetListShowTimes(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
-            DBHelper db = null;
             totalRecord = 0;
+            DBHelper db = null;
 
             try
             {
-                // Tạo tham số cho Stored Procedure
-                var pars = new SqlParameter[6];
-                pars[0] = new SqlParameter("@_MovieId", movieId);  // Không còn kiểm tra Nullable
-                pars[1] = new SqlParameter("@_RoomId", roomId);    // Không còn kiểm tra Nullable
-                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[4];
+                pars[0] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[1] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[2] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
-                // Kết nối đến cơ sở dữ liệu và gọi Stored Procedure
                 db = new DBHelper(connectionString);
                 var result = db.GetListSP<ShowTimeDAL>("SP_ShowTime_GetList", pars);
 
-                // Lấy kết quả từ các tham số OUTPUT
-                response = ConvertUtil.ToInt(pars[5].Value);
-                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[3].Value);
+                totalRecord = ConvertUtil.ToInt(pars[2].Value);
 
-                // Trả về danh sách lịch chiếu
-                return result;
+                return result ?? new List<ShowTimeDAL>();
             }
             catch (Exception ex)
             {
-                response = -99; // Mã lỗi hệ thống
-                throw;
+                response = -99;
+                throw new Exception("Error getting show time list", ex);
             }
             finally
             {
                 if (db != null)
-                    db.Close(); // Đảm bảo đóng kết nối
+                    db.Close();
             }
         }
 
+        public ShowTimeDAL GetShowTimeById(Guid showTimeId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_ShowTimeId", showTimeId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var results = db.GetListSP<ShowTimeDAL>("SP_ShowTime_GetById", pars);
+
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return results?.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting show time by id", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<AvailableRoomDAL> GetAvailableRooms(DateTime startTime, DateTime endTime, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_StartTime", startTime);
+                pars[1] = new SqlParameter("@_EndTime", endTime);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<AvailableRoomDAL>("SP_ShowTime_GetAvailableRooms", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+                return result ?? new List<AvailableRoomDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting available rooms", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<TimeSlotDAL> GetAvailableTimes(Guid roomId, DateTime date, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_RoomId", roomId);
+                pars[1] = new SqlParameter("@_Date", date);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<TimeSlotDAL>("SP_ShowTime_GetAvailableTimes", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+                return result ?? new List<TimeSlotDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting available time slots", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 }

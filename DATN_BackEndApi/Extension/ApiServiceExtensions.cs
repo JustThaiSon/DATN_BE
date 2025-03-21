@@ -81,6 +81,8 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<RoleManager<AppRoles>, RoleManager<AppRoles>>();
             services.AddTransient<ICustomerDAO, CustomerDAO>();
             services.AddTransient<ICinemasDAO, CinemasDAO>();
+            services.AddTransient<IShowTimeDAO, ShowTimeDAO>();
+            services.AddTransient<IStatisticDAO, StatisticDAO>();
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();

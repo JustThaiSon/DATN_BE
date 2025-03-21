@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using DATN_Helpers.Common;
-using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
+using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
@@ -11,71 +11,145 @@ namespace DATN_BackEndApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[BAuthorize]
     public class ShowTimeController : ControllerBase
     {
-        private readonly IShowTimeDAO _showtimeDAO;
-        private readonly string _langCode;
-        private readonly IUltil _ultils;
+        private readonly IShowTimeDAO _showTimeDAO;
         private readonly IMapper _mapper;
+        private readonly string _langCode;
 
-        public ShowTimeController(IShowTimeDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
+        public ShowTimeController(IShowTimeDAO showTimeDAO, IMapper mapper, IConfiguration configuration)
         {
-            _showtimeDAO = movieDAO;
-            _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
-            _ultils = ultils;
+            _showTimeDAO = showTimeDAO;
             _mapper = mapper;
+            _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
         }
 
-        [HttpPost]
-        [Route("CreateShowTime")]
-
-        public async Task<CommonResponse<dynamic>> CreateShowTime(ShowTimeReq rq)
-        {
-            var res = new CommonResponse<dynamic>();
-            _showtimeDAO.CreateShowTime(rq, out int response);
-            res.Data = null;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-            return res;
-        }
-
-        [HttpPost]
-        [Route("UpdateShowTime")]
-
-        public async Task<CommonResponse<dynamic>> UpdateShowTime(Guid ShowTimeId, ShowTimeReq rq)
-        {
-            var res = new CommonResponse<dynamic>();
-            _showtimeDAO.UpdateShowTime(ShowTimeId, rq, out int response);
-            res.Data = null;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-            return res;
-        }
-
-        [HttpPost]
-        [Route("DeleteShowTime")]
-        public async Task<CommonResponse<dynamic>> DeleteShowTime(Guid showTimeId)
-        {
-            var res = new CommonResponse<dynamic>();
-            _showtimeDAO.DeleteShowTime(showTimeId, out int response);
-            res.Data = null;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-            return res;
-        }
-
+        /// <summary>
+        /// Lấy danh sách lịch chiếu có phân trang
+        /// </summary>
         [HttpGet]
-        [Route("GetListShowTimes")]
-        public async Task<CommonPagination<List<ShowTimeRes>>> GetListShowTimes(Guid movieId, Guid roomId, int currentPage, int recordPerPage)
+        [Route("GetList")]
+        public CommonPagination<List<ShowTimeRes>> GetList(
+            [FromQuery] int currentPage,
+            [FromQuery] int recordPerPage)
         {
             var res = new CommonPagination<List<ShowTimeRes>>();
-            var result = _showtimeDAO.GetListShowTime(movieId, roomId, currentPage, recordPerPage, out int totalRecord, out int response);
-            var resultMapper = _mapper.Map<List<ShowTimeRes>>(result);
-            res.Data = resultMapper;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
+            var result = _showTimeDAO.GetListShowTimes(currentPage, recordPerPage, out int totalRecord, out int response);
+
+            res.Data = _mapper.Map<List<ShowTimeRes>>(result);
             res.TotalRecord = totalRecord;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }  
+        /// <summary>
+        /// Lấy chi tiết một lịch chiếu
+        /// </summary>
+        [HttpGet]
+        [Route("GetById/{id}")]
+        public CommonResponse<ShowTimeRes> GetById(Guid id)
+        {
+            var res = new CommonResponse<ShowTimeRes>();
+            var result = _showTimeDAO.GetShowTimeById(id, out int response);
+
+            res.Data = _mapper.Map<ShowTimeRes>(result);
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Lấy danh sách phòng trống trong khoảng thời gian
+        /// </summary>
+        [HttpGet]
+        [Route("GetAvailableRooms")]
+        public CommonResponse<List<AvailableRoomRes>> GetAvailableRooms(
+            [FromQuery] DateTime startTime,
+            [FromQuery] DateTime endTime)
+        {
+            var res = new CommonResponse<List<AvailableRoomRes>>();
+            var result = _showTimeDAO.GetAvailableRooms(startTime, endTime, out int response);
+
+            res.Data = _mapper.Map<List<AvailableRoomRes>>(result);
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Lấy danh sách khung giờ trống của một phòng trong ngày
+        /// </summary>
+        [HttpGet]
+        [Route("GetAvailableTimes")]
+        public CommonResponse<List<TimeSlotRes>> GetAvailableTimes(
+            [FromQuery] Guid roomId,
+            [FromQuery] DateTime date)
+        {
+            var res = new CommonResponse<List<TimeSlotRes>>();
+            var result = _showTimeDAO.GetAvailableTimes(roomId, date, out int response);
+
+            res.Data = _mapper.Map<List<TimeSlotRes>>(result);
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Tạo mới lịch chiếu
+        /// </summary>
+        [HttpPost]
+        [Route("Create")]
+        public CommonResponse<string> Create([FromBody] ShowTimeReq request)
+        {
+            var res = new CommonResponse<string>();
+            _showTimeDAO.CreateShowTime(request, out int response);
+
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
+        /// <summary>
+        /// Cập nhật thông tin lịch chiếu
+        /// </summary>
+        [HttpPost]
+        [Route("Update/{id}")]
+        public CommonResponse<string> Update(Guid id, [FromBody] UpdateShowTimeReq request)
+        {
+            var res = new CommonResponse<string>();
+            
+            try
+            {
+                _showTimeDAO.UpdateShowTime(id, request, out int response);
+                res.ResponseCode = response;
+                res.Message = MessageUtils.GetMessage(response, _langCode);
+                return res;
+            }
+            catch (Exception ex)
+            {
+                res.ResponseCode = -99;
+                res.Message = "An error occurred while processing your request";
+                return res;
+            }
+        }
+
+        /// <summary>
+        /// Xóa lịch chiếu
+        /// </summary>
+        [HttpPost]
+        [Route("Delete/{id}")]
+        public CommonResponse<string> Delete(Guid id)
+        {
+            var res = new CommonResponse<string>();
+            _showTimeDAO.DeleteShowTime(id, out int response);
+
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
 
             return res;
         }
