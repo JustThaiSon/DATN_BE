@@ -25,6 +25,7 @@ using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Employee.Req;
 using DATN_Models.DTOS.Employee.Res;
+using DATN_Models.DTOS.Logs.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -158,6 +159,8 @@ namespace DATN_Models.Mapper
             CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
             CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
 
+            CreateMap<ChangeLog, GetLogRes>().ReverseMap();
+
             #endregion
 
 
@@ -217,7 +220,7 @@ namespace DATN_Models.Mapper
             #endregion
             #region PricingRule
             CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
-              
+
                 .ReverseMap();
             CreateMap<UpdatePricingRuleDAL, UpdatePricingRuleReq>().ReverseMap();
             CreateMap<GetListPricingRuleDAL, GetListPricingRuleRes>().ReverseMap();
