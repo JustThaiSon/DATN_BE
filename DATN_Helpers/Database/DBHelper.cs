@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DATN_Helpers.Extensions;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace DATN_Helpers.Database
@@ -55,9 +56,7 @@ namespace DATN_Helpers.Database
 
         public DBHelper()
         {
-            //
-            // TODO: Add constructor logic here
-            //
+
         }
 
         /// <summary>
@@ -470,19 +469,47 @@ namespace DATN_Helpers.Database
         public int ExecuteNonQuerySP(string SPName)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            };
             return ExecuteNonQuery(sqlCommand);
         }
 
         public int ExecuteNonQuerySP(string SPName, int timeout, params SqlParameter[] Parameters)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
+
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            };
             return ExecuteNonQuery(sqlCommand, timeout, Parameters);
         }
+        private void SetSessionContext(Guid userId)
+        {
+            if (_ConnectionToDB == null || _ConnectionToDB.State != ConnectionState.Open)
+            {
+                _ConnectionToDB = OpenConnection();  // Mở kết nối nếu chưa có
+            }
+
+            using var cmd = new SqlCommand("EXEC sp_set_session_context @key, @value", _ConnectionToDB);
+            cmd.Parameters.AddWithValue("@key", "UserId");
+            cmd.Parameters.AddWithValue("@value", userId);
+            cmd.ExecuteNonQuery();
+        }
+
 
         public int ExecuteNonQuerySP(string SPName, params SqlParameter[] Parameters)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
-
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            };
             return ExecuteNonQuery(sqlCommand, Parameters);
         }
 
@@ -611,13 +638,24 @@ namespace DATN_Helpers.Database
         public List<T> GetListSP<T>(string SPName)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            }
+            ;
             return GetList<T>(sqlCommand);
         }
 
         public List<T> GetListSP<T>(string SPName, params SqlParameter[] Parameters)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
-
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            }
+            ;
             return GetList<T>(sqlCommand, Parameters);
         }
 
@@ -705,12 +743,24 @@ namespace DATN_Helpers.Database
         public T GetInstanceSP<T>(string SPName)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            }
+            ;
             return GetInstance<T>(sqlCommand);
         }
 
         public T GetInstanceSP<T>(string SPName, params SqlParameter[] Parameters)
         {
             var sqlCommand = new SqlCommand(SPName) { CommandType = CommandType.StoredProcedure };
+            var userId = HttpContextHelper.GetUserId();
+            if (userId != Guid.Empty)
+            {
+                SetSessionContext(userId);
+            }
+            ;
             return GetInstance<T>(sqlCommand, Parameters);
         }
 

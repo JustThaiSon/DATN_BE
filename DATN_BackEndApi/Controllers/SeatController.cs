@@ -72,10 +72,8 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
         [HttpPost]
         [Route("UpdateStatusSeat")]
-
         public async Task<CommonResponse<dynamic>> UpdateStatusSeat(UpdateSeatStatusReq rq)
         {
             var res = new CommonResponse<dynamic>();
@@ -88,10 +86,8 @@ namespace DATN_BackEndApi.Controllers
 
         }
 
-
         [HttpPost]
         [Route("UpdateStatusSeatByShowTime")]
-
         public async Task<CommonResponse<dynamic>> UpdateStatusSeatByShowTime(UpdateSeatByShowTimeStatusReq rq)
         {
             var res = new CommonResponse<dynamic>();
@@ -103,7 +99,6 @@ namespace DATN_BackEndApi.Controllers
             return res;
 
         }
-
         [HttpPost]
         [Route("UpdateTypeSeat")]
         public async Task<CommonResponse<dynamic>> UpdateTypeSeat(UpdateSeatTypeReq rq)
@@ -117,7 +112,6 @@ namespace DATN_BackEndApi.Controllers
             return res;
 
         }
-
 
         [HttpPost]
         [Route("SetupPair")]

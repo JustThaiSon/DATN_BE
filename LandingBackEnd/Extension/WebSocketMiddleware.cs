@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
-using DATN_Helpers.Common.interfaces;
-using DATN_Helpers.Constants;
 using DATN_LandingPage.Handlers;
-using DATN_Models.DAO;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Services.WebSockets;
-using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 using System.Net.WebSockets;
-using System.Text;
 namespace DATN_LandingPage.Extension
 {
     public class WebSocketMiddleware
@@ -17,39 +11,23 @@ namespace DATN_LandingPage.Extension
         private readonly IWebSocketManager _webSocketManager;
         private readonly IMapper _mapper;
         private readonly ISeatDAO _seatDAO;
-        private readonly SeatStatusService _seatStatusService = new();
+        private readonly SeatStatusService _seatStatusService;
         private readonly ILogger<WebSocketMiddleware> _logger;
 
-        public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager, IMapper mapper, ISeatDAO seatDAO, ILogger<WebSocketMiddleware> logger)
+        public WebSocketMiddleware(RequestDelegate next, IWebSocketManager webSocketManager, IMapper mapper, ISeatDAO seatDAO, ILogger<WebSocketMiddleware> logger, SeatStatusService seatStatusService)
         {
             _next = next;
             _webSocketManager = webSocketManager;
             _mapper = mapper;
             _seatDAO = seatDAO;
             _logger = logger;
+            _seatStatusService = seatStatusService;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
             if (context.WebSockets.IsWebSocketRequest)
             {
-                var token = context.Request.Query["access_token"].ToString();
-                var utilsServices = context.RequestServices.GetService<IUltil>();
-
-                if (utilsServices == null)
-                {
-                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    return;
-                }
-
-                var (userId, ListRole) = utilsServices.ValidateToken(token);
-                if (userId == null)
-                {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
-
-                var displayName = GetDisplayNameById(userId.Value);
                 WebSocket webSocket = null;
 
                 try
@@ -61,8 +39,18 @@ namespace DATN_LandingPage.Extension
                     {
                         case "/ws/KeepSeat":
                             {
-                                var chatHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
-                                await chatHandler.ReceiveMessages("KeepSeat", userId.Value.ToString());
+                                var roomIdString = context.Request.Query["roomId"].ToString();
+                                var userIdString = context.Request.Query["userId"].ToString();
+                                if (Guid.TryParse(roomIdString, out Guid roomId) && Guid.TryParse(userIdString, out Guid userId))
+                                {
+                                    var seatStatusHandler = new SeatStatusShowHandler(webSocket, _webSocketManager, _mapper, _seatStatusService, _seatDAO);
+                                    await seatStatusHandler.HandleRequestAsync("KeepSeat", roomId, userId);
+                                }
+                                else
+                                {
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync("Invalid roomId or userId parameter.");
+                                }
                                 break;
                             }
                         default:

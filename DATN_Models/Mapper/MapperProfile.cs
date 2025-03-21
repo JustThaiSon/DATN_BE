@@ -52,7 +52,6 @@ namespace DATN_Models.Mapper
 
             CreateMap<CreateAccountReq, CreateAccountDAL>();
             CreateMap<CreateAccountDAL, CreateAccountReq>().ReverseMap();
-
             // Phần movie
             #region Nghia_Movie
             // Cái này là list movie (hiện tại Đã SHOW ĐƯỢC được danh sách actor trong movie)
@@ -74,8 +73,6 @@ namespace DATN_Models.Mapper
             CreateMap<GetShowTimeLandingDAL, GetShowTimeLangdingRes>().ReverseMap();
             CreateMap<ShowtimesLangdingDAL, ShowtimesLangdingRes>().ReverseMap();
             #endregion
-
-
             // Phần actor
             #region Nghia_Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
@@ -89,7 +86,6 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-
             // Phần Comment
             #region Nghia_Comment
             CreateMap<CreateCommentDAL, CreateCommentReq>().ReverseMap();
@@ -99,7 +95,6 @@ namespace DATN_Models.Mapper
             //CreateMap<ListCommentDALTest, GetListCommentResTest>().ReverseMap();
 
             #endregion
-
 
             // Phần rating
             #region Nghia_Rating
@@ -112,14 +107,12 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-
             // Phần Customer
             #region Nghia_Customer
             CreateMap<GetListCustomerInformationDAL, GetListCustomerInformationRes>().ReverseMap();
             CreateMap<UpdateCustomerDAL, UpdateCustomerReq>().ReverseMap();
 
             #endregion
-
 
             // Phần Membership
             #region Nghia_Membership
@@ -129,6 +122,51 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+            // Phần nhân viên
+            #region Nghia_Employee
+            CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
+            CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
+            CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
+            #endregion
+
+
+
+
+
+            #region Cinema
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+
+
+            #endregion
+
+
+
+            #region Cinema
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+
+
+            #endregion
+
+
+            // Phần Thống kê
+            #region Nghia_Statistic
+            CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
+            CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
+
+            #endregion
+
+
+            #region Showtime
+            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
+
+            #endregion
+
+
+            #region Showtime
+            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
+
+            #endregion
 
             #region ThaoDepTrai
             #region 
@@ -150,9 +188,7 @@ namespace DATN_Models.Mapper
 
             // Phần Order
             #region
-            CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
             CreateMap<TicketDAL, TicketReq>().ReverseMap();
-            CreateMap<CreateTicketDAL, CreateTicketReq>().ReverseMap();
             CreateMap<CreateOrderServiceDAL, CreateOrderServiceReq>().ReverseMap();
             CreateMap<CreateServiceReq, CreateServiceDAL>().ReverseMap();
             CreateMap<UpdateServiceDAL, UpdateServiceReq>().ReverseMap();
@@ -161,6 +197,9 @@ namespace DATN_Models.Mapper
             CreateMap<GetListTicketDAL, GetListTicketRes>().ReverseMap();
             CreateMap<GetDetailOrderDAL, GetDetailOrderRes>().ReverseMap();
             CreateMap<GetStatusByIdDAL, GetStatusByIdRes>().ReverseMap();
+            CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
+            CreateMap<TicketReq, TicketDAL>().ReverseMap();
+            CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();
@@ -195,6 +234,8 @@ namespace DATN_Models.Mapper
 
 
             CreateMap<SignInDAL, SignInReq>().ReverseMap();
+            CreateMap<GetAllNameMovieDAL, GetAllNameMovieRes>().ReverseMap();
+            CreateMap<GetSeatByShowTimeRes, GetSeatByShowTimeDAL>().ReverseMap();
 
             #region ShowTime
             // Entity <-> DAL mappings

@@ -12,6 +12,7 @@ namespace DATN_BackEndApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[BAuthorize]
     public class RoomController : ControllerBase
     {
         private readonly string _langCode;

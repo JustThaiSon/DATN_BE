@@ -148,6 +148,16 @@ public class WebSocketManager : IWebSocketManager
 
 
     }
+    public async Task SendMessageToAllExceptUserAsync(string hub, string userId, string message)
+    {
+        var allUsers = _userSockets.Keys
+            .Where(key => key.StartsWith(hub) && !key.EndsWith(userId))
+            .ToList();
 
+        foreach (var user in allUsers)
+        {
+            await SendMessageToUserAsync(hub, user.Split('_')[1], message);
+        }
+    }
     #endregion
 }
