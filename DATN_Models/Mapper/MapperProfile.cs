@@ -2,6 +2,7 @@
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAL.Customer;
+using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
@@ -23,6 +24,8 @@ using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
+using DATN_Models.DTOS.Employee.Req;
+using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
