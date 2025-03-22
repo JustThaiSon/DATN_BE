@@ -51,8 +51,6 @@ namespace DATN_Models.Models.Configurations
                 .HasDefaultValueSql("GETDATE()");
 
             builder.Property(x => x.UpdatedAt);
-
-            // Relationships được định nghĩa trong VoucherUsageConfiguration
         }
     }
 }

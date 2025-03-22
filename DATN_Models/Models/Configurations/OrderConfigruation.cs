@@ -21,10 +21,8 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.IsAnonymous)
                 .IsRequired();
 
-
             builder.Property(x => x.VoucherId)
                 .IsRequired(false);
-
 
             builder.HasOne<Voucher>()
                 .WithMany()
@@ -32,6 +30,5 @@ namespace DATN_Models.Models.Configurations
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);
         }
-
     }
 }

@@ -18,7 +18,6 @@ namespace DATN_Models.Models.Configurations
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
 
-
             builder.Property(x => x.Status)
                 .IsRequired();
 
