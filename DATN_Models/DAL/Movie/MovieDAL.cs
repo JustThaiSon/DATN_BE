@@ -7,9 +7,10 @@
         public string Description { get; set; }
         public string Thumbnail { get; set; }
         public string Trailer { get; set; }
-        public int Duration { get; set; } // thời kuong của phim tính bằng phút
+        public int Duration { get; set; }
         public int Status { get; set; }
         public List<ActorDAL>? listdienvien { get; set; }
+        public List<MovieGenreDAL>? genres { get; set; }
         public DateTime ReleaseDate { get; set; }
     }
 }

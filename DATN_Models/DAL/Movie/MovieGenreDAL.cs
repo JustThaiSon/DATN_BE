@@ -1,6 +1,8 @@
-﻿namespace DATN_Models.Models
+﻿using System;
+
+namespace DATN_Models.DAL.Movie
 {
-    public class Genres
+    public class MovieGenreDAL
     {
         public Guid Id { get; set; }
         public string GenreName { get; set; }

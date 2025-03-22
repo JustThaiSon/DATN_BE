@@ -1,6 +1,8 @@
-﻿namespace DATN_Models.Models
+﻿using System;
+
+namespace DATN_Models.DTOS.Genre.Res
 {
-    public class Genres
+    public class GetGenreRes
     {
         public Guid Id { get; set; }
         public string GenreName { get; set; }

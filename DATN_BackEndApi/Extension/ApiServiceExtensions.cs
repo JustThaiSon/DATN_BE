@@ -80,7 +80,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
             services.AddTransient<IVoucherDAO, VoucherDAO>();
             services.AddTransient<ILogDAO, LogDAO>();
-
+            services.AddTransient<IGenreDAO, GenreDAO>();
 
 
 

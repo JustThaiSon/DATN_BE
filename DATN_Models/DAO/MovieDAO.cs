@@ -34,6 +34,7 @@ namespace DATN_Models.DAO
         public List<MovieDAL> GetListMovie(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
+            totalRecord = 0;
             DBHelper db = null;
             try
             {
@@ -46,12 +47,15 @@ namespace DATN_Models.DAO
 
                 var (movies, actors) = db.GetMultipleSP<MovieDAL, ActorDAL>("SP_Movie_GetList", pars);
 
-
+                // Process each movie to add actors and genres
                 foreach (var item in movies)
                 {
+                    // Add actors to the movie
                     item.listdienvien = actors.Where(x => x.MovieId == item.Id).ToList();
-                }
 
+                    // Add genres to the movie
+                    item.genres = GetMovieGenres(item.Id, out int genreResponse);
+                }
 
                 response = ConvertUtil.ToInt(pars[3].Value);
                 totalRecord = ConvertUtil.ToInt(pars[2].Value);
@@ -83,18 +87,29 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                // Tạo DataTable để chứa danh sách actorId
-                // GuidList
+                // Create DataTable for actor IDs
                 DataTable actorTable = new DataTable();
-
                 actorTable.Columns.Add("Id", typeof(Guid));
-
-                foreach (var actorId in req.ListActorID)
+                if (req.ListActorID != null && req.ListActorID.Any())
                 {
-                    actorTable.Rows.Add(actorId);
+                    foreach (var actorId in req.ListActorID)
+                    {
+                        actorTable.Rows.Add(actorId);
+                    }
                 }
 
-                var pars = new SqlParameter[10];
+                // Create DataTable for genre IDs
+                DataTable genreTable = new DataTable();
+                genreTable.Columns.Add("Id", typeof(Guid));
+                if (req.ListGenreID != null && req.ListGenreID.Any())
+                {
+                    foreach (var genreId in req.ListGenreID)
+                    {
+                        genreTable.Rows.Add(genreId);
+                    }
+                }
+
+                var pars = new SqlParameter[11]; // Updated parameter count
 
                 pars[0] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[1] = new SqlParameter("@_Description", req.Description);
@@ -104,16 +119,14 @@ namespace DATN_Models.DAO
                 pars[5] = new SqlParameter("@_Duration", req.Duration);
                 pars[6] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
                 pars[7] = new SqlParameter("@_Status", req.Status);
-
-                // Thêm id actor vào trong bảng MovieActor
                 pars[8] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
-                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[9] = new SqlParameter("@_GenreIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = genreTable };
+                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Create", pars);
 
-                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
-                response = ConvertUtil.ToInt(pars[9].Value);
+                response = ConvertUtil.ToInt(pars[10].Value);
             }
             catch (Exception ex)
             {
@@ -145,13 +158,15 @@ namespace DATN_Models.DAO
                 pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                //var result = db.GetInstanceSP<MovieDAL>("SP_Movie_MovieDetail", pars);
-
                 var (movies, actors) = db.GetSingleSP<MovieDAL, ActorDAL>("SP_Movie_MovieDetail", pars);
 
                 if (movies != null)
                 {
+                    // Add actors to the movie
                     movies.listdienvien = actors.Where(x => x.MovieId == movies.Id).ToList();
+
+                    // Add genres to the movie
+                    movies.genres = GetMovieGenres(Id, out int genreResponse);
                 }
 
                 response = ConvertUtil.ToInt(pars[1].Value);
@@ -206,18 +221,29 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                // Tạo DataTable để chứa danh sách actorId
-                // GuidList
+                // Create DataTable for actor IDs
                 DataTable actorTable = new DataTable();
-
                 actorTable.Columns.Add("Id", typeof(Guid));
-
-                foreach (var actorId in req.ListActorID)
+                if (req.ListActorID != null && req.ListActorID.Any())
                 {
-                    actorTable.Rows.Add(actorId);
+                    foreach (var actorId in req.ListActorID)
+                    {
+                        actorTable.Rows.Add(actorId);
+                    }
                 }
 
-                var pars = new SqlParameter[11];
+                // Create DataTable for genre IDs
+                DataTable genreTable = new DataTable();
+                genreTable.Columns.Add("Id", typeof(Guid));
+                if (req.ListGenreID != null && req.ListGenreID.Any())
+                {
+                    foreach (var genreId in req.ListGenreID)
+                    {
+                        genreTable.Rows.Add(genreId);
+                    }
+                }
+
+                var pars = new SqlParameter[12]; // Updated parameter count
 
                 pars[0] = new SqlParameter("@_MovieID", req.MovieID);
                 pars[1] = new SqlParameter("@_MovieName", req.MovieName);
@@ -228,17 +254,14 @@ namespace DATN_Models.DAO
                 pars[6] = new SqlParameter("@_Duration", req.Duration);
                 pars[7] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
                 pars[8] = new SqlParameter("@_Status", req.Status);
-
-                // Thêm id actor vào trong bảng MovieActor
                 pars[9] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
-
-
-                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[10] = new SqlParameter("@_GenreIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = genreTable };
+                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[10].Value);
+                response = ConvertUtil.ToInt(pars[11].Value);
             }
             catch (Exception ex)
             {
@@ -403,6 +426,40 @@ namespace DATN_Models.DAO
                 db?.Close();
             }
         }
+
+
+
+
+
+        public List<MovieGenreDAL> GetMovieGenres(Guid movieId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_MovieID", movieId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<MovieGenreDAL>("SP_Movie_GetGenres", pars);
+
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result ?? new List<MovieGenreDAL>();
+            }
+            catch (Exception)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
 
         #endregion
     }

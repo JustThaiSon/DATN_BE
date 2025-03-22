@@ -14,5 +14,6 @@ namespace DATN_Models.DTOS.Movies.Req.Movie
         public DateTime ReleaseDate { get; set; }
         public int Status { get; set; }
         public List<Guid>? ListActorID { get; set; }
+        public List<Guid>? ListGenreID { get; set; }
     }
 }

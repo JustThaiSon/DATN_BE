@@ -3,6 +3,7 @@ using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
+using DATN_Models.DAL.Genre;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
@@ -26,6 +27,8 @@ using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Employee.Req;
 using DATN_Models.DTOS.Employee.Res;
+using DATN_Models.DTOS.Genre.Req;
+using DATN_Models.DTOS.Genre.Res;
 using DATN_Models.DTOS.Logs.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
@@ -80,6 +83,8 @@ namespace DATN_Models.Mapper
             CreateMap<GetDetailMovieLangdingDAL, GetDetailMovieLangdingRes>().ReverseMap();
             CreateMap<GetShowTimeLandingDAL, GetShowTimeLangdingRes>().ReverseMap();
             CreateMap<ShowtimesLangdingDAL, ShowtimesLangdingRes>().ReverseMap();
+
+            CreateMap<MovieGenreDAL, MovieGenreRes>().ReverseMap();
             #endregion
             // Phần actor
             #region Nghia_Actor
@@ -146,7 +151,14 @@ namespace DATN_Models.Mapper
             CreateMap<VoucherUsageDAL, UseVoucherReq>().ReverseMap();
             #endregion
 
+            // Phần thể loại
+            #region Nghia_Genre
 
+            CreateMap<GenreDAL, GetGenreRes>().ReverseMap();
+            CreateMap<AddGenreDAL, AddGenreReq>().ReverseMap();
+            CreateMap<UpdateGenreDAL, UpdateGenreReq>().ReverseMap();
+
+            #endregion
 
             #region Cinema
             CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
