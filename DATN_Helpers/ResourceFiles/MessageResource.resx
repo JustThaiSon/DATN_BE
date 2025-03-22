@@ -226,4 +226,10 @@
   <data name="-500" xml:space="preserve">
     <value>Lỗi hệ thống</value>
   </data>
+  <data name="-110" xml:space="preserve">
+    <value>Voucher đã hết hạn</value>
+  </data>
+  <data name="-111" xml:space="preserve">
+    <value>Voucher này đã đạt giới hạn sử dụng</value>
+  </data>
 </root>

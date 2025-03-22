@@ -14,5 +14,7 @@ namespace DATN_Models.DAO.Interface
         List<VoucherDAL> GetListVoucher(int currentPage, int recordPerPage, out int totalRecord, out int response);
         void UseVoucher(VoucherUsageDAL req, out int response);
         List<VoucherUsageDAL> GetVoucherUsageHistory(Guid voucherId, int currentPage, int recordPerPage, out int totalRecord, out int response);
+        // Lấy danh sách tất cả voucher đã sử dụng
+        List<VoucherUsageDAL> GetAllVoucherUsage(int currentPage, int recordPerPage, out int totalRecord, out int response);
     }
 }

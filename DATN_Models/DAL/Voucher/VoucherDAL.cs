@@ -25,7 +25,6 @@ namespace DATN_Models.DAL.Voucher
         public string Description { get; set; }
         public string DiscountType { get; set; }
         public decimal DiscountValue { get; set; }
-        public decimal MinOrderValue { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }

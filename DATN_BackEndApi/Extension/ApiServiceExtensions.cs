@@ -78,6 +78,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
+            services.AddTransient<IVoucherDAO, VoucherDAO>();
 
 
 
@@ -96,9 +97,6 @@ namespace DATN_BackEndApi.Extension
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
 
-
-            // Thêm vào phương thức AddCoreService trong ServiceExtensions
-            services.AddScoped<IVoucherDAO, VoucherDAO>();
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

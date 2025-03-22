@@ -47,7 +47,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetById/{id}")]
+        [Route("GetById")]
         public CommonResponse<VoucherRes> GetById(Guid id)
         {
             var res = new CommonResponse<VoucherRes>();
@@ -62,7 +62,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetByCode/{code}")]
+        [Route("GetByCode")]
         public CommonResponse<VoucherRes> GetByCode(string code)
         {
             var res = new CommonResponse<VoucherRes>();
@@ -92,7 +92,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpPost]
-        [Route("Update/{id}")]
+        [Route("Update")]
         public CommonResponse<string> Update(Guid id, [FromBody] VoucherReq request)
         {
             var res = new CommonResponse<string>();
@@ -109,7 +109,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpPost]
-        [Route("Delete/{id}")]
+        [Route("Delete")]
         public CommonResponse<string> Delete(Guid id)
         {
             var res = new CommonResponse<string>();
@@ -138,7 +138,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetUsageHistory/{voucherId}")]
+        [Route("GetUsageHistory")]
         public CommonPagination<List<VoucherUsageRes>> GetUsageHistory(
             Guid voucherId,
             [FromQuery] int currentPage,
@@ -147,6 +147,27 @@ namespace DATN_BackEndApi.Controllers
             var res = new CommonPagination<List<VoucherUsageRes>>();
 
             var result = _voucherDAO.GetVoucherUsageHistory(voucherId, currentPage, recordPerPage, out int totalRecord, out int response);
+
+            res.Data = _mapper.Map<List<VoucherUsageRes>>(result);
+            res.TotalRecord = totalRecord;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
+
+
+
+        [HttpGet]
+        [Route("GetAllUsage")]
+        public CommonPagination<List<VoucherUsageRes>> GetAllUsage(
+    [FromQuery] int currentPage,
+    [FromQuery] int recordPerPage)
+        {
+            var res = new CommonPagination<List<VoucherUsageRes>>();
+
+            var result = _voucherDAO.GetAllVoucherUsage(currentPage, recordPerPage, out int totalRecord, out int response);
 
             res.Data = _mapper.Map<List<VoucherUsageRes>>(result);
             res.TotalRecord = totalRecord;
