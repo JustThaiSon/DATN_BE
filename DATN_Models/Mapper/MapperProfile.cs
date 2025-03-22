@@ -15,6 +15,7 @@ using DATN_Models.DAL.SeatType;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAL.Statistic;
+using DATN_Models.DAL.Voucher;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Cinemas.Req;
@@ -44,6 +45,8 @@ using DATN_Models.DTOS.Service.Response;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
 using DATN_Models.DTOS.Statistic.Res;
+using DATN_Models.DTOS.Voucher.Req;
+using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 
@@ -134,7 +137,13 @@ namespace DATN_Models.Mapper
             CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 
-
+            // Phần voucher
+            #region Nghia_Voucher
+            CreateMap<VoucherDAL, VoucherRes>().ReverseMap();
+            CreateMap<VoucherDAL, VoucherReq>().ReverseMap();
+            CreateMap<VoucherUsageDAL, VoucherUsageRes>().ReverseMap();
+            CreateMap<VoucherUsageDAL, UseVoucherReq>().ReverseMap();
+            #endregion
 
 
 
@@ -217,7 +226,7 @@ namespace DATN_Models.Mapper
             #endregion
             #region PricingRule
             CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
-              
+
                 .ReverseMap();
             CreateMap<UpdatePricingRuleDAL, UpdatePricingRuleReq>().ReverseMap();
             CreateMap<GetListPricingRuleDAL, GetListPricingRuleRes>().ReverseMap();

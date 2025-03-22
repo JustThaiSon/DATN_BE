@@ -95,6 +95,10 @@ namespace DATN_BackEndApi.Extension
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
+
+
+            // Thêm vào phương thức AddCoreService trong ServiceExtensions
+            services.AddScoped<IVoucherDAO, VoucherDAO>();
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
