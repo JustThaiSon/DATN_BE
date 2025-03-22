@@ -106,6 +106,19 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+   
+
+        [HttpPost]
+        [Route("DeleteCinema")]
+        public async Task<CommonResponse<dynamic>> DeleteCinema(Guid id)
+        {
+            var res = new CommonResponse<dynamic>();
+            _cinemasDAO.DeleteCinema(id, out int response);
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
 
         [HttpGet]
         [Route("GetCinemaById")]

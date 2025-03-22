@@ -12,6 +12,8 @@ namespace DATN_Models.DAO.Interface
         public List<CinemasDAL> GetListCinemasByName(string nameCinemas, int currentPage, int recordPerPage, out int totalRecord, out int response);
         public void UpdateCinemasAdress(Guid CinemasId, string newAdress, out int response);
         public CinemasRes GetCinemaById(Guid cinemasId, out int response);
+        public void DeleteCinema(Guid cinemasId, out int response);
+
 
 
     }

@@ -1,4 +1,4 @@
-﻿namespace DATN_Models.DTOS.Statistic.Res
+﻿namespace DATN_Models.DAL.Statistic
 {
     public class StatisticSeatProfitabilityDAL
     {

@@ -171,14 +171,10 @@ namespace DATN_Models.Mapper
 
             #region Showtime
             CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
+            CreateMap<ShowTimeRes, ShowTimeDAL>().ReverseMap();
 
             #endregion
 
-
-            #region Showtime
-            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
-
-            #endregion
 
             #region ThaoDepTrai
             #region 
@@ -224,13 +220,7 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateSeatTypeMultiplierDAL, UpdateSeatTypeMultiplierReq>().ReverseMap();
             #endregion
             #region PricingRule
-            CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
-                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.StartTime) ? (TimeSpan?)null : TimeSpan.Parse(src.StartTime)))
-                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.EndTime) ? (TimeSpan?)null : TimeSpan.Parse(src.EndTime)))
-                .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.StartDate) ? (DateTime?)null : DateTime.Parse(src.StartDate)))
-                .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.EndDate) ? (DateTime?)null : DateTime.Parse(src.EndDate)))
-                .ForMember(dest => dest.Date, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Date) ? (DateTime?)null : DateTime.Parse(src.Date)))
-                .ReverseMap();
+            CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>().ReverseMap();
             CreateMap<UpdatePricingRuleDAL, UpdatePricingRuleReq>().ReverseMap();
             CreateMap<GetListPricingRuleDAL, GetListPricingRuleRes>().ReverseMap();
             #endregion

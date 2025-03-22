@@ -80,6 +80,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
 
 
+            services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
 
 
 
@@ -90,7 +91,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICustomerDAO, CustomerDAO>();
             services.AddTransient<ICinemasDAO, CinemasDAO>();
             services.AddTransient<IShowTimeDAO, ShowTimeDAO>();
-            services.AddTransient<IStatisticDAO, StatisticDAO>();
+            services.AddTransient<IStatisticDAO, DATN_Models.DAO.StatisticDAO>();
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();

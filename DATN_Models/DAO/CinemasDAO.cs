@@ -4,6 +4,7 @@ using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
+using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -224,10 +225,37 @@ namespace DATN_Models.DAO
             }
         }
 
+        public void DeleteCinema(Guid cinemasId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
 
+            try
+            {
+                // Khai báo tham số Stored Procedure
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_CinemaId", cinemasId); // ID của rạp
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output }; 
 
+                // Thực thi Stored Procedure
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Cinema_Delete", pars);
 
-
-
+                // Lấy mã phản hồi từ tham số OUTPUT
+                response = ConvertUtil.ToInt(pars[1].Value);
+            }
+            catch (Exception ex)
+            {
+                // Gán mã lỗi hệ thống khi xảy ra ngoại lệ
+                response = -99;
+                throw new Exception("Error updating cinema address", ex);
+            }
+            finally
+            {
+                // Đảm bảo đóng kết nối
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 }

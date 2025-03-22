@@ -50,7 +50,7 @@ namespace DATN_BackEndApi.Controllers
         [HttpPost]
         [Route("CreateRule")]
 
-        public async Task<CommonResponse<dynamic>> CreateRule(CreatePricingRuleReq rq)
+        public async Task<CommonResponse<dynamic>> CreateRule( [FromBody]CreatePricingRuleReq rq)
         {
             var res = new CommonResponse<dynamic>();
             var resultMapper = _mapper.Map<CreatePricingRuleDAL>(rq);

@@ -9,5 +9,6 @@
         public int TotalRooms { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public bool Isdeleted { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DATN_Models.DAL.Statistic;
-using DATN_Models.DTOS.Statistic.Res;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
