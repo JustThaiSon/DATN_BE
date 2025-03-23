@@ -11,14 +11,5 @@ namespace DATN_Models.DTOS.Service.Request
         public string CategoryName { get; set; }
         //public string ImageUrl { get; set; }
     }
-    public class CreateServiceReqValidator : AbstractValidator<CreateServiceReq>
-    {
-        public CreateServiceReqValidator()
-        {
-            RuleFor(_ => _.ServiceName).NotNegative().NotNullOrEmpty();
-            RuleFor(_ => _.Description).NotNegative().NotNullOrEmpty();
-            RuleFor(_ => _.CategoryName).NotNegative().NotNullOrEmpty();
-            RuleFor(_ => _.Price).NotNegative().GreaterThanZero();
-        }
-    }
+   
 }

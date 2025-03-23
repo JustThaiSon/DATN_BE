@@ -54,6 +54,7 @@ using DATN_Models.DAL.Employee;
 using DATN_Models.DTOS.Employee.Req;
 using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.ShowTime.Res;
+using DATN_Models.Models;
 
 namespace DATN_Models.Mapper
 {
@@ -172,6 +173,8 @@ namespace DATN_Models.Mapper
             #region Showtime
             CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
             CreateMap<ShowTimeRes, ShowTimeDAL>().ReverseMap();
+            CreateMap<ShowTime, ShowTimeDAL>().ReverseMap();
+            CreateMap<ShowTimeDAL, ShowTime>().ReverseMap();
 
             #endregion
 
