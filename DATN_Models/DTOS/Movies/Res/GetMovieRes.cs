@@ -1,4 +1,6 @@
 ﻿using DATN_Models.DAL.Movie;
+using DATN_Models.DTOS.Movies.Res;
+using DATN_Models.Models;
 
 namespace DATN_Models.DTOS.Movies.Res
 {
@@ -14,5 +16,9 @@ namespace DATN_Models.DTOS.Movies.Res
         public List<ActorDAL>? listdienvien { get; set; }
         public List<MovieGenreRes>? genres { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public double AverageRating { get; set; } // Add this
+
     }
 }
+
+

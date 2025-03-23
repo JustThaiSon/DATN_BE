@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Cinemas;
+using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;

@@ -1,6 +1,7 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Movie;
+using DATN_Models.DAL.Rating;
 using DATN_Models.DAO.Interface;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -156,8 +157,10 @@ namespace DATN_Models.DAO
                 var pars = new SqlParameter[2];
                 pars[0] = new SqlParameter("@_MovieID", Id);
                 pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
 
+                // Get movie details including average rating
                 var (movies, actors) = db.GetSingleSP<MovieDAL, ActorDAL>("SP_Movie_MovieDetail", pars);
 
                 if (movies != null)
@@ -167,6 +170,9 @@ namespace DATN_Models.DAO
 
                     // Add genres to the movie
                     movies.genres = GetMovieGenres(Id, out int genreResponse);
+                    movies.AverageRating = GetMovieRating(Id);
+
+                    // Note: AverageRating should now be populated from the SQL procedure directly
                 }
 
                 response = ConvertUtil.ToInt(pars[1].Value);
@@ -305,8 +311,56 @@ namespace DATN_Models.DAO
             }
         }
 
-        public GetDetailMovieLangdingDAL GetDetailMovieLangding(Guid movieId, out int response)
+        public MovieDAL GetDetailMovieLangding(Guid movieId, out int response)
         {
+            //response = 0;
+            //DBHelper db = null;
+            //try
+            //{
+            //    var pars = new SqlParameter[2];
+            //    pars[0] = new SqlParameter("@_MovieID", movieId);
+            //    pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            //    db = new DBHelper(connectionString);
+            //    var result = db.GetInstanceSP<GetDetailMovieLangdingDAL>("SP_Langding_GetDetailMovie", pars);
+            //    if (result != null)
+            //    {
+            //        result.Genres = result.GenreList.Split(',')
+            //      .Select(x => x.Split(':'))
+            //      .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
+            //      .Select(parts => new ListGenreLangdingDAL
+            //      {
+            //          Id = Guid.Parse(parts[0].Trim()),
+            //          GenreName = parts[1].Trim()
+            //      })
+            //      .ToList();
+
+            //        result.Actors = result.ActorList.Split(',')
+            //            .Select(x => x.Split(':'))
+            //            .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
+            //            .Select(parts => new ListActorLangdingDAL
+            //            {
+            //                Id = Guid.Parse(parts[0].Trim()),
+            //                ActorName = parts[1].Trim()
+            //            })
+            //            .ToList();
+            //    }
+            //    response = ConvertUtil.ToInt(pars[1].Value);
+            //    return result;
+            //}
+
+            //catch (Exception ex)
+            //{
+            //    response = -99;
+            //    throw;
+            //}
+            //finally
+            //{
+            //    if (db != null)
+            //        db.Close();
+            //}
+
+
+
             response = 0;
             DBHelper db = null;
             try
@@ -315,33 +369,24 @@ namespace DATN_Models.DAO
                 pars[0] = new SqlParameter("@_MovieID", movieId);
                 pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
-                var result = db.GetInstanceSP<GetDetailMovieLangdingDAL>("SP_Langding_GetDetailMovie", pars);
-                if (result != null)
+
+                var (movies, actors) = db.GetSingleSP<MovieDAL, ActorDAL>("SP_Movie_MovieDetail", pars);
+
+                if (movies != null)
                 {
-                    result.Genres = result.GenreList.Split(',')
-                  .Select(x => x.Split(':'))
-                  .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
-                  .Select(parts => new ListGenreLangdingDAL
-                  {
-                      Id = Guid.Parse(parts[0].Trim()),
-                      GenreName = parts[1].Trim()
-                  })
-                  .ToList();
+                    // Add actors to the movie
+                    movies.listdienvien = actors.Where(x => x.MovieId == movies.Id).ToList();
 
-                    result.Actors = result.ActorList.Split(',')
-                        .Select(x => x.Split(':'))
-                        .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
-                        .Select(parts => new ListActorLangdingDAL
-                        {
-                            Id = Guid.Parse(parts[0].Trim()),
-                            ActorName = parts[1].Trim()
-                        })
-                        .ToList();
+                    // Add genres to the movie
+                    movies.genres = GetMovieGenres(movieId, out int genreResponse);
+
+
+                    movies.AverageRating = GetMovieRating(movieId);
                 }
-                response = ConvertUtil.ToInt(pars[1].Value);
-                return result;
-            }
 
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return movies;
+            }
             catch (Exception ex)
             {
                 response = -99;
@@ -458,6 +503,44 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+
+
+        public double GetMovieRating(Guid movieId)
+        {
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2]; // Corrected parameter count to 3
+                pars[0] = new SqlParameter("@_MovieID", movieId);
+                pars[1] = new SqlParameter("@_RatingAverage", SqlDbType.Decimal) { Direction = ParameterDirection.Output, Precision = 5, Scale = 1 }; // Changed to Decimal to match SQL parameter
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<RatingDAL>("SP_Rating_MovieDetail", pars);
+
+                // Check if pars[1].Value is null or DBNull
+                if (pars[1].Value == null || pars[1].Value == DBNull.Value)
+                {
+                    return 0;
+                }
+
+                // Convert to double and check if it's 0
+                double ratingAverage = Convert.ToDouble(pars[1].Value);
+                return ratingAverage;
+            }
+            catch (Exception)
+            {
+                return 0; // Return 0 in case of exception
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
+
 
 
 
