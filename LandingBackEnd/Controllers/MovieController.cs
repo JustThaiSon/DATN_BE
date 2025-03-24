@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DATN_BackEndApi.VNPay;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
@@ -27,7 +28,9 @@ namespace DATN_LandingPage.Controllers
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IOrderDAO _orderDAO;
-        public MovieController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, IMailService mailService, ISeatDAO seatDAO, IServiceDAO serviceDAO, IOrderDAO orderDAO)
+        private readonly IVNPayService _vnPayService;
+
+        public MovieController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, IMailService mailService, ISeatDAO seatDAO, IServiceDAO serviceDAO, IOrderDAO orderDAO, IVNPayService vnPayService)
         {
             _movieDAO = movieDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
@@ -37,6 +40,7 @@ namespace DATN_LandingPage.Controllers
             _seatDAO = seatDAO;
             _serviceDAO = serviceDAO;
             _orderDAO = orderDAO;
+            _vnPayService = vnPayService;
         }
         [HttpGet]
         [Route("GetMovie")]
@@ -147,5 +151,44 @@ namespace DATN_LandingPage.Controllers
 
             return res;
         }
+        [HttpPost]
+        [Route("create-payment")]
+        public async Task<CommonResponse<string>> CreatePayment([FromBody] OrderInfo orderInfo)
+        {
+            var res = new CommonResponse<string>();
+            try
+            {
+                var paymentUrl = _vnPayService.CreatePaymentUrl(orderInfo, HttpContext);
+                res.Data = paymentUrl;
+                res.ResponseCode = 1;
+                res.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                res.ResponseCode = -99;
+                res.Message = ex.Message;
+            }
+            return res;
+        }
+
+
+
+
+
+
+
+        [HttpGet]
+        [Route("payment-callback")]
+        public IActionResult PaymentCallback()
+        {
+            var response = _vnPayService.ProcessPaymentCallback(Request.Query);
+            // Redirect back to Angular with payment result
+            var redirectUrl = "http://localhost:4200/payment-callback";
+            var queryString = $"?vnp_ResponseCode={response.VnPayResponseCode}&vnp_TxnRef={response.OrderId}";
+            return Redirect(redirectUrl + queryString);
+        }
+
+
+
     }
 }

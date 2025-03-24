@@ -304,5 +304,25 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        public List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Statistic_MovieDetailDAL> Movie_DateRange(Guid MovieID, DateTime? start_date, DateTime? end_date, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Summary(out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Movie(out int response)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

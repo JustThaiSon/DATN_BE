@@ -162,7 +162,7 @@ namespace DATN_Models.DAO
                 string ticketsXml = ConvertTicketsToXml(req.Tickets);
 
                 var pars = new SqlParameter[7];
-                pars[0] = new SqlParameter("@UserId", userID);
+                pars[0] = new SqlParameter("@UserId", userID == Guid.Empty ? DBNull.Value : userID);
                 pars[1] = new SqlParameter("@_Email", req.Email);
                 pars[2] = new SqlParameter("@IsAnonymous", req.IsAnonymous);
                 pars[3] = new SqlParameter("@PaymentId", req.PaymentId);
