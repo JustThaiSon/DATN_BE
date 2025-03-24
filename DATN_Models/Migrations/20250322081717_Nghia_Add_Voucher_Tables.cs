@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DATN_Models.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Voucher_Tables : Migration
+    public partial class Nghia_Add_Voucher_Tables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

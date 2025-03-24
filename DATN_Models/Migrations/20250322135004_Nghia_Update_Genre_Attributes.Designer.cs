@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    [Migration("20250322081717_Add_Voucher_Tables")]
-    partial class Add_Voucher_Tables
+    [Migration("20250322135004_Update_Genre_Attributes")]
+    partial class Nghia_Update_Genre_Attributes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -335,6 +335,9 @@ namespace DATN_Models.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Genres");
@@ -587,6 +590,25 @@ namespace DATN_Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ParamConfig");
+                });
+
+            modelBuilder.Entity("DATN_Models.Models.PaymentMethod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaymentMethodName")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentMethod");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.PricingRules", b =>

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DATN_Models.Migrations
 {
     /// <inheritdoc />
-    public partial class Update_Genre_Attributes : Migration
+    public partial class Nghia_Update_Genre_Attributes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
