@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using StatisticSeatOccupancyDAL = DATN_Models.DAL.Statistic.StatisticSeatOccupancyDAL;
+using StatisticSeatProfitabilityDAL = DATN_Models.DAL.Statistic.StatisticSeatProfitabilityDAL;
+using StatisticTopServicesDAL = DATN_Models.DAL.Statistic.StatisticTopServicesDAL;
 
 namespace DATN_Models.DAO.Interface
 {

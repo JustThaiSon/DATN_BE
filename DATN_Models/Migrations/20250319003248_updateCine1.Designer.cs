@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    [Migration("20250302155019_updateroom")]
-    partial class updateroom
+    [Migration("20250319003248_updateCine1")]
+    partial class updateCine1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,6 +215,9 @@ namespace DATN_Models.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -661,6 +664,9 @@ namespace DATN_Models.Migrations
                     b.Property<Guid>("CinemaId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("Isdeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -741,6 +747,9 @@ namespace DATN_Models.Migrations
 
                     b.Property<int>("ColNumber")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("PairId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");

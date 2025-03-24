@@ -7,7 +7,12 @@ using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
+using DATN_Models.DTOS.Room.Res;
+using DATN_Models.HandleData;
+using DATN_Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace DATN_BackEndApi.Controllers
 {
@@ -19,6 +24,7 @@ namespace DATN_BackEndApi.Controllers
         private readonly string _langCode;
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
+        private readonly DATN_Context _db;
 
         public CinemasController(ICinemasDAO cinemaDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
         {
@@ -26,6 +32,7 @@ namespace DATN_BackEndApi.Controllers
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
+            _db = new DATN_Context();
         }
 
         [HttpPost]
@@ -43,6 +50,19 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+
+
+
+        [HttpPost]
+        [Route("DeleteCinema")]
+        public async Task<CommonResponse<dynamic>> DeleteCinema(Guid id)
+        {
+            var res = new CommonResponse<dynamic>();
+            _cinemasDAO.DeleteCinema(id, out int response);
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
         [HttpPost]
         [Route("UpdateCinemas")]
 
@@ -108,17 +128,7 @@ namespace DATN_BackEndApi.Controllers
 
    
 
-        [HttpPost]
-        [Route("DeleteCinema")]
-        public async Task<CommonResponse<dynamic>> DeleteCinema(Guid id)
-        {
-            var res = new CommonResponse<dynamic>();
-            _cinemasDAO.DeleteCinema(id, out int response);
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-            return res;
-        }
-
+      
 
         [HttpGet]
         [Route("GetCinemaById")]

@@ -10,6 +10,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StatisticBundledServicesDAL = DATN_Models.DAL.Statistic.StatisticBundledServicesDAL;
+using StatisticCustomerGenderDAL = DATN_Models.DAL.Statistic.StatisticCustomerGenderDAL;
 
 namespace DATN_Models.DAO
 {
@@ -386,6 +388,16 @@ namespace DATN_Models.DAO
         }
 
         public Task Movie(out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<Interface.StatisticCustomerGenderDAL> IStatisticDAO.GetCustomerGender(DateTime? startDate, DateTime? endDate, out int response)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<Interface.StatisticBundledServicesDAL> IStatisticDAO.GetBundledServices(DateTime? startDate, DateTime? endDate, out int response)
         {
             throw new NotImplementedException();
         }
