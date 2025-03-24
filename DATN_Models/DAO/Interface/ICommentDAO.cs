@@ -1,4 +1,5 @@
-﻿using DATN_Models.DAL.Movie.Actor;
+﻿using DATN_Models.DAL.Comment;
+using DATN_Models.DAL.Movie.Actor;
 
 namespace DATN_Models.DAO.Interface
 {

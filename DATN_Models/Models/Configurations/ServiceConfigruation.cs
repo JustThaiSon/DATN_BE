@@ -19,10 +19,8 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.Price)
                 .IsRequired();
 
-            builder.Property(x => x.Category)
-                .HasMaxLength(100);
-
             builder.Property(x => x.CreatedDate)
+                .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
 
             builder.Property(x => x.Status)
@@ -30,3 +28,4 @@ namespace DATN_Models.Models.Configurations
         }
     }
 }
+

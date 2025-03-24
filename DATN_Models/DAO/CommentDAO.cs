@@ -1,7 +1,9 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
+using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAO.Interface;
+using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -114,6 +116,7 @@ namespace DATN_Models.DAO
         public List<ListCommentDAL> GetListComment(Guid MovieId, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
+            totalRecord = 0;
             DBHelper db = null;
             try
             {
@@ -126,9 +129,24 @@ namespace DATN_Models.DAO
                 db = new DBHelper(connectionString);
 
                 var result = db.GetListSP<ListCommentDAL>("SP_Comment_GetList", pars);
-
+  
                 response = ConvertUtil.ToInt(pars[4].Value);
                 totalRecord = ConvertUtil.ToInt(pars[3].Value);
+
+
+
+
+
+
+                // Kiểm tra response code
+                if (response != 200)
+                {
+                    Console.WriteLine($"SP returned error code: {response}");
+                }
+
+
+
+
 
                 return result;
             }
@@ -143,6 +161,15 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+
+
+
+
+
+
+        
+
 
     }
 

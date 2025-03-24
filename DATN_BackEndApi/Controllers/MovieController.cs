@@ -139,6 +139,22 @@ namespace DATN_BackEndApi.Controllers
         //}
 
 
+        [HttpGet("GetMovieGenres")]
+        public async Task<CommonResponse<List<MovieGenreRes>>> GetMovieGenres(Guid id)
+        {
+            var res = new CommonResponse<List<MovieGenreRes>>();
+
+            var result = _movieDAO.GetMovieGenres(id, out int response);
+            var resultMapper = _mapper.Map<List<MovieGenreRes>>(result);
+
+            res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
+
 
         #endregion
     }

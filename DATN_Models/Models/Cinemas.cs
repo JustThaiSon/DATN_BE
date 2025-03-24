@@ -11,5 +11,7 @@ namespace DATN_Models.Models
         public int TotalRooms { get; set; }
         public CinemaStatusEnum Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

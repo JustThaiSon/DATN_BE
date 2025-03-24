@@ -7,7 +7,11 @@ using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
+using DATN_Models.DTOS.Room.Res;
+using DATN_Models.HandleData;
+using DATN_Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DATN_BackEndApi.Controllers
 {
@@ -19,6 +23,7 @@ namespace DATN_BackEndApi.Controllers
         private readonly string _langCode;
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
+        private readonly DATN_Context _db;
 
         public CinemasController(ICinemasDAO cinemaDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
         {
@@ -26,6 +31,7 @@ namespace DATN_BackEndApi.Controllers
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
+            _db = new DATN_Context();
         }
 
         [HttpPost]
@@ -41,6 +47,37 @@ namespace DATN_BackEndApi.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
             return res;
+        }
+
+
+        [HttpPost]
+        [Route("DeleteCinema")]
+        public async Task<CommonResponse<dynamic>> DeleteCinema(Guid id)
+        {
+            try
+            {
+                await _db.Database.ExecuteSqlRawAsync("DISABLE TRIGGER ALL ON Cinemas;");
+                var Cine = _db.Cinemas.FirstOrDefault(a => a.CinemasId == id);
+
+                Cine.IsDeleted = true;
+                await _db.SaveChangesAsync();
+                await _db.Database.ExecuteSqlRawAsync("ENABLE TRIGGER ALL ON Cinemas;");
+                return new CommonResponse<dynamic>
+                {
+                    ResponseCode = 200
+                };
+                
+            }
+            catch (Exception ex)
+            {
+                return new CommonResponse<dynamic>
+                {
+                    ResponseCode = -101,
+                    Message = $"có lỗi rồi : {ex}"
+                };
+            }
+           
+            
         }
 
         [HttpPost]
