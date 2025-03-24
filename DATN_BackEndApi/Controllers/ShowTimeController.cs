@@ -125,6 +125,7 @@ namespace DATN_BackEndApi.Controllers
             
             try
             {
+                var reqMapper = _mapper.Map<ShowTimeReq>(request);
                 _showTimeDAO.UpdateShowTime(id, request, out int response);
                 res.ResponseCode = response;
                 res.Message = MessageUtils.GetMessage(response, _langCode);
