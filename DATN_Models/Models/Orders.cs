@@ -10,7 +10,9 @@
         public int Status { get; set; }
         public int IsAnonymous { get; set; }
         public Guid? PaymentId { get; set; }
+        public Guid? VoucherId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
     }
+
 }

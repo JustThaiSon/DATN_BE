@@ -18,6 +18,9 @@ namespace DATN_Models.DAO.Interface
         List<StatisticBundledServicesDAL> GetBundledServices(DateTime? startDate, DateTime? endDate, out int response);
         List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response);
         List<Statistic_MovieDetailDAL> Movie_DateRange(Guid MovieID, DateTime? start_date, DateTime? end_date, out int response);
+
+
+
         #region phụ
         Task Summary(out int response);
 

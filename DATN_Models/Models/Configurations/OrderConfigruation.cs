@@ -20,7 +20,15 @@ namespace DATN_Models.Models.Configurations
                 .IsRequired();
             builder.Property(x => x.IsAnonymous)
                 .IsRequired();
-        }
 
+            builder.Property(x => x.VoucherId)
+                .IsRequired(false);
+
+            builder.HasOne<Voucher>()
+                .WithMany()
+                .HasForeignKey(x => x.VoucherId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
+        }
     }
 }

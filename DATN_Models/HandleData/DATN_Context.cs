@@ -51,6 +51,7 @@ namespace DATN_Models.HandleData
         public DbSet<Seats> Seats { get; set; }
         public DbSet<SeatTypes> SeatTypes { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<ShowTime> ShowTimes { get; set; }
         public DbSet<Tickets> Tickets { get; set; }
         public DbSet<PricingRules> PricingRules { get; set; }
@@ -58,5 +59,13 @@ namespace DATN_Models.HandleData
         public DbSet<ErrorLog> ErrorLog { get; set; }
         public DbSet<ParamConfig> ParamConfig { get; set; }
         public DbSet<ChangeLog> ChangeLogs { get; set; }
+
+
+
+
+
+
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherUsage> VoucherUsages { get; set; }
     }
 }

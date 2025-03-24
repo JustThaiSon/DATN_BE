@@ -78,8 +78,10 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
-
-
+            services.AddTransient<IVoucherDAO, VoucherDAO>();
+            services.AddTransient<ILogDAO, LogDAO>();
+            services.AddTransient<IGenreDAO, GenreDAO>();
+            services.AddTransient<IServiceTypeDAO, ServiceTypeDAO>();
 
 
 
@@ -95,6 +97,7 @@ namespace DATN_BackEndApi.Extension
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
             services.AddScoped<UserManager<AppUsers>, UserManager<AppUsers>>();
+
             // AddSingleton
             services.AddSingleton<IWebSocketManager, WebSocketManager>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

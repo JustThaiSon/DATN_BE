@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Cinemas;
+using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Customer;
+using DATN_Models.DAL.Employee;
+using DATN_Models.DAL.Genre;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
@@ -13,8 +16,10 @@ using DATN_Models.DAL.Room;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
 using DATN_Models.DAL.Service;
+using DATN_Models.DAL.ServiceType;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAL.Statistic;
+using DATN_Models.DAL.Voucher;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.Cinemas.Req;
@@ -23,6 +28,11 @@ using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
+using DATN_Models.DTOS.Employee.Req;
+using DATN_Models.DTOS.Employee.Res;
+using DATN_Models.DTOS.Genre.Req;
+using DATN_Models.DTOS.Genre.Res;
+using DATN_Models.DTOS.Logs.Res;
 using DATN_Models.DTOS.Employee.Req;
 using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
@@ -41,8 +51,13 @@ using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DTOS.Service.Response;
+using DATN_Models.DTOS.ServiceType.Req;
+using DATN_Models.DTOS.ServiceType.Res;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
+using DATN_Models.DTOS.Statistic.Res;
+using DATN_Models.DTOS.Voucher.Req;
+using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
@@ -76,7 +91,13 @@ namespace DATN_Models.Mapper
             CreateMap<GetDetailMovieLangdingDAL, GetDetailMovieLangdingRes>().ReverseMap();
             CreateMap<GetShowTimeLandingDAL, GetShowTimeLangdingRes>().ReverseMap();
             CreateMap<ShowtimesLangdingDAL, ShowtimesLangdingRes>().ReverseMap();
+
+            CreateMap<MovieGenreDAL, MovieGenreRes>().ReverseMap();
             #endregion
+
+
+
+
             // Phần actor
             #region Nghia_Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
@@ -90,6 +111,8 @@ namespace DATN_Models.Mapper
 
             #endregion
 
+
+
             // Phần Comment
             #region Nghia_Comment
             CreateMap<CreateCommentDAL, CreateCommentReq>().ReverseMap();
@@ -98,7 +121,12 @@ namespace DATN_Models.Mapper
             CreateMap<ListCommentDAL, GetListCommentRes>().ReverseMap();
             //CreateMap<ListCommentDALTest, GetListCommentResTest>().ReverseMap();
 
+
+
             #endregion
+
+
+
 
             // Phần rating
             #region Nghia_Rating
@@ -110,6 +138,9 @@ namespace DATN_Models.Mapper
 
 
             #endregion
+
+
+
 
             // Phần Customer
             #region Nghia_Customer
@@ -134,7 +165,37 @@ namespace DATN_Models.Mapper
             CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 
+            // Phần voucher
+            #region Nghia_Voucher
+            CreateMap<VoucherDAL, VoucherRes>().ReverseMap();
+            CreateMap<VoucherDAL, VoucherReq>().ReverseMap();
+            CreateMap<VoucherUsageDAL, VoucherUsageRes>().ReverseMap();
+            CreateMap<VoucherUsageDAL, UseVoucherReq>().ReverseMap();
+            #endregion
 
+            // Phần thể loại
+            #region Nghia_Genre
+
+            CreateMap<GenreDAL, GetGenreRes>().ReverseMap();
+            CreateMap<AddGenreDAL, AddGenreReq>().ReverseMap();
+            CreateMap<UpdateGenreDAL, UpdateGenreReq>().ReverseMap();
+
+            #endregion
+
+            // Phần dịch vụ
+            #region Nghia_Service_Type
+            CreateMap<ServiceTypeDAL, ServiceTypeRes>().ReverseMap();
+            CreateMap<CreateServiceTypeReq, CreateServiceTypeDAL>().ReverseMap();
+            CreateMap<UpdateServiceTypeReq, UpdateServiceTypeDAL>().ReverseMap();
+            #endregion
+
+            // Phần nhân viên
+            #region Nghia_Employee
+            CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
+            CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
+            CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
+            #endregion
 
 
 
@@ -158,7 +219,30 @@ namespace DATN_Models.Mapper
             CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
             CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
 
+            CreateMap<ChangeLog, GetLogRes>().ReverseMap();
+
             #endregion
+
+
+
+
+            #region Cinema
+            CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
+
+
+            #endregion
+
+
+            // Phần Thống kê
+            #region Nghia_Statistic
+            CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
+            CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
+
+            #endregion
+
+
+            #region Showtime
+            CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
 
 
             #region Showtime
@@ -217,13 +301,17 @@ namespace DATN_Models.Mapper
             #endregion
             #region PricingRule
             CreateMap<CreatePricingRuleReq, CreatePricingRuleDAL>()
-              
+
                 .ReverseMap();
             CreateMap<UpdatePricingRuleDAL, UpdatePricingRuleReq>().ReverseMap();
             CreateMap<GetListPricingRuleDAL, GetListPricingRuleRes>().ReverseMap();
             #endregion
 
             #endregion
+
+
+
+
             #region statistic
             CreateMap<StatisticTopServicesDAL, StatisticTopServicesRes>().ReverseMap();
             CreateMap<StatisticSeatProfitabilityDAL, StatisticSeatProfitabilityRes>().ReverseMap();
@@ -261,6 +349,9 @@ namespace DATN_Models.Mapper
             CreateMap<ShowTimeReq, ShowTime>();
             #endregion
 
+
+
+            #endregion
         }
     }
 }

@@ -57,11 +57,11 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetDetailMovie")]
-        public async Task<CommonResponse<GetDetailMovieLangdingRes>> GetDetailMovie(Guid movieId)
+        public async Task<CommonResponse<GetMovieRes>> GetDetailMovie(Guid movieId)
         {
-            var res = new CommonResponse<GetDetailMovieLangdingRes>();
-            var data = _movieDAO.GetDetailMovieLangding(movieId, out int responseCode);
-            var resultMapper = _mapper.Map<GetDetailMovieLangdingRes>(data);
+            var res = new CommonResponse<GetMovieRes>();
+            var data = _movieDAO.GetMovieDetail(movieId, out int responseCode);
+            var resultMapper = _mapper.Map<GetMovieRes>(data);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = resultMapper;
@@ -131,6 +131,24 @@ namespace DATN_LandingPage.Controllers
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = resultMapper;
+            return res;
+        }
+
+
+
+
+        [HttpGet("GetMovieGenres")]
+        public async Task<CommonResponse<List<MovieGenreRes>>> GetMovieGenres(Guid id)
+        {
+            var res = new CommonResponse<List<MovieGenreRes>>();
+
+            var result = _movieDAO.GetMovieGenres(id, out int response);
+            var resultMapper = _mapper.Map<List<MovieGenreRes>>(result);
+
+            res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
             return res;
         }
         [HttpPost]
