@@ -35,7 +35,6 @@ public class VNPayService : IVNPayService
         pay.AddRequestData("vnp_Locale", "vn");
         pay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang {order.OrderId}");
         pay.AddRequestData("vnp_OrderType", "other");
-
         //pay.AddRequestData("vnp_ReturnUrl", _options.ReturnUrl);
         //pay.AddRequestData("vnp_TxnRef", tick);
 
