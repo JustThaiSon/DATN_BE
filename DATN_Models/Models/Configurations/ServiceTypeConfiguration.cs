@@ -1,11 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DATN_Models.Models.Configurations
 {
-    public class ServiceConfigruation : IEntityTypeConfiguration<Service>
+    public class ServiceTypeConfiguration : IEntityTypeConfiguration<ServiceType>
     {
-        public void Configure(EntityTypeBuilder<Service> builder)
+        public void Configure(EntityTypeBuilder<ServiceType> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -16,16 +21,12 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.Description)
                 .HasMaxLength(500);
 
-            builder.Property(x => x.Price)
-                .IsRequired();
-
             builder.Property(x => x.CreatedDate)
                 .HasDefaultValueSql("GETDATE()")
                 .IsRequired();
 
             builder.Property(x => x.Status)
-                .IsRequired();
+                    .IsRequired();
         }
     }
 }
-

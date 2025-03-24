@@ -51,6 +51,7 @@ namespace DATN_Models.HandleData
         public DbSet<Seats> Seats { get; set; }
         public DbSet<SeatTypes> SeatTypes { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<ServiceType> ServiceTypes { get; set; }
         public DbSet<ShowTime> ShowTimes { get; set; }
         public DbSet<Tickets> Tickets { get; set; }
         public DbSet<PricingRules> PricingRules { get; set; }

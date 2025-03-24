@@ -15,6 +15,7 @@ using DATN_Models.DAL.Room;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
 using DATN_Models.DAL.Service;
+using DATN_Models.DAL.ServiceType;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAL.Statistic;
 using DATN_Models.DAL.Voucher;
@@ -47,6 +48,8 @@ using DATN_Models.DTOS.SeatType.Req;
 using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Request;
 using DATN_Models.DTOS.Service.Response;
+using DATN_Models.DTOS.ServiceType.Req;
+using DATN_Models.DTOS.ServiceType.Res;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
 using DATN_Models.DTOS.Statistic.Res;
@@ -160,6 +163,15 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateGenreDAL, UpdateGenreReq>().ReverseMap();
 
             #endregion
+
+            // Phần dịch vụ
+            #region Nghia_Service_Type
+            CreateMap<ServiceTypeDAL, ServiceTypeRes>().ReverseMap();
+            CreateMap<CreateServiceTypeReq, CreateServiceTypeDAL>().ReverseMap();
+            CreateMap<UpdateServiceTypeReq, UpdateServiceTypeDAL>().ReverseMap();
+            #endregion
+
+
 
             #region Cinema
             CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
