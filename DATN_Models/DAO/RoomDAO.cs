@@ -25,17 +25,18 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[6];
+                var pars = new SqlParameter[7];
                 pars[0] = new SqlParameter("@_CinemaId", resquest.CinemaId);
-                pars[1] = new SqlParameter("@_Name", resquest.Name);
-                pars[2] = new SqlParameter("@_TotalColNumber", resquest.TotalColNumber);
-                pars[3] = new SqlParameter("@_TotalRowNumber", resquest.TotalRowNumber);
-                pars[4] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[1] = new SqlParameter("@_RoomTypeId", resquest.RoomTypeId);
+                pars[2] = new SqlParameter("@_Name", resquest.Name);
+                pars[3] = new SqlParameter("@_TotalColNumber", resquest.TotalColNumber);
+                pars[4] = new SqlParameter("@_TotalRowNumber", resquest.TotalRowNumber);
+                pars[5] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
+                pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Room_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[5].Value);
+                response = ConvertUtil.ToInt(pars[6].Value);
             }
             catch (Exception ex)
             {

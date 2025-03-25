@@ -48,6 +48,7 @@ namespace DATN_Models.HandleData
         // public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Ratings> Ratings { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Seats> Seats { get; set; }
         public DbSet<SeatTypes> SeatTypes { get; set; }
         public DbSet<Service> Services { get; set; }
