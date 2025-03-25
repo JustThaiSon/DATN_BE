@@ -10,6 +10,7 @@
         Upgrading = 6,
         Closed = 7,
         Cancelled = 8,
-        Locked = 9
+        Locked = 9,
+
     }
 }

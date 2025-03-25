@@ -82,6 +82,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ILogDAO, LogDAO>();
             services.AddTransient<IGenreDAO, GenreDAO>();
             services.AddTransient<IServiceTypeDAO, ServiceTypeDAO>();
+            services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
 
 
 
