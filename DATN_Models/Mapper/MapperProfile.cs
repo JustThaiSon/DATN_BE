@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Cinemas;
-using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;
@@ -61,6 +60,7 @@ using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
+using DATN_Models.DAL.Comment;
 
 namespace DATN_Models.Mapper
 {
@@ -187,6 +187,7 @@ namespace DATN_Models.Mapper
             CreateMap<ServiceTypeDAL, ServiceTypeRes>().ReverseMap();
             CreateMap<CreateServiceTypeReq, CreateServiceTypeDAL>().ReverseMap();
             CreateMap<UpdateServiceTypeReq, UpdateServiceTypeDAL>().ReverseMap();
+            CreateMap<GetListSeatTypeRes, GetListSeatTypeDAL>().ReverseMap();
             #endregion
 
             // Phần nhân viên

@@ -82,7 +82,6 @@ namespace DATN_BackEndApi.Controllers
 
         public async Task<CommonPagination<List<GetListSeatTypeRes>>> GetListSeatType(int currentPage, int recordPerPage)
         {
-
             var res = new CommonPagination<List<GetListSeatTypeRes>>();
 
             var result = _seatTypeDAO.GetListSeatType(currentPage, recordPerPage, out int TotalRecord, out int response);

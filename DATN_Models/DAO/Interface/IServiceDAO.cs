@@ -8,5 +8,6 @@ namespace DATN_Models.DAO.Interface
         void UpdateService(UpdateServiceDAL req, out int response);
         void DeleteService(DeleteServiceDAL req, out int response);
         List<GetServiceDAL> GetService(int currentPage, int recordPerPage, out int totalRecord, out int response);
+    
     }
 }

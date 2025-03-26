@@ -73,6 +73,8 @@ namespace DATN_Models.DAO
             }
         }
 
+        
+
         public List<GetServiceDAL> GetService(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
@@ -100,6 +102,8 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        
 
         public void UpdateService(UpdateServiceDAL req, out int response)
         {
