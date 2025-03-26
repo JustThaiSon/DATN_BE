@@ -4,6 +4,7 @@ using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Room;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Room.Req;
 using DATN_Models.DTOS.Room.Res;
 using Microsoft.AspNetCore.Mvc;
@@ -82,5 +83,20 @@ namespace DATN_BackEndApi.Controllers
             res.ResponseCode = response;
             return res;
         }
+
+        [HttpPost]
+        [Route("UpdateRoom")]
+
+        public async Task<CommonResponse<dynamic>> UpdateRoom( UpdateRoomReq rq)
+        {
+            var res = new CommonResponse<dynamic>();
+            var Rqmapper = _mapper.Map<UpdateRoomDAL>(rq);
+            _roomDAO.UpdateRoom(Rqmapper, out int response);
+            res.Data = null;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
     }
 }

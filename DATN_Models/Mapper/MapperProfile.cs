@@ -4,8 +4,8 @@ using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
-using DATN_Models.DAL.Genre;
 using DATN_Models.DAL.Employee;
+using DATN_Models.DAL.Genre;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
@@ -13,6 +13,7 @@ using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAL.Rating;
 using DATN_Models.DAL.Room;
+using DATN_Models.DAL.RoomType;
 using DATN_Models.DAL.Seat;
 using DATN_Models.DAL.SeatType;
 using DATN_Models.DAL.Service;
@@ -29,12 +30,12 @@ using DATN_Models.DTOS.Comments.Res;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Employee.Req;
+using DATN_Models.DTOS.Employee.Req;
+using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Genre.Req;
 using DATN_Models.DTOS.Genre.Res;
 using DATN_Models.DTOS.Logs.Res;
-using DATN_Models.DTOS.Employee.Req;
-using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -45,6 +46,7 @@ using DATN_Models.DTOS.Rating.Req;
 using DATN_Models.DTOS.Rating.Res;
 using DATN_Models.DTOS.Room.Req;
 using DATN_Models.DTOS.Room.Res;
+using DATN_Models.DTOS.RoomType.Res;
 using DATN_Models.DTOS.Seat.Req;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Req;
@@ -56,9 +58,9 @@ using DATN_Models.DTOS.ServiceType.Res;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
 using DATN_Models.DTOS.Statistic.Res;
+using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.DTOS.Voucher.Req;
 using DATN_Models.DTOS.Voucher.Res;
-using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 
@@ -265,7 +267,9 @@ namespace DATN_Models.Mapper
             #region Room
             CreateMap<CreateRoomReq, CreateRoomDAL>().ReverseMap();
             CreateMap<ListRoomDAL, GetListRoomRes>().ReverseMap();
+            CreateMap<UpdateRoomDAL, UpdateRoomReq>().ReverseMap();
             #endregion
+            CreateMap<GetListRoomTypeDAL, RoomTypeGetListRes>().ReverseMap();
 
             #region Seat
             CreateMap<GetListSeatRes, ListSeatDAL>().ReverseMap();
