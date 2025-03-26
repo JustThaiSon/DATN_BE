@@ -132,6 +132,38 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        public void UpdateRoom(UpdateRoomDAL req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[6]; // Updated parameter count
+
+                pars[0] = new SqlParameter("@_RoomId", req.Id);
+                pars[1] = new SqlParameter("@_RoomTypeId", req.RoomTypeId);
+                pars[2] = new SqlParameter("@_RoomName", req.Name);
+                pars[3] = new SqlParameter("@_RoomStatus", req.Status);
+                pars[4] = new SqlParameter("@_SeatPrice", req.SeatPrice);
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Room_Update", pars);
+
+                response = ConvertUtil.ToInt(pars[5].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 
 

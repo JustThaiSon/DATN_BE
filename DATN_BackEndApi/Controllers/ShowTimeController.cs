@@ -154,5 +154,18 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+        [HttpPost]
+        [Route("UpdateShowTimeStatus")]
+        public CommonResponse<string> UpdateShowTimeStatus(Guid id,int status)
+        {
+            var res = new CommonResponse<string>();
+            _showTimeDAO.UpdateShowTimeStatus(id,status, out int response);
+
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+
+            return res;
+        }
+
     }
 }

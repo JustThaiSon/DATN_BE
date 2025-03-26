@@ -269,5 +269,40 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        public void UpdateShowTimeStatus(Guid showTimeId, int status, out int response)
+        {
+            response = 0; // Khởi tạo mã phản hồi
+            DBHelper db = null;
+
+            try
+            {
+                // Tạo danh sách tham số cho Stored Procedure
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_ShowTimeId", showTimeId);
+                pars[1] = new SqlParameter("@_Status", status);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                // Gọi Stored Procedure
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_ShowTime_UpdateStatus", pars);
+
+                // Lấy mã phản hồi từ tham số OUTPUT
+                response = ConvertUtil.ToInt(pars[2].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99; // Lỗi hệ thống
+                throw new Exception("Error deleting show time", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close(); // Đóng kết nối
+            }
+        }
     }
 }
