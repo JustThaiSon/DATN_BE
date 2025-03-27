@@ -25,17 +25,18 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[6];
+                var pars = new SqlParameter[7];
                 pars[0] = new SqlParameter("@_CinemaId", resquest.CinemaId);
-                pars[1] = new SqlParameter("@_Name", resquest.Name);
-                pars[2] = new SqlParameter("@_TotalColNumber", resquest.TotalColNumber);
-                pars[3] = new SqlParameter("@_TotalRowNumber", resquest.TotalRowNumber);
-                pars[4] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[1] = new SqlParameter("@_RoomTypeId", resquest.RoomTypeId);
+                pars[2] = new SqlParameter("@_Name", resquest.Name);
+                pars[3] = new SqlParameter("@_TotalColNumber", resquest.TotalColNumber);
+                pars[4] = new SqlParameter("@_TotalRowNumber", resquest.TotalRowNumber);
+                pars[5] = new SqlParameter("@_SeatPrice", resquest.SeatPrice);
+                pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Room_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[5].Value);
+                response = ConvertUtil.ToInt(pars[6].Value);
             }
             catch (Exception ex)
             {
@@ -119,6 +120,38 @@ namespace DATN_Models.DAO
 
                 //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
                 response = ConvertUtil.ToInt(pars[1].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public void UpdateRoom(UpdateRoomDAL req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[6]; // Updated parameter count
+
+                pars[0] = new SqlParameter("@_RoomId", req.Id);
+                pars[1] = new SqlParameter("@_RoomTypeId", req.RoomTypeId);
+                pars[2] = new SqlParameter("@_RoomName", req.Name);
+                pars[3] = new SqlParameter("@_RoomStatus", req.Status);
+                pars[4] = new SqlParameter("@_SeatPrice", req.SeatPrice);
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Room_Update", pars);
+
+                response = ConvertUtil.ToInt(pars[5].Value);
             }
             catch (Exception ex)
             {

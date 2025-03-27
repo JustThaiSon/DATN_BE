@@ -6,6 +6,7 @@
         UnAvailable = 1,
         None = 2,
         Held = 3,
-        Reserved = 4
+        Reserved = 4,
+        Paied = 5
     }
 }

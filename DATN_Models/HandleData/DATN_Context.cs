@@ -19,7 +19,7 @@ namespace DATN_Models.HandleData
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=tcp:nhom1-datn.database.windows.net,1433;Initial Catalog=rapphim;Persist Security Info=False;User ID=datn;Password=Nghiagaming1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            optionsBuilder.UseSqlServer("Server=tcp:datn-nhom1.database.windows.net,1433;Initial Catalog=rapphim;Persist Security Info=False;User ID=lamgaming;Password=Nghia12345;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -48,6 +48,7 @@ namespace DATN_Models.HandleData
         // public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Ratings> Ratings { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
         public DbSet<Seats> Seats { get; set; }
         public DbSet<SeatTypes> SeatTypes { get; set; }
         public DbSet<Service> Services { get; set; }

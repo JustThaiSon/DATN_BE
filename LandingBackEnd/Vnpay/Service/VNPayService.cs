@@ -1,5 +1,5 @@
-﻿using DATN_BackEndApi.Extension.Vnpay;
-using DATN_BackEndApi.Extension.Vnpay.DATN_BackEndApi.VNPay;
+﻿using DATN_BackEndApi.VNPay;
+using DATN_LandingPage.Extension.Vnpay;
 
 public interface IVNPayService
 {
@@ -35,20 +35,15 @@ public class VNPayService : IVNPayService
         pay.AddRequestData("vnp_Locale", "vn");
         pay.AddRequestData("vnp_OrderInfo", $"Thanh toan don hang {order.OrderId}");
         pay.AddRequestData("vnp_OrderType", "other");
-
         //pay.AddRequestData("vnp_ReturnUrl", _options.ReturnUrl);
         //pay.AddRequestData("vnp_TxnRef", tick);
 
 
         // Sử dụng URL tạm thời cho vnp_ReturnUrl
-        var returnUrl = $"{context.Request.Scheme}://{context.Request.Host}/api/payment/payment-callback";
+        var returnUrl = $"{context.Request.Scheme}://{context.Request.Host}/api/Movie/payment-callback";
         pay.AddRequestData("vnp_ReturnUrl", returnUrl);
         pay.AddRequestData("vnp_TxnRef", tick);
 
-        // Sử dụng URL callback đúng
-        //var returnUrl = _options.ReturnUrl;
-        //pay.AddRequestData("vnp_ReturnUrl", returnUrl);
-        //pay.AddRequestData("vnp_TxnRef", tick);
 
 
         var paymentUrl = pay.CreateRequestUrl(_options.PaymentUrl, _options.HashSecret);

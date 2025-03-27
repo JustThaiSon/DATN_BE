@@ -4,6 +4,7 @@ using DATN_Models.HandleData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    partial class DATN_ContextModelSnapshot : ModelSnapshot
+    [Migration("20250325172702_Nghia_Clean_Code_Nhanh_Thao")]
+    partial class Nghia_Clean_Code_Nhanh_Thao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -683,25 +686,6 @@ namespace DATN_Models.Migrations
                     b.ToTable("Ratings");
                 });
 
-            modelBuilder.Entity("DATN_Models.Models.RoomType", b =>
-                {
-                    b.Property<Guid>("RoomTypeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("status")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoomTypeId");
-
-                    b.ToTable("RoomTypes");
-                });
-
             modelBuilder.Entity("DATN_Models.Models.Rooms", b =>
                 {
                     b.Property<Guid>("Id")
@@ -718,9 +702,6 @@ namespace DATN_Models.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid>("RoomTypeId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<long>("SeatPrice")
                         .HasColumnType("bigint");

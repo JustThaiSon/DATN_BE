@@ -1,14 +1,20 @@
 ﻿using AutoMapper;
+using DATN_BackEndApi.VNPay;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Orders;
+using DATN_Models.DAL.Service;
+using DATN_Models.DAL.ServiceType;
+using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Seat.Res;
+using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Response;
+using DATN_Models.DTOS.ServiceType.Res;
 using DATN_Services.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,12 +28,15 @@ namespace DATN_LandingPage.Controllers
         private readonly IMovieDAO _movieDAO;
         private readonly ISeatDAO _seatDAO;
         private readonly IServiceDAO _serviceDAO;
+        private readonly IServiceTypeDAO _serviceTypeDAO;
         private readonly string _langCode;
         private readonly IUltil _ultils;
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
         private readonly IOrderDAO _orderDAO;
-        public MovieController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, IMailService mailService, ISeatDAO seatDAO, IServiceDAO serviceDAO, IOrderDAO orderDAO)
+        private readonly IVNPayService _vnPayService;
+
+        public MovieController(IMovieDAO movieDAO, IConfiguration configuration, IUltil ultils, IMapper mapper, IMailService mailService, ISeatDAO seatDAO, IServiceDAO serviceDAO, IOrderDAO orderDAO, IVNPayService vnPayService, IServiceTypeDAO seatTypeDAO)
         {
             _movieDAO = movieDAO;
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
@@ -37,6 +46,8 @@ namespace DATN_LandingPage.Controllers
             _seatDAO = seatDAO;
             _serviceDAO = serviceDAO;
             _orderDAO = orderDAO;
+            _vnPayService = vnPayService;
+            _serviceTypeDAO = seatTypeDAO;
         }
         [HttpGet]
         [Route("GetMovie")]
@@ -131,8 +142,6 @@ namespace DATN_LandingPage.Controllers
         }
 
 
-
-
         [HttpGet("GetMovieGenres")]
         public async Task<CommonResponse<List<MovieGenreRes>>> GetMovieGenres(Guid id)
         {
@@ -147,5 +156,58 @@ namespace DATN_LandingPage.Controllers
 
             return res;
         }
+        [HttpGet]
+        [Route("GetServiceTypeList")]
+        public async Task<CommonPagination<List<ServiceTypeRes>>> GetServiceTypeList(int currentPage, int recordPerPage)
+        {
+            var res = new CommonPagination<List<ServiceTypeRes>>();
+            var result = _serviceTypeDAO.GetServiceTypeList(currentPage, recordPerPage, out int totalRecord, out int response);
+            var resultMapper = _mapper.Map<List<ServiceTypeRes>>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            res.TotalRecord = totalRecord;
+            return res;
+        }
+     
+        [HttpPost]
+        [Route("create-payment")]
+        public async Task<CommonResponse<string>> CreatePayment([FromBody] OrderInfo orderInfo)
+        {
+            var res = new CommonResponse<string>();
+            try
+            {
+                var paymentUrl = _vnPayService.CreatePaymentUrl(orderInfo, HttpContext);
+                res.Data = paymentUrl;
+                res.ResponseCode = 1;
+                res.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                res.ResponseCode = -99;
+                res.Message = ex.Message;
+            }
+            return res;
+        }
+
+
+
+
+
+
+
+        [HttpGet]
+        [Route("payment-callback")]
+        public IActionResult PaymentCallback()
+        {
+            var response = _vnPayService.ProcessPaymentCallback(Request.Query);
+            // Redirect back to Angular with payment result
+            var redirectUrl = "http://localhost:4200/payment-callback";
+            var queryString = $"?vnp_ResponseCode={response.VnPayResponseCode}&vnp_TxnRef={response.OrderId}";
+            return Redirect(redirectUrl + queryString);
+        }
+
+
+
     }
 }

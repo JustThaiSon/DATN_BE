@@ -1,10 +1,10 @@
-using DATN_BackEndApi.Extension.Vnpay.DATN_BackEndApi.VNPay;
+using DATN_BackEndApi.VNPay;
 using System.Globalization;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DATN_BackEndApi.Extension.Vnpay
+namespace DATN_LandingPage.Extension.Vnpay
 {
     public class VNPayLibrary
     {
@@ -135,34 +135,33 @@ namespace DATN_BackEndApi.Extension.Vnpay
         public string HashSecret { get; set; } = "5QV88EXQ18V2V8473WMNBS3IVOLJFVTW";
         public string PaymentUrl { get; set; } = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         public string ReturnUrl { get; set; } = "http://localhost:4200/payment-callback"; // thay cái này thành 1 route trong angular (hiện tại để tạm thế này đã)
+        //public string ReturnUrl { get; set; } = "https://localhost:7105/swagger/payment-callback";
+        public string ApiUrl { get; set; } = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    }
+}
+namespace DATN_BackEndApi.VNPay
+{
+    public class OrderInfo
+    {
+        public Guid OrderId { get; set; }
+        public long Amount { get; set; }
+        public string OrderDesc { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string Status { get; set; }
+        public long PaymentTranId { get; set; }
+        public string BankCode { get; set; }
+        public string PayStatus { get; set; }
     }
 
-
-    namespace DATN_BackEndApi.VNPay
+    public class PaymentResponse
     {
-
-        public class OrderInfo
-        {
-            public Guid OrderId { get; set; }
-            public long Amount { get; set; }
-            public string OrderDesc { get; set; }
-            public DateTime CreatedDate { get; set; }
-            public string Status { get; set; }
-            public long PaymentTranId { get; set; }
-            public string BankCode { get; set; }
-            public string PayStatus { get; set; }
-        }
-
-        public class PaymentResponse
-        {
-            public string OrderDescription { get; set; }
-            public string TransactionId { get; set; }
-            public string OrderId { get; set; }
-            public string PaymentMethod { get; set; }
-            public string PaymentId { get; set; }
-            public bool Success { get; set; }
-            public string Token { get; set; }
-            public string VnPayResponseCode { get; set; }
-        }
+        public string OrderDescription { get; set; }
+        public string TransactionId { get; set; }
+        public string OrderId { get; set; }
+        public string PaymentMethod { get; set; }
+        public string PaymentId { get; set; }
+        public bool Success { get; set; }
+        public string Token { get; set; }
+        public string VnPayResponseCode { get; set; }
     }
 }
