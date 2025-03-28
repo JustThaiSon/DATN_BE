@@ -49,7 +49,7 @@ namespace DATN_Models.DAL.Statistic
     {
         public string GenreName { get; set; }
         public int TotalShowtimes { get; set; }
-        public decimal TotalRevenue { get; set; }
+        public int TotalBookedSeats { get; set; }
     }
 
     public class StatisticPeakHoursDAL
