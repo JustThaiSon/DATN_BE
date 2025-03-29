@@ -190,6 +190,7 @@ namespace DATN_Models.Mapper
             CreateMap<CreateServiceTypeReq, CreateServiceTypeDAL>().ReverseMap();
             CreateMap<UpdateServiceTypeReq, UpdateServiceTypeDAL>().ReverseMap();
             CreateMap<GetListSeatTypeRes, GetListSeatTypeDAL>().ReverseMap();
+            CreateMap<GetMovieByShowTimeRes, GetMovieByShowTimeDAL>().ReverseMap();
             #endregion
 
             // Phần nhân viên

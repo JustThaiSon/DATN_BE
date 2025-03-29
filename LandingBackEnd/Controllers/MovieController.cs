@@ -169,7 +169,20 @@ namespace DATN_LandingPage.Controllers
             res.TotalRecord = totalRecord;
             return res;
         }
-     
+
+        [HttpGet]
+        [Route("GetMovieByShowTime")]
+        public async Task<CommonResponse<GetMovieByShowTimeRes>> GetMovieByShowTime(Guid showtimeId)
+        {
+            var res = new CommonResponse<GetMovieByShowTimeRes>();
+            var result = _movieDAO.GetMovieByShowTime(showtimeId, out int response);
+            var resultMapper = _mapper.Map<GetMovieByShowTimeRes>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
         [HttpPost]
         [Route("create-payment")]
         public async Task<CommonResponse<string>> CreatePayment([FromBody] OrderInfo orderInfo)

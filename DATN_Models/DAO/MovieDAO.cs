@@ -2,7 +2,9 @@
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Rating;
+using DATN_Models.DAL.Service;
 using DATN_Models.DAO.Interface;
+using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -531,6 +533,31 @@ namespace DATN_Models.DAO
             catch (Exception)
             {
                 return 0; // Return 0 in case of exception
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public GetMovieByShowTimeDAL GetMovieByShowTime(Guid showtime, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_ShowTimeId", showtime);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetMovieByShowTimeDAL>("SP_ShowTime_GetMovieByShowtime", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
             finally
             {
