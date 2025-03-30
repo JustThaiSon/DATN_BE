@@ -3,6 +3,7 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
+using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -181,6 +182,31 @@ namespace DATN_Models.DAO
             finally
             {
                 db?.Close();
+            }
+        }
+
+        public List<GetPaymentDAL> GetPayment(out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[1];
+                pars[0] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetPaymentDAL>("SP_Order_GetPayment", pars);
+                response = ConvertUtil.ToInt(pars[0].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
             }
         }
     }

@@ -9,5 +9,6 @@ namespace DATN_Models.DAO.Interface
         void CreateOrderService(Guid orderId, CreateOrderServiceDAL req, out int response);
         GetDetailOrderDAL GetDetailOrder(Guid orderId, out int response);
         List<GetListTicketDAL> GetListTicket(Guid orderDetailId, out int Record, out int response);
+        List<GetPaymentDAL> GetPayment(out int response);
     }
 }

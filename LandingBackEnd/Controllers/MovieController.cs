@@ -11,6 +11,7 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Response;
@@ -177,6 +178,19 @@ namespace DATN_LandingPage.Controllers
             var res = new CommonResponse<GetMovieByShowTimeRes>();
             var result = _movieDAO.GetMovieByShowTime(showtimeId, out int response);
             var resultMapper = _mapper.Map<GetMovieByShowTimeRes>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
+        [HttpGet]
+        [Route("GetPayment")]
+        public async Task<CommonResponse<List<GetPaymentRes>>> GetPayment()
+        {
+            var res = new CommonResponse<List<GetPaymentRes>> ();
+            var result = _orderDAO.GetPayment(out int response);
+            var resultMapper = _mapper.Map<List<GetPaymentRes>>(result);
             res.Data = resultMapper;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
