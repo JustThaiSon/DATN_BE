@@ -1,5 +1,7 @@
 ﻿using DATN_Helpers.Common;
 using DATN_Helpers.Database;
+using DATN_Models.DAL.Movie;
+using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.ShowTime.Req;
@@ -21,6 +23,52 @@ namespace DATN_Models.DAO
 
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
+
+
+        public ShowtimeAutoDateDAL AutoDateNghia(ShowtimeAutoDateReq showtimereq, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[5];
+                pars[0] = new SqlParameter("@_CinemaId", showtimereq.CinemasId);
+                pars[1] = new SqlParameter("@_RoomId", showtimereq.RoomId);
+                pars[2] = new SqlParameter("@_Date", showtimereq.Date);
+                pars[3] = new SqlParameter("@_MovieID", showtimereq.MovieId);
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<ShowtimeAutoDateDAL>("SP_ShowTime_AutoDate_Nghia", pars);
+                response = ConvertUtil.ToInt(pars[4].Value);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         public void CreateShowTime(ShowTimeReq request, out int response)
         {
             response = 0; // Khởi tạo mã phản hồi

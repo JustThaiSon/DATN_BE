@@ -237,4 +237,7 @@
     <value>Phòng này đã có đủ suất chiếu ngày hôm nay</value>
     <comment>nếu endtime suất chiếu phòng này &gt; 22h tối</comment>
   </data>
+  <data name="-999901" xml:space="preserve">
+    <value>Phim này đã có 1 suất chiếu hôm nay trong phòng này</value>
+  </data>
 </root>

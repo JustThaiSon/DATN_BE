@@ -101,6 +101,7 @@ namespace DATN_Models.Mapper
 
 
 
+
             // Phần actor
             #region Nghia_Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
@@ -263,6 +264,7 @@ namespace DATN_Models.Mapper
 
             #region Showtime
             CreateMap<ShowTimeDAL, ShowTimeRes>().ReverseMap();
+            CreateMap<ShowtimeAutoDateDAL, ShowtimeAutoDateRes>().ReverseMap();
 
 
             #region Showtime

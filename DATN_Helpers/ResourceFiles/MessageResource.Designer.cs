@@ -376,6 +376,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Phim này đã có 1 suất chiếu hôm nay trong phòng này.
+        /// </summary>
+        internal static string _999901 {
+            get {
+                return ResourceManager.GetString("-999901", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mật khẩu có thể không đúng.
         /// </summary>
         internal static string _999998 {
