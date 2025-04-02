@@ -219,6 +219,7 @@
   </data>
   <data name="-999998" xml:space="preserve">
     <value>Mật khẩu có thể không đúng</value>
+    <comment>Mật khẩu có thể không đúng</comment>
   </data>
   <data name="-999999" xml:space="preserve">
     <value>Người dùng không tồn tại (đổi mật khẩu)</value>
@@ -231,5 +232,9 @@
   </data>
   <data name="-111" xml:space="preserve">
     <value>Voucher này đã đạt giới hạn sử dụng</value>
+  </data>
+  <data name="-999900" xml:space="preserve">
+    <value>Phòng này đã có đủ suất chiếu ngày hôm nay</value>
+    <comment>nếu endtime suất chiếu phòng này &gt; 22h tối</comment>
   </data>
 </root>
