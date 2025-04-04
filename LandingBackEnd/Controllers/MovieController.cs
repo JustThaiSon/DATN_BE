@@ -105,10 +105,9 @@ namespace DATN_LandingPage.Controllers
         [Route("CreateOrder")]
         public async Task<CommonResponse<string>> CreateOrder(CreateOrderReq req)
         {
-            var userId = HttpContextHelper.GetUserId();
             var res = new CommonResponse<string>();
             var reqpMapper = _mapper.Map<CreateOrderDAL>(req);
-            var result = _orderDAO.CreateOrder(userId, reqpMapper, out int responseCode);
+            var result = _orderDAO.CreateOrder(reqpMapper, out int responseCode);
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.ResponseCode = responseCode;
             if (result != null)

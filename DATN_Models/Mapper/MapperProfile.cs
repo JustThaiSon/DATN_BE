@@ -63,6 +63,7 @@ using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 using DATN_Models.DAL.Comment;
+using DATN_Models.DTOS.Account.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -72,7 +73,7 @@ namespace DATN_Models.Mapper
         {
 
             CreateMap<CreateAccountReq, CreateAccountDAL>();
-            CreateMap<CreateAccountDAL, CreateAccountReq>().ReverseMap();
+            CreateMap<GetUserInfoDAL, GetUserInfoRes>().ReverseMap();
             // Phần movie
             #region Nghia_Movie
             // Cái này là list movie (hiện tại Đã SHOW ĐƯỢC được danh sách actor trong movie)
@@ -164,7 +165,7 @@ namespace DATN_Models.Mapper
             CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
-            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
+            //CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 
             // Phần voucher
@@ -194,13 +195,6 @@ namespace DATN_Models.Mapper
             CreateMap<GetPaymentDAL, GetPaymentRes>().ReverseMap();
             #endregion
 
-            // Phần nhân viên
-            #region Nghia_Employee
-            CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
-            CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
-            CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
-            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
-            #endregion
 
 
 

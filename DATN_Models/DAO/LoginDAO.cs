@@ -1,7 +1,9 @@
-﻿using DATN_Helpers.Constants;
+﻿using DATN_Helpers.Common;
+using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account;
 using DATN_Models.DTOS.Account.Req;
@@ -55,7 +57,7 @@ namespace DATN_Models.DAO
             var result = await _signInManager.PasswordSignInAsync(user, req.PassWord, true, true);
             if (!result.Succeeded)
             {
-                response = (int)ResponseCodeEnum.ERR_SYSTEM;
+                response = (int)ResponseCodeEnum.ERR_PASSWORD;
                 return (null, response);
             }
             var roleNames = await _userManager.GetRolesAsync(user);
@@ -72,7 +74,8 @@ namespace DATN_Models.DAO
                 ID = user.Id,
                 DisplayName = user.Name,
                 UserName = user.UserName,
-                Roles = roleNamesList
+                Roles = roleNamesList,
+                Email = user.Email
             };
             response = (int)ResponseCodeEnum.SUCCESS;
             SaveSession(user.Id);
@@ -177,6 +180,49 @@ namespace DATN_Models.DAO
         {
             var random = new Random();
             return random.Next(100000, 999999).ToString();
+        }
+
+        public GetUserInfoDAL GetUserInfo(Guid userId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetUserInfoDAL>("SP_User_GetUserInfor", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public async Task<int> ChangePasswordAsync(Guid userId, ChangePasswordCustomerReq req)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return (int)ResponseCodeEnum.ERR_USER_NOT_FOUND;
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, req.CurrentPassword, req.NewPassword);
+            if (!result.Succeeded)
+            {
+                return (int)ResponseCodeEnum.ERR_SYSTEM;
+            }
+
+            return (int)ResponseCodeEnum.SUCCESS;
         }
     }
 }

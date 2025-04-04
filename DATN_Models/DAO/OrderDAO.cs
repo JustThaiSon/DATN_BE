@@ -154,7 +154,7 @@ namespace DATN_Models.DAO
             );
             return xml.ToString();
         }
-        public OrderMailResultDAL CreateOrder(Guid? userID, CreateOrderDAL req, out int response)
+        public OrderMailResultDAL CreateOrder( CreateOrderDAL req, out int response)
         {
             DBHelper db = null;
             try
@@ -162,17 +162,18 @@ namespace DATN_Models.DAO
                 string servicesXml = ConvertServicesToXml(req.Services);
                 string ticketsXml = ConvertTicketsToXml(req.Tickets);
 
-                var pars = new SqlParameter[7];
-                pars[0] = new SqlParameter("@UserId", userID == Guid.Empty ? DBNull.Value : userID);
+                var pars = new SqlParameter[8];
+                pars[0] = new SqlParameter("@UserId", req.UserId == Guid.Empty ? DBNull.Value : req.UserId);
                 pars[1] = new SqlParameter("@_Email", req.Email);
                 pars[2] = new SqlParameter("@IsAnonymous", req.IsAnonymous);
                 pars[3] = new SqlParameter("@PaymentId", req.PaymentId);
                 pars[4] = new SqlParameter("@Services", servicesXml);
                 pars[5] = new SqlParameter("@Tickets", ticketsXml);
-                pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[6] = new SqlParameter("@TransactionCode", req.TransactionCode);
+                pars[7] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<OrderMailResultDAL>("SP_Order_CreateOrder", pars);
-                response = ConvertUtil.ToInt(pars[6].Value);
+                response = ConvertUtil.ToInt(pars[7].Value);
                 return result;
             }
             catch (Exception ex)
