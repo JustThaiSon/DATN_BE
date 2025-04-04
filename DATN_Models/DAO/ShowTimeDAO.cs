@@ -139,7 +139,7 @@ namespace DATN_Models.DAO
                     var checkPars = new SqlParameter[1];
                     checkPars[0] = new SqlParameter("@_RoomId", request.RoomId);
                     var existingShowtimes = db.GetListSP<ShowTimeDAL>("SP_ShowTime_GetListByRoom", checkPars);
-                    
+
                     if (existingShowtimes != null)
                     {
                         foreach (var showtime in existingShowtimes)

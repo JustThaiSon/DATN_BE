@@ -287,7 +287,11 @@ namespace DATN_Models.Mapper
             #region Room
             CreateMap<CreateRoomReq, CreateRoomDAL>().ReverseMap();
             CreateMap<ListRoomDAL, GetListRoomRes>().ReverseMap();
+            CreateMap<ListRoomByCinemaDAL, GetListRoomByCinemaRes>().ReverseMap();
             CreateMap<UpdateRoomDAL, UpdateRoomReq>().ReverseMap();
+
+
+
             #endregion
             CreateMap<GetListRoomTypeDAL, RoomTypeGetListRes>().ReverseMap();
 
