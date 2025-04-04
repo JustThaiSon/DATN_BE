@@ -1,10 +1,12 @@
-﻿using DATN_Helpers.Common;
+﻿using Azure;
+using DATN_Helpers.Common;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.ShowTime.Req;
+using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -352,5 +354,41 @@ namespace DATN_Models.DAO
                     db.Close(); // Đóng kết nối
             }
         }
+
+
+
+
+        public void ShowtimeCronjob()
+        {
+            DBHelper db = null;
+
+            try
+            {
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_ShowTime_Cronjob_Nghia");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error deleting show time", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

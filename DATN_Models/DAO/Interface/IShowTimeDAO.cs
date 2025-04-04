@@ -14,7 +14,7 @@ namespace DATN_Models.DAO.Interface
         List<AvailableRoomDAL> GetAvailableRooms(DateTime startTime, DateTime endTime, out int response);
         List<TimeSlotDAL> GetAvailableTimes(Guid roomId, DateTime date, out int response);
 
-
+        void ShowtimeCronjob();
 
 
 
