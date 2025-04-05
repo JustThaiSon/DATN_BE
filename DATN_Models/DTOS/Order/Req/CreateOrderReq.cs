@@ -8,6 +8,8 @@ namespace DATN_Models.DTOS.Order.Req
         public int IsAnonymous { get; set; }
         public Guid? PaymentId { get; set; }
         public string? TransactionCode { get; set; }
+        public string? VoucherCode { get; set; }
+        public decimal TotalPriceMethod { get; set; }
         public List<ServiceReq>? Services { get; set; }
         public List<TicketReq>? Tickets { get; set; }
     }

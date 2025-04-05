@@ -10,6 +10,7 @@
         public int Status { get; set; }
         public bool IsAnonymous { get; set; }
         public Guid? VoucherId { get; set; }
+        public long DiscountPrice { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
 
