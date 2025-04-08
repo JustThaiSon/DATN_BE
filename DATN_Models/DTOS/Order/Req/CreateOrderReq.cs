@@ -4,8 +4,10 @@ namespace DATN_Models.DTOS.Order.Req
     public class CreateOrderReq
     {
         public string Email { get; set; }
+        public Guid? UserId { get; set; }
         public int IsAnonymous { get; set; }
         public Guid? PaymentId { get; set; }
+        public string? TransactionCode { get; set; }
         public List<ServiceReq>? Services { get; set; }
         public List<TicketReq>? Tickets { get; set; }
     }

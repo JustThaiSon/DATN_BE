@@ -217,6 +217,9 @@
   <data name="-405" xml:space="preserve">
     <value>Lỗi Resfresh Token</value>
   </data>
+  <data name="-406" xml:space="preserve">
+    <value>Mật Khẩu hoặc tài khoản không chính xác !</value>
+  </data>
   <data name="-999998" xml:space="preserve">
     <value>Mật khẩu có thể không đúng</value>
     <comment>Mật khẩu có thể không đúng</comment>

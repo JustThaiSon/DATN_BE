@@ -21,6 +21,10 @@ namespace DATN_LandingPage.Handlers
         private static ConcurrentDictionary<string, CancellationTokenSource> userCountdownTokens
             = new ConcurrentDictionary<string, CancellationTokenSource>();
 
+        // Lưu thời gian countdown còn lại của từng user
+        private static ConcurrentDictionary<string, int> userCountdownRemaining
+            = new ConcurrentDictionary<string, int>();
+
         // Lưu các cập nhật ghế của từng user
         private static ConcurrentDictionary<string, List<SeatStatusUpdateRequest>> userSeatUpdates
             = new ConcurrentDictionary<string, List<SeatStatusUpdateRequest>>();
@@ -101,7 +105,14 @@ namespace DATN_LandingPage.Handlers
                                 break;
 
                             case "JoinRoom":
-                                _ = StartCountdownAsync(hub, roomId, currentUserId);
+                                _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, 120, true); // Default 120 seconds
+                                break;
+
+                            case "ExtendCountdown":
+                                if (request.ExtensionDuration.HasValue)
+                                {
+                                    _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, request.ExtensionDuration.Value);
+                                }
                                 break;
 
                             case "Payment":
@@ -146,26 +157,51 @@ namespace DATN_LandingPage.Handlers
                 tokenSource.Dispose();
             }
             userCountdownTokens.TryRemove(userId, out _);
+            userCountdownRemaining.TryRemove(userId, out _);
         }
 
         /// <summary>
-        /// Tạo countdown riêng cho user, sau thời gian quy định sẽ hủy ghế nếu chưa thanh toán
+        /// Tạo hoặc gia hạn countdown riêng cho user, sau thời gian quy định sẽ hủy ghế nếu chưa thanh toán
         /// </summary>
-        private async Task StartCountdownAsync(string hub, Guid roomId, string userId)
+        private async Task StartOrExtendCountdownAsync(string hub, Guid roomId, string userId, int durationInSeconds, bool isJoinRoom = false)
         {
-            // 1. Hủy token cũ (nếu có) để tránh chạy song song
+            // 1. Tính toán thời gian countdown mới
+            int newDuration = durationInSeconds;
+            if (userCountdownRemaining.TryGetValue(userId, out int remainingTime))
+            {
+                if (isJoinRoom)
+                {
+                    // Nếu là JoinRoom và user đã có thời gian countdown, không reset thời gian
+                    newDuration = remainingTime;
+                }
+                else
+                {
+                    // Nếu không phải là JoinRoom, cộng thêm thời gian mới
+                    newDuration += remainingTime;
+                }
+            }
+            else
+            {
+                // Nếu user chưa có thời gian countdown, đặt thời gian mới
+                userCountdownRemaining[userId] = newDuration;
+            }
+
+            // 2. Hủy token cũ (nếu có) để tránh chạy song song
             CancelUserCountdown(userId);
 
-            // 2. Tạo token mới cho user
+            // 3. Tạo token mới cho user
             var newTokenSource = new CancellationTokenSource();
             userCountdownTokens[userId] = newTokenSource;
             var cancellationToken = newTokenSource.Token;
 
             // (Tuỳ chọn) Reset cờ thanh toán = false mỗi lần JoinRoom
-            userPaymentStatus[userId] = false;
+            if (isJoinRoom)
+            {
+                userPaymentStatus[userId] = false;
+            }
 
-            // 3. Bắt đầu đếm ngược 60 giây
-            for (int i = 120; i >= 0; i--)
+            // 4. Bắt đầu đếm ngược với thời gian được chỉ định
+            for (int i = newDuration; i >= 0; i--)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -173,13 +209,14 @@ namespace DATN_LandingPage.Handlers
                     break;
                 }
 
+                userCountdownRemaining[userId] = i;
                 var countdownData = new { i };
                 await SendSeatsCountdownToClient(roomId, hub, countdownData);
 
                 await Task.Delay(1000, cancellationToken);
             }
 
-            // 4. Hết thời gian => revert ghế (nếu user chưa thanh toán)
+            // 5. Hết thời gian => revert ghế (nếu user chưa thanh toán)
             if (!cancellationToken.IsCancellationRequested)
             {
                 // Kiểm tra trạng thái thanh toán
@@ -201,6 +238,7 @@ namespace DATN_LandingPage.Handlers
                 }
             }
         }
+
 
         /// <summary>
         /// Gửi thông tin đếm ngược (countdown) cho chính user
@@ -532,6 +570,7 @@ namespace DATN_LandingPage.Handlers
             public string Action { get; set; } = string.Empty;
             public string? SeatId { get; set; }
             public List<SeatStatusUpdateRequest>? SeatStatusUpdateRequests { get; set; }
+            public int? ExtensionDuration { get; set; } 
         }
 
         public class SeatStatusUpdateRequest

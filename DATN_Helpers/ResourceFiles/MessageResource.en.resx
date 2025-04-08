@@ -124,7 +124,19 @@
     <value>abc</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="200" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="-1996" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="-1997" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="200" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="-405" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="-406" xml:space="preserve">
+    <value>Password invalid!</value>
   </data>
 </root>

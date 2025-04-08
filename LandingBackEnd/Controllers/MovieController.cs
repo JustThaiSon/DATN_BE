@@ -11,6 +11,7 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Response;
@@ -104,10 +105,9 @@ namespace DATN_LandingPage.Controllers
         [Route("CreateOrder")]
         public async Task<CommonResponse<string>> CreateOrder(CreateOrderReq req)
         {
-            var userId = HttpContextHelper.GetUserId();
             var res = new CommonResponse<string>();
             var reqpMapper = _mapper.Map<CreateOrderDAL>(req);
-            var result = _orderDAO.CreateOrder(userId, reqpMapper, out int responseCode);
+            var result = _orderDAO.CreateOrder(reqpMapper, out int responseCode);
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.ResponseCode = responseCode;
             if (result != null)
@@ -169,7 +169,33 @@ namespace DATN_LandingPage.Controllers
             res.TotalRecord = totalRecord;
             return res;
         }
-     
+
+        [HttpGet]
+        [Route("GetMovieByShowTime")]
+        public async Task<CommonResponse<GetMovieByShowTimeRes>> GetMovieByShowTime(Guid showtimeId)
+        {
+            var res = new CommonResponse<GetMovieByShowTimeRes>();
+            var result = _movieDAO.GetMovieByShowTime(showtimeId, out int response);
+            var resultMapper = _mapper.Map<GetMovieByShowTimeRes>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
+        [HttpGet]
+        [Route("GetPayment")]
+        public async Task<CommonResponse<List<GetPaymentRes>>> GetPayment()
+        {
+            var res = new CommonResponse<List<GetPaymentRes>> ();
+            var result = _orderDAO.GetPayment(out int response);
+            var resultMapper = _mapper.Map<List<GetPaymentRes>>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
         [HttpPost]
         [Route("create-payment")]
         public async Task<CommonResponse<string>> CreatePayment([FromBody] OrderInfo orderInfo)
