@@ -117,12 +117,13 @@ namespace DATN_Models.DAO
             try
             {
                 // Tạo danh sách tham số cho Stored Procedure
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[6];
                 pars[0] = new SqlParameter("@_ShowTimeId", ShowTimeId);
-                pars[1] = new SqlParameter("@_RoomId", request.RoomId);
-                pars[2] = new SqlParameter("@_StartTime", request.StartTime);
-                pars[3] = new SqlParameter("@_EndTime", request.EndTime);
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int)
+                pars[1] = new SqlParameter("@_MovieId", ShowTimeId);
+                pars[2] = new SqlParameter("@_RoomId", request.RoomId);
+                pars[3] = new SqlParameter("@_StartTime", request.StartTime);
+                pars[4] = new SqlParameter("@_EndTime", request.EndTime);
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
                 };
@@ -132,7 +133,7 @@ namespace DATN_Models.DAO
                 db.ExecuteNonQuerySP("SP_ShowTime_Update", pars);
 
                 // Lấy mã phản hồi từ tham số OUTPUT
-                response = Convert.ToInt32(pars[4].Value);
+                response = Convert.ToInt32(pars[5].Value);
 
                 // Log thông tin để debug
                 if (response == -1) // Lỗi trùng lịch

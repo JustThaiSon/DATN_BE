@@ -3,6 +3,7 @@ using DATN_BackEndApi.VNPay;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
+using DATN_LandingPage.Extension;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.ServiceType;
@@ -215,13 +216,6 @@ namespace DATN_LandingPage.Controllers
             }
             return res;
         }
-
-
-
-
-
-
-
         [HttpGet]
         [Route("payment-callback")]
         public IActionResult PaymentCallback()
@@ -232,8 +226,31 @@ namespace DATN_LandingPage.Controllers
             var queryString = $"?vnp_ResponseCode={response.VnPayResponseCode}&vnp_TxnRef={response.OrderId}";
             return Redirect(redirectUrl + queryString);
         }
-
-
-
+        [BAuthorize]
+        [HttpGet]
+        [Route("GetListHistoryOrderByUser")]
+        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser()
+        {
+            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _orderDAO.GetListHistoryOrderByUser(userId, out int response);
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [BAuthorize]
+        [HttpGet]
+        [Route("GetPastShowTimesByTimeFilter")]
+        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetPastShowTimesByTimeFilter(string filter)
+        {
+            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, out int response);
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
     }
 }

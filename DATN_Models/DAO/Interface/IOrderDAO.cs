@@ -1,4 +1,5 @@
 ﻿using DATN_Models.DAL.Orders;
+using DATN_Models.DTOS.Order.Res;
 
 namespace DATN_Models.DAO.Interface
 {
@@ -10,5 +11,7 @@ namespace DATN_Models.DAO.Interface
         GetDetailOrderDAL GetDetailOrder(Guid orderId, out int response);
         List<GetListTicketDAL> GetListTicket(Guid orderDetailId, out int Record, out int response);
         List<GetPaymentDAL> GetPayment(out int response);
+        List<GetListHistoryOrderByUserRes> GetListHistoryOrderByUser(Guid userId, out int response);
+        List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response);
     }
 }

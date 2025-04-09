@@ -3,6 +3,7 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -154,7 +155,7 @@ namespace DATN_Models.DAO
             );
             return xml.ToString();
         }
-        public OrderMailResultDAL CreateOrder( CreateOrderDAL req, out int response)
+        public OrderMailResultDAL CreateOrder(CreateOrderDAL req, out int response)
         {
             DBHelper db = null;
             try
@@ -162,7 +163,7 @@ namespace DATN_Models.DAO
                 string servicesXml = ConvertServicesToXml(req.Services);
                 string ticketsXml = ConvertTicketsToXml(req.Tickets);
 
-                var pars = new SqlParameter[8];
+                var pars = new SqlParameter[10];
                 pars[0] = new SqlParameter("@UserId", req.UserId == Guid.Empty ? DBNull.Value : req.UserId);
                 pars[1] = new SqlParameter("@_Email", req.Email);
                 pars[2] = new SqlParameter("@IsAnonymous", req.IsAnonymous);
@@ -170,10 +171,12 @@ namespace DATN_Models.DAO
                 pars[4] = new SqlParameter("@Services", servicesXml);
                 pars[5] = new SqlParameter("@Tickets", ticketsXml);
                 pars[6] = new SqlParameter("@TransactionCode", req.TransactionCode);
-                pars[7] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[7] = new SqlParameter("@_VoucherCode", req.VoucherCode);
+                pars[8] = new SqlParameter("@_TotalPriceMethod", req.TotalPriceMethod);
+                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<OrderMailResultDAL>("SP_Order_CreateOrder", pars);
-                response = ConvertUtil.ToInt(pars[7].Value);
+                response = ConvertUtil.ToInt(pars[9].Value);
                 return result;
             }
             catch (Exception ex)
@@ -210,5 +213,145 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        public List<GetListHistoryOrderByUserRes> GetListHistoryOrderByUser(Guid userId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            List<GetListHistoryOrderByUserRes> result = new List<GetListHistoryOrderByUserRes>();
+
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var dataTable = db.GetDataTableSP("SP_HistoryOrder_GetListTicket", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                if (response == 200)
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        var sessionTimeParts = ConvertUtil.ToString(row["SessionTime"]).Split(" - ");
+                        var sessionTime = sessionTimeParts.Length == 2 ? sessionTimeParts[0] : string.Empty;
+                        var sessionDate = sessionTimeParts.Length == 2 ? sessionTimeParts[1] : string.Empty;
+
+                        var serviceList = ConvertUtil.ToString(row["ServiceList"]).Split(',').Select(s =>
+                        {
+                            var parts = s.Split('|');
+                            return parts.Length == 3 ? new ServiceInfoModel
+                            {
+                                Name = parts[0].Trim(),
+                                Quantity = int.Parse(parts[1].Trim()),
+                                TotalPrice = long.Parse(parts[2].Trim())
+                            } : null;
+                        }).Where(s => s != null).ToList();
+
+                        var order = new GetListHistoryOrderByUserRes
+                        {
+                            Id = ConvertUtil.ToGuid(row["Id"]),
+                            UserName = ConvertUtil.ToString(row["UserName"]),
+                            MovieName = ConvertUtil.ToString(row["MovieName"]),
+                            OrderCode = ConvertUtil.ToString(row["OrderCode"]),
+                            CinemaName = ConvertUtil.ToString(row["CinemaName"]),
+                            Address = ConvertUtil.ToString(row["Address"]),
+                            Thumbnail = ConvertUtil.ToString(row["Thumbnail"]),
+                            SessionTime = sessionTime,
+                            SessionDate = sessionDate,
+                            RoomName = ConvertUtil.ToString(row["RoomName"]),
+                            SeatList = ConvertUtil.ToString(row["SeatList"]).Split(',').Select(s => s.Trim()).ToList(),
+                            ServiceList = serviceList,
+                            ConcessionAmount = ConvertUtil.ToLong(row["ConcessionAmount"]),
+                            TotalPrice = ConvertUtil.ToLong(row["TotalPrice"]),
+                            Email = ConvertUtil.ToString(row["Email"]),
+                            CreatedDate = ConvertUtil.ToDateTime(row["CreatedDate"])
+                        };
+                        result.Add(order);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error while fetching order history", ex);
+            }
+            finally
+            {
+                db?.Close();
+            }
+
+            return result;
+        }
+    public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            List<GetListHistoryOrderByUserRes> result = new List<GetListHistoryOrderByUserRes>();
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_FilterValue", filterValue ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var dataTable = db.GetDataTableSP("SP_GetPastShowTimesByTimeFilter", pars);
+                response = ConvertUtil.ToInt(pars[2].Value);
+
+                if (response == 200)
+                {
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        var sessionTimeParts = ConvertUtil.ToString(row["SessionTime"]).Split(" - ");
+                        var sessionTime = sessionTimeParts.Length == 2 ? sessionTimeParts[0] : string.Empty;
+                        var sessionDate = sessionTimeParts.Length == 2 ? sessionTimeParts[1] : string.Empty;
+
+                        var serviceList = ConvertUtil.ToString(row["ServiceList"]).Split(',').Select(s =>
+                        {
+                            var parts = s.Split('|');
+                            return parts.Length == 3 ? new ServiceInfoModel
+                            {
+                                Name = parts[0].Trim(),
+                                Quantity = int.Parse(parts[1].Trim()),
+                                TotalPrice = long.Parse(parts[2].Trim())
+                            } : null;
+                        }).Where(s => s != null).ToList();
+
+                        var showTime = new GetListHistoryOrderByUserRes
+                        {
+                            Id = ConvertUtil.ToGuid(row["Id"]),
+                            UserName = ConvertUtil.ToString(row["UserName"]),
+                            MovieName = ConvertUtil.ToString(row["MovieName"]),
+                            OrderCode = ConvertUtil.ToString(row["OrderCode"]),
+                            CinemaName = ConvertUtil.ToString(row["CinemaName"]),
+                            Address = ConvertUtil.ToString(row["Address"]),
+                            Thumbnail = ConvertUtil.ToString(row["Thumbnail"]),
+                            SessionTime = sessionTime,
+                            SessionDate = sessionDate,
+                            RoomName = ConvertUtil.ToString(row["RoomName"]),
+                            SeatList = ConvertUtil.ToString(row["SeatList"]).Split(',').Select(s => s.Trim()).ToList(),
+                            ServiceList = serviceList,
+                            ConcessionAmount = ConvertUtil.ToLong(row["ConcessionAmount"]),
+                            TotalPrice = ConvertUtil.ToLong(row["TotalPrice"]),
+                            Email = ConvertUtil.ToString(row["Email"]),
+                            CreatedDate = ConvertUtil.ToDateTime(row["CreatedDate"])
+                        };
+                        result.Add(showTime);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error while fetching past show times", ex);
+            }
+            finally
+            {
+                db?.Close();
+            }
+
+            return result;
+        }
     }
-}
+    }

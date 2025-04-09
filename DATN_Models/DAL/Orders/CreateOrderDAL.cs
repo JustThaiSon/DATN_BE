@@ -8,6 +8,8 @@ namespace DATN_Models.DAL.Orders
         public int IsAnonymous { get; set; }
         public Guid? PaymentId { get; set; }
         public string? TransactionCode { get; set; }
+        public string? VoucherCode { get; set; }
+        public decimal TotalPriceMethod { get; set; }
         public List<ServiceDAL>? Services { get; set; }
         public List<TicketDAL>? Tickets { get; set; }
     }

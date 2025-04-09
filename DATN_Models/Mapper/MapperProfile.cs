@@ -6,7 +6,6 @@ using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;
-using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
@@ -154,13 +153,7 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-            // Phần Membership
-            #region Nghia_Membership
-            CreateMap<MembershipDAL, MembershipRes>().ReverseMap();
-            CreateMap<UpdateMembershipDAL, UpdateMembershipReq>().ReverseMap();
-            CreateMap<AddMembershipDAL, AddMembershipReq>().ReverseMap();
-
-            #endregion
+     
 
             // Phần nhân viên
             #region Nghia_Employee

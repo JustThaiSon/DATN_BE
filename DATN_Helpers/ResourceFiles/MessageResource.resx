@@ -243,4 +243,7 @@
   <data name="-999901" xml:space="preserve">
     <value>Phim này đã có 1 suất chiếu hôm nay trong phòng này</value>
   </data>
+  <data name="-999902" xml:space="preserve">
+    <value>Không thể thay đổi/xóa thông tin suất chiếu vì đã có người đặt vé</value>
+  </data>
 </root>
