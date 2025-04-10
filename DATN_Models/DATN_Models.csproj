@@ -32,9 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DAL\Membership\" />
     <Folder Include="DTOS\Log_Nghia\Req\" />
-    <Folder Include="DTOS\Membership\Res\" />
     <Folder Include="DTOS\Template\Res\" />
   </ItemGroup>
 

@@ -63,6 +63,8 @@ using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 using DATN_Models.DAL.Comment;
 using DATN_Models.DTOS.Account.Res;
+using DATN_Models.DTOS.Membership.Res;
+using DATN_Models.DAL.Membership;
 
 namespace DATN_Models.Mapper
 {
@@ -282,6 +284,8 @@ namespace DATN_Models.Mapper
             CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
             CreateMap<TicketReq, TicketDAL>().ReverseMap();
             CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
+            CreateMap<CheckMemberShipRes, CheckMemberShipDAL>().ReverseMap();
+            CreateMap<MembershipPreviewDAL, MembershipPreviewRes>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();

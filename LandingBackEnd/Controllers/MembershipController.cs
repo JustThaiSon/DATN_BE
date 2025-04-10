@@ -8,6 +8,7 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Extensions;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Membership.Req;
+using DATN_Models.DTOS.Membership.Res;
 
 namespace DATN_LandingPage.Controllers
 {
@@ -39,6 +40,35 @@ namespace DATN_LandingPage.Controllers
             _membershipDAO.AddUserMembership(userId, req, out int responseCode);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            return res;
+        }
+
+        [BAuthorize]
+        [HttpPost]
+        [Route("CheckMembership")]
+        public async Task<CommonResponse<CheckMemberShipRes>> CheckMembership()
+        {
+            var res = new CommonResponse<CheckMemberShipRes>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _membershipDAO.CheckMembership(userId, out int responseCode);
+            var resultMapper = _mapper.Map<CheckMemberShipRes>(result);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = resultMapper;
+            return res;
+        }
+        [BAuthorize]
+        [HttpGet]
+        [Route("MembershipPreview")]
+        public async Task<CommonResponse<MembershipPreviewRes>> MembershipPreview(long orderPrice,long ticketPrice )
+        {
+            var res = new CommonResponse<MembershipPreviewRes>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _membershipDAO.MembershipPreview(userId, orderPrice, ticketPrice, out int responseCode);
+            var resultMapper = _mapper.Map<MembershipPreviewRes>(result);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = resultMapper;
             return res;
         }
     }
