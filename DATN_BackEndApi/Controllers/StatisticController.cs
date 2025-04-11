@@ -4,6 +4,7 @@ using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
+using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.HandleData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace DATN_BackEndApi.Controllers
     public class StatisticController : ControllerBase
     {
         private readonly string _langCode;
-        private readonly IUltil _ultils; 
+        private readonly IUltil _ultils;
         private readonly IMapper _mapper;
         private readonly IStatisticDAO _statisticDAO;
         private readonly DATN_Context _db;
@@ -166,6 +167,39 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+
+
+        [HttpGet]
+        [Route("GetSummary_DateRange")]
+        public async Task<CommonPagination<List<Statistic_SummaryDetailRes>>> GetSummary_DateRange(DateTime? Start, DateTime? End)
+        {
+            var res = new CommonPagination<List<Statistic_SummaryDetailRes>>();
+            var result = _statisticDAO.Summary_DateRange(Start, End, out int response);
+            var resultMapper = _mapper.Map<List<Statistic_SummaryDetailRes>>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+
+            return res;
+        }
+
+
+
+        [HttpGet]
+        [Route("GetMovieSummary_DateRange")]
+        public async Task<CommonPagination<List<Statistic_MovieDetailRes>>> GetMovieSummary_DateRange(DateTime? Start, DateTime? End)
+        {
+            var res = new CommonPagination<List<Statistic_MovieDetailRes>>();
+            var result = _statisticDAO.Movie_DateRange(Start, End, out int response);
+            var resultMapper = _mapper.Map<List<Statistic_MovieDetailRes>>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+
+            return res;
+        }
 
 
 

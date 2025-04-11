@@ -334,7 +334,9 @@ namespace DATN_Models.Mapper
             CreateMap<StatisticSeatProfitabilityDAL, StatisticSeatProfitabilityRes>().ReverseMap();
             CreateMap<StatisticSeatOccupancyDAL, StatisticSeatOccupancyRes>().ReverseMap();
             CreateMap<StatisticRevenueByTimeDAL, StatisticRevenueByTimeRes>().ReverseMap();
-            CreateMap<StatisticRevenueByCinemaDAL, StatisticRevenueByCinemaRes>().ReverseMap();
+            CreateMap<StatisticRevenueByCinemaDAL, StatisticRevenueByCinemaRes>()
+                        .ForMember(dest => dest.TotalRevenue,
+                                  opt => opt.MapFrom(src => src.TotalRevenue));
             CreateMap<StatisticPopularGenresDAL, StatisticPopularGenresRes>().ReverseMap();
             CreateMap<StatisticPeakHoursDAL, StatisticPeakHoursRes>().ReverseMap();
             CreateMap<StatisticCustomerGenderDAL, StatisticCustomerGenderRes>().ReverseMap();
