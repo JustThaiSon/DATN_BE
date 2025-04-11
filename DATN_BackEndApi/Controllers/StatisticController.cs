@@ -201,11 +201,20 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+        [HttpGet]
+        [Route("GetSummary_DateRange_Detail")]
+        public async Task<CommonPagination<List<Statistic_SummaryDetailRes>>> GetSummary_DateRange_Detail(DateTime? Start, DateTime? End)
+        {
+            var res = new CommonPagination<List<Statistic_SummaryDetailRes>>();
+            var result = _statisticDAO.Summary_DateRange_Detail(Start, End, out int response);
+            var resultMapper = _mapper.Map<List<Statistic_SummaryDetailRes>>(result);
 
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
 
-
-
-
+            return res;
+        }
 
     }
 }

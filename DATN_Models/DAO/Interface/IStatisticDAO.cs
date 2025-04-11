@@ -23,6 +23,7 @@ namespace DATN_Models.DAO.Interface
 
 
         List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response);
+        List<Statistic_SummaryDetailDAL> Summary_DateRange_Detail(DateTime? start_date, DateTime? end_date, out int response);
         List<Statistic_MovieDetailDAL> Movie_DateRange(DateTime? start_date, DateTime? end_date, out int response);
 
 

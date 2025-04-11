@@ -336,6 +336,41 @@ namespace DATN_Models.DAO
             }
         }
 
+
+
+
+
+        public List<Statistic_SummaryDetailDAL> Summary_DateRange_Detail(DateTime? start_date, DateTime? end_date, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<Statistic_SummaryDetailDAL>("SP_Statistic_Summary_DateRange_Detail", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+
+                return result ?? new List<Statistic_SummaryDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting bundled services statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
         public List<Statistic_MovieDetailDAL> Movie_DateRange(DateTime? start_date, DateTime? end_date, out int response)
         {
             response = 0;
