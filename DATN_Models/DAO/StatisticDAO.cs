@@ -371,6 +371,38 @@ namespace DATN_Models.DAO
             }
         }
 
+        public List<StatisticRevenueDetailDAL> GetRevenueDetail(Guid? cinemasId, DateTime? start_date, DateTime? end_date, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[4];
+                pars[0] = new SqlParameter("@_CinemasID", cinemasId ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<StatisticRevenueDetailDAL>("SP_Statistic_Revenue_Detail", pars);
+
+                response = ConvertUtil.ToInt(pars[3].Value);
+
+                return result ?? new List<StatisticRevenueDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting revenue detail statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
         public List<Statistic_MovieDetailDAL> Movie_DateRange(DateTime? start_date, DateTime? end_date, out int response)
         {
             response = 0;

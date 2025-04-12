@@ -153,7 +153,7 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-     
+
 
             // Phần nhân viên
             #region Nghia_Employee
@@ -226,6 +226,7 @@ namespace DATN_Models.Mapper
             #region Nghia_Statistic
             CreateMap<Statistic_MovieDetailDAL, Statistic_MovieDetailRes>().ReverseMap();
             CreateMap<Statistic_SummaryDetailDAL, Statistic_SummaryDetailRes>().ReverseMap();
+            CreateMap<StatisticRevenueDetailDAL, StatisticRevenueDetailRes>().ReverseMap();
 
             CreateMap<ChangeLog, GetLogRes>().ReverseMap();
 
@@ -268,7 +269,7 @@ namespace DATN_Models.Mapper
             #endregion
 
             #region ThaoDepTrai
-            #region 
+            #region
             CreateMap<CinemasReq, CinemasDAL>().ReverseMap();
             CreateMap<CinemasDAL, CinemasRes>().ReverseMap();
             #endregion

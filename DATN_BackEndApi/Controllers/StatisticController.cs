@@ -203,9 +203,9 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpGet]
         [Route("GetSummary_DateRange_Detail")]
-        public async Task<CommonPagination<List<Statistic_SummaryDetailRes>>> GetSummary_DateRange_Detail(DateTime? Start, DateTime? End)
+        public CommonResponse<List<Statistic_SummaryDetailRes>> GetSummary_DateRange_Detail(DateTime? Start, DateTime? End)
         {
-            var res = new CommonPagination<List<Statistic_SummaryDetailRes>>();
+            var res = new CommonResponse<List<Statistic_SummaryDetailRes>>();
             var result = _statisticDAO.Summary_DateRange_Detail(Start, End, out int response);
             var resultMapper = _mapper.Map<List<Statistic_SummaryDetailRes>>(result);
 
@@ -216,5 +216,19 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+        [HttpGet]
+        [Route("GetRevenueDetail")]
+        public async Task<CommonPagination<List<StatisticRevenueDetailRes>>> GetRevenueDetail(Guid? CinemasID, DateTime? Start, DateTime? End)
+        {
+            var res = new CommonPagination<List<StatisticRevenueDetailRes>>();
+            var result = _statisticDAO.GetRevenueDetail(CinemasID, Start, End, out int response);
+            var resultMapper = _mapper.Map<List<StatisticRevenueDetailRes>>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+
+            return res;
+        }
     }
 }
