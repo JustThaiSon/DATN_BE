@@ -5,7 +5,6 @@ using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;
-using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
@@ -63,6 +62,9 @@ using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 using DATN_Models.DAL.Comment;
+using DATN_Models.DTOS.Account.Res;
+using DATN_Models.DTOS.Membership.Res;
+using DATN_Models.DAL.Membership;
 
 namespace DATN_Models.Mapper
 {
@@ -72,7 +74,7 @@ namespace DATN_Models.Mapper
         {
 
             CreateMap<CreateAccountReq, CreateAccountDAL>();
-            CreateMap<CreateAccountDAL, CreateAccountReq>().ReverseMap();
+            CreateMap<GetUserInfoDAL, GetUserInfoRes>().ReverseMap();
             // Phần movie
             #region Nghia_Movie
             // Cái này là list movie (hiện tại Đã SHOW ĐƯỢC được danh sách actor trong movie)
@@ -151,20 +153,15 @@ namespace DATN_Models.Mapper
 
             #endregion
 
-            // Phần Membership
-            #region Nghia_Membership
-            CreateMap<MembershipDAL, MembershipRes>().ReverseMap();
-            CreateMap<UpdateMembershipDAL, UpdateMembershipReq>().ReverseMap();
-            CreateMap<AddMembershipDAL, AddMembershipReq>().ReverseMap();
-
-            #endregion
+     
 
             // Phần nhân viên
             #region Nghia_Employee
             CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
-            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
+            CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
+            //CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 
             // Phần voucher
@@ -190,15 +187,10 @@ namespace DATN_Models.Mapper
             CreateMap<CreateServiceTypeReq, CreateServiceTypeDAL>().ReverseMap();
             CreateMap<UpdateServiceTypeReq, UpdateServiceTypeDAL>().ReverseMap();
             CreateMap<GetListSeatTypeRes, GetListSeatTypeDAL>().ReverseMap();
+            CreateMap<GetMovieByShowTimeRes, GetMovieByShowTimeDAL>().ReverseMap();
+            CreateMap<GetPaymentDAL, GetPaymentRes>().ReverseMap();
             #endregion
 
-            // Phần nhân viên
-            #region Nghia_Employee
-            CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
-            CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
-            CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
-            CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
-            #endregion
 
 
 
@@ -293,6 +285,9 @@ namespace DATN_Models.Mapper
             CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
             CreateMap<TicketReq, TicketDAL>().ReverseMap();
             CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
+            CreateMap<CheckMemberShipRes, CheckMemberShipDAL>().ReverseMap();
+            CreateMap<MembershipPreviewDAL, MembershipPreviewRes>().ReverseMap();
+            CreateMap<GetOrderDetailLangdingRes, GetOrderDetailLangdingDAL>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();

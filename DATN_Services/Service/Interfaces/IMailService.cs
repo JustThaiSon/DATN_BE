@@ -7,5 +7,6 @@ namespace DATN_Services.Service.Interfaces
         Task<bool> SendMail(string email, string subject, string body);
 
         Task<bool> SendQrCodeEmail(OrderMailResultDAL req);
+        byte[] GenerateQrCode(string text);
     }
 }

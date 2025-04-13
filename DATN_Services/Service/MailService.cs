@@ -47,7 +47,7 @@ namespace DATN_Services.Service
 
 
                 // 1️⃣ Tạo mã QR
-                string qrText = $"Phim: {req.MovieName}\nMã vé: {req.OrderCode}";
+                string qrText = $"{req.OrderCode}";
                 byte[] qrCodeImage = GenerateQrCode(qrText);
 
                 // 2️⃣ Tạo nội dung HTML
@@ -207,7 +207,7 @@ namespace DATN_Services.Service
         }
 
 
-        private byte[] GenerateQrCode(string text)
+        public byte[] GenerateQrCode(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
