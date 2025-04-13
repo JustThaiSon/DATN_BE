@@ -13,5 +13,7 @@ namespace DATN_Models.DAO.Interface
         List<GetPaymentDAL> GetPayment(out int response);
         List<GetListHistoryOrderByUserRes> GetListHistoryOrderByUser(Guid userId, out int response);
         List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response);
+        GetOrderDetailLangdingDAL GetOrderDetailLangding(Guid orderId,out int response);
+        CheckRefundDAL CheckRefund(Guid orderId, out int response);
     }
 }

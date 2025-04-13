@@ -160,6 +160,7 @@ namespace DATN_Models.Mapper
             CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
             //CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 
@@ -286,6 +287,7 @@ namespace DATN_Models.Mapper
             CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
             CreateMap<CheckMemberShipRes, CheckMemberShipDAL>().ReverseMap();
             CreateMap<MembershipPreviewDAL, MembershipPreviewRes>().ReverseMap();
+            CreateMap<GetOrderDetailLangdingRes, GetOrderDetailLangdingDAL>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();

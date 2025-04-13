@@ -165,77 +165,87 @@ namespace DATN_LandingPage.Handlers
         /// </summary>
         private async Task StartOrExtendCountdownAsync(string hub, Guid roomId, string userId, int durationInSeconds, bool isJoinRoom = false)
         {
-            // 1. Tính toán thời gian countdown mới
             int newDuration = durationInSeconds;
+
             if (userCountdownRemaining.TryGetValue(userId, out int remainingTime))
             {
                 if (isJoinRoom)
                 {
-                    // Nếu là JoinRoom và user đã có thời gian countdown, không reset thời gian
                     newDuration = remainingTime;
                 }
                 else
                 {
-                    // Nếu không phải là JoinRoom, cộng thêm thời gian mới
                     newDuration += remainingTime;
                 }
             }
             else
             {
-                // Nếu user chưa có thời gian countdown, đặt thời gian mới
                 userCountdownRemaining[userId] = newDuration;
             }
 
-            // 2. Hủy token cũ (nếu có) để tránh chạy song song
             CancelUserCountdown(userId);
 
-            // 3. Tạo token mới cho user
             var newTokenSource = new CancellationTokenSource();
             userCountdownTokens[userId] = newTokenSource;
             var cancellationToken = newTokenSource.Token;
 
-            // (Tuỳ chọn) Reset cờ thanh toán = false mỗi lần JoinRoom
             if (isJoinRoom)
             {
                 userPaymentStatus[userId] = false;
             }
 
-            // 4. Bắt đầu đếm ngược với thời gian được chỉ định
-            for (int i = newDuration; i >= 0; i--)
+            try
             {
-                if (cancellationToken.IsCancellationRequested)
+                for (int i = newDuration; i >= 0; i--)
                 {
-                    Console.WriteLine($"[WebSocket] Countdown cancelled for user={userId}");
-                    break;
-                }
-
-                userCountdownRemaining[userId] = i;
-                var countdownData = new { i };
-                await SendSeatsCountdownToClient(roomId, hub, countdownData);
-
-                await Task.Delay(1000, cancellationToken);
-            }
-
-            // 5. Hết thời gian => revert ghế (nếu user chưa thanh toán)
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                // Kiểm tra trạng thái thanh toán
-                if (!userPaymentStatus.ContainsKey(userId) || !userPaymentStatus[userId])
-                {
-                    if (userSeatUpdates.ContainsKey(userId))
+                    if (cancellationToken.IsCancellationRequested)
                     {
-                        foreach (var update in userSeatUpdates[userId])
-                        {
-                            var seatGuid = Guid.Parse(update.SeatId);
-                            _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)SeatStatusEnum.Available);
-                        }
-                        // Xóa thông tin ghế của user
-                        userSeatUpdates.TryRemove(userId, out _);
-                        // Gửi danh sách ghế mới nhất cho tất cả user
-                        var updatedSeatList = GenerateSeatList(roomId);
-                        await SendMessageToAllUsers(hub, updatedSeatList);
+                        Console.WriteLine($"[WebSocket] Countdown cancelled for user={userId}");
+                        break;
                     }
+
+                    userCountdownRemaining[userId] = i;
+                    var countdownData = new { i };
+                    await SendSeatsCountdownToClient(roomId, hub, countdownData);
+
+                    await Task.Delay(1000, cancellationToken);
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                Console.WriteLine($"[WebSocket] Countdown task cancelled due to disconnect for user={userId}");
+            }
+            finally
+            {
+                bool paid = userPaymentStatus.TryGetValue(userId, out var isPaid) && isPaid;
+
+                if (!paid)
+                {
+                    await RevertSeatsIfUnpaidAsync(hub, roomId, userId);
+                }
+
+                userCountdownTokens.TryRemove(userId, out _);
+                userCountdownRemaining.TryRemove(userId, out _);
+                userPaymentStatus.TryRemove(userId, out _);
+            }
+        }
+        private async Task RevertSeatsIfUnpaidAsync(string hub, Guid roomId, string userId)
+        {
+            if (userSeatUpdates.ContainsKey(userId))
+            {
+                foreach (var update in userSeatUpdates[userId])
+                {
+                    var seatGuid = Guid.Parse(update.SeatId);
+                    _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)SeatStatusEnum.Available);
+                }
+
+                userSeatUpdates.TryRemove(userId, out _);
+
+                // Gửi danh sách ghế mới nhất cho tất cả user
+                var updatedSeatList = GenerateSeatList(roomId);
+                await SendMessageToAllUsers(hub, updatedSeatList);
+
+                Console.WriteLine($"[WebSocket] Ghế đã được revert do timeout/disconnect cho user={userId}");
             }
         }
 

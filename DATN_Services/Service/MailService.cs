@@ -207,7 +207,7 @@ namespace DATN_Services.Service
         }
 
 
-        private byte[] GenerateQrCode(string text)
+        public byte[] GenerateQrCode(string text)
         {
             if (string.IsNullOrEmpty(text))
             {

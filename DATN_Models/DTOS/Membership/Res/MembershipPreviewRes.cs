@@ -4,6 +4,6 @@
     {
         public long DiscountAmount { get; set; }
         public int PointWillEarn { get; set; }
-        public string FreeService { get; set; }
+        public List<string> FreeService { get; set; }
     }
 }

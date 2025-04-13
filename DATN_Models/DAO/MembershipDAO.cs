@@ -87,6 +87,7 @@ namespace DATN_Models.DAO
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<MembershipPreviewDAL>("SP_Membership_GetPreview", pars);
+                result.ParseFreeServiceString();
                 response = ConvertUtil.ToInt(pars[3].Value);
                 return result;
             }

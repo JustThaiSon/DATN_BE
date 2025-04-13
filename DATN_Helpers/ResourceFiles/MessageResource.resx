@@ -220,6 +220,9 @@
   <data name="-406" xml:space="preserve">
     <value>Mật Khẩu hoặc tài khoản không chính xác !</value>
   </data>
+  <data name="-407" xml:space="preserve">
+    <value>Order không tồn tại !</value>
+  </data>
   <data name="-999998" xml:space="preserve">
     <value>Mật khẩu có thể không đúng</value>
   </data>

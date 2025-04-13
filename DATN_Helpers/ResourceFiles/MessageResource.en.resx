@@ -133,10 +133,16 @@
   <data name="200" xml:space="preserve">
     <value>Success</value>
   </data>
-  <data name="-405" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="-601" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
+  </data>
+  <data name="-405" xml:space="preserve">
+    <value>Lỗi Resfresh Token</value>
   </data>
   <data name="-406" xml:space="preserve">
     <value>Password invalid!</value>
+  </data>
+  <data name="-407" xml:space="preserve">
+    <value>Order not exist !</value>
   </data>
 </root>
