@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
 using DATN_Models.DAL.Cinemas;
+using DATN_Models.DAL.Comment;
+using DATN_Models.DAL.Counter;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Employee;
@@ -26,6 +28,7 @@ using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
+using DATN_Models.DTOS.Counter.Res;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Employee.Req;
@@ -62,7 +65,6 @@ using DATN_Models.DTOS.Voucher.Req;
 using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
-using DATN_Models.DAL.Comment;
 
 namespace DATN_Models.Mapper
 {
@@ -357,6 +359,12 @@ namespace DATN_Models.Mapper
 
 
             #endregion
+
+            //counter
+
+            CreateMap<Counter_NowPlayingMovies_GetList_DTO, Counter_NowPlayingMovies_GetList_DAL>().ReverseMap();
+
+
         }
     }
 }

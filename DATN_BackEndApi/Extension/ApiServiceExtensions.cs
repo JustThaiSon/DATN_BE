@@ -86,6 +86,9 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             services.AddTransient<IRoomTypeDAO, RoomTypeDAO>();
 
+            services.AddTransient<ICounterDAO, CounterDAO>();
+
+
 
 
             services.AddTransient<ICinemasDAO, CinemasDAO>();

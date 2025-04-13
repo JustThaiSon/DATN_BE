@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DTOS\Counter\Req\" />
     <Folder Include="DTOS\Log_Nghia\Req\" />
     <Folder Include="DTOS\Template\Res\" />
   </ItemGroup>
