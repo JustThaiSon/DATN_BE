@@ -9,6 +9,7 @@ using DATN_Helpers.Extensions;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Membership.Req;
 using DATN_Models.DTOS.Membership.Res;
+using DATN_Services.Service.Interfaces;
 
 namespace DATN_LandingPage.Controllers
 {
@@ -21,14 +22,17 @@ namespace DATN_LandingPage.Controllers
         private readonly IMapper _mapper;
         private readonly IVNPayService _vnPayService;
         private readonly IMembershipDAO _membershipDAO;
+        private readonly IMailService _mailService;
 
-        public MembershipController(IConfiguration configuration, IUltil ultils, IMapper mapper, IVNPayService vnPayService, IMembershipDAO membershipDAO)
+
+        public MembershipController(IConfiguration configuration, IUltil ultils, IMapper mapper, IVNPayService vnPayService, IMembershipDAO membershipDAO, IMailService mailService)
         {
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
             _vnPayService = vnPayService;
             _membershipDAO = membershipDAO;
+            _mailService = mailService;
         }
         [BAuthorize]
         [HttpPost]
@@ -66,6 +70,21 @@ namespace DATN_LandingPage.Controllers
             var userId = HttpContextHelper.GetUserId();
             var result = _membershipDAO.MembershipPreview(userId, orderPrice, ticketPrice, out int responseCode);
             var resultMapper = _mapper.Map<MembershipPreviewRes>(result);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = resultMapper;
+            return res;
+        }
+        [BAuthorize]
+        [HttpGet]
+        [Route("GetmembershipByUserRes")]
+        public async Task<CommonResponse<GetmembershipByUserRes>> GetmembershipByUser()
+        {
+            var res = new CommonResponse<GetmembershipByUserRes>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _membershipDAO.GetmembershipByUser(userId, out int responseCode);
+            var resultMapper = _mapper.Map<GetmembershipByUserRes>(result);
+            resultMapper.UserMembershipDetails.MemberCodeBase64 =  _mailService.GenerateQrCode(resultMapper.UserMembershipDetails.MemberCode);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = resultMapper;

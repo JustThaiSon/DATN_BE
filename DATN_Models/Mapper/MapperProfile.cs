@@ -161,6 +161,9 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
             CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
+            CreateMap<GetmembershipByUserDAL, GetmembershipByUserRes>().ReverseMap();
+            CreateMap<MembershipBenefitRes, MembershipBenefitDAL>().ReverseMap();
+            CreateMap<UserMembershipDetailsDAL, UserMembershipDetailsRes>().ReverseMap();
             //CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 

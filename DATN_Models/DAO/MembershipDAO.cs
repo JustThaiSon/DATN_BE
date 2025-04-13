@@ -3,10 +3,10 @@ using DATN_Helpers.Database;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Membership.Req;
-using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Text.Json;
 
 namespace DATN_Models.DAO
 {
@@ -74,6 +74,47 @@ namespace DATN_Models.DAO
             }
         }
 
+        public GetmembershipByUserDAL GetmembershipByUser(Guid userId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetmembershipByUserDAL>("SP_Membership_GetMembershipByUser", pars);
+
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                // Parse JSON từ raw string thành object nếu không null
+                if (!string.IsNullOrEmpty(result.RawUserMembershipDetails))
+                {
+                    result.UserMembershipDetails =  JsonSerializer.Deserialize<UserMembershipDetailsDAL>(result.RawUserMembershipDetails);
+                }
+                if (!string.IsNullOrEmpty(result.RawCurrentLevelBenefits))
+                {
+                    result.CurrentLevelBenefits = JsonSerializer.Deserialize<List<MembershipBenefitDAL>>(result.RawCurrentLevelBenefits);
+                }
+                if (!string.IsNullOrEmpty(result.RawNextLevelBenefits))
+                {
+                    result.NextLevelBenefits = JsonSerializer.Deserialize<List<MembershipBenefitDAL>>(result.RawNextLevelBenefits);
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
+
         public MembershipPreviewDAL MembershipPreview(Guid userId, long orderPrice, long ticketPrice, out int response)
         {
             response = 0;
@@ -99,7 +140,6 @@ namespace DATN_Models.DAO
             {
                 db?.Close();
             }
-            ;
         }
     }
 }
