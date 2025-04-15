@@ -26,36 +26,7 @@ namespace DATN_Models.DAO
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
-        public List<StatisticTopServicesDAL> GetTopServices(DateTime? startDate, DateTime? endDate, out int response)
-        {
-            response = 0;
-            DBHelper db = null;
 
-            try
-            {
-                var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@StartDate", startDate ?? (object)DBNull.Value);
-                pars[1] = new SqlParameter("@EndDate", endDate ?? (object)DBNull.Value);
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-
-                db = new DBHelper(connectionString);
-                var result = db.GetListSP<StatisticTopServicesDAL>("SP_Statistic_TopServices", pars);
-
-                response = ConvertUtil.ToInt(pars[2].Value);
-
-                return result ?? new List<StatisticTopServicesDAL>();
-            }
-            catch (Exception ex)
-            {
-                response = -99;
-                throw new Exception("Error getting top services statistics", ex);
-            }
-            finally
-            {
-                if (db != null)
-                    db.Close();
-            }
-        }
 
         public List<StatisticSeatProfitabilityDAL> GetSeatProfitability(DateTime? startDate, DateTime? endDate, out int response)
         {
@@ -274,36 +245,7 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<StatisticBundledServicesDAL> GetBundledServices(DateTime? startDate, DateTime? endDate, out int response)
-        {
-            response = 0;
-            DBHelper db = null;
 
-            try
-            {
-                var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@StartDate", startDate ?? (object)DBNull.Value);
-                pars[1] = new SqlParameter("@EndDate", endDate ?? (object)DBNull.Value);
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-
-                db = new DBHelper(connectionString);
-                var result = db.GetListSP<StatisticBundledServicesDAL>("SP_Statistic_BundledServices", pars);
-
-                response = ConvertUtil.ToInt(pars[2].Value);
-
-                return result ?? new List<StatisticBundledServicesDAL>();
-            }
-            catch (Exception ex)
-            {
-                response = -99;
-                throw new Exception("Error getting bundled services statistics", ex);
-            }
-            finally
-            {
-                if (db != null)
-                    db.Close();
-            }
-        }
 
         public List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response)
         {
@@ -425,7 +367,38 @@ namespace DATN_Models.DAO
             catch (Exception ex)
             {
                 response = -99;
-                throw new Exception("Error getting bundled services statistics", ex);
+                throw new Exception("Error getting movie statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<Statistic_ServiceDetailDAL> Service_DateRange(DateTime? start_date, DateTime? end_date, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<Statistic_ServiceDetailDAL>("SP_Statistic_TopServiceDetail", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+
+                return result ?? new List<Statistic_ServiceDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting service statistics", ex);
             }
             finally
             {

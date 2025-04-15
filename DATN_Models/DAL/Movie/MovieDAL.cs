@@ -15,6 +15,9 @@ namespace DATN_Models.DAL.Movie
         public List<ActorDAL>? listdienvien { get; set; }
         public List<MovieGenreDAL>? genres { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public double AverageRating { get; set; } // Add this for average rating
+        public double AverageRating { get; set; }
+        public Guid? AgeRatingId { get; set; }
+        public string? AgeRatingCode { get; set; }
+        public List<MovieFormatInfoDAL>? Formats { get; set; }
     }
 }

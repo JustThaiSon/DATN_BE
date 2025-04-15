@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DATN_Models.DAL.Account;
+using DATN_Models.DAL.AgeRating;
 using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Customer;
@@ -8,6 +9,7 @@ using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAL.MovieFormat;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAL.Rating;
@@ -22,6 +24,8 @@ using DATN_Models.DAL.Statistic;
 using DATN_Models.DAL.Voucher;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Actor;
+using DATN_Models.DTOS.AgeRating.Req;
+using DATN_Models.DTOS.AgeRating.Res;
 using DATN_Models.DTOS.Cinemas.Req;
 using DATN_Models.DTOS.Cinemas.Res;
 using DATN_Models.DTOS.Comments.Req;
@@ -35,6 +39,8 @@ using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Genre.Req;
 using DATN_Models.DTOS.Genre.Res;
 using DATN_Models.DTOS.Logs.Res;
+using DATN_Models.DTOS.MovieFormat.Req;
+using DATN_Models.DTOS.MovieFormat.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -77,7 +83,9 @@ namespace DATN_Models.Mapper
             // Phần movie
             #region Nghia_Movie
             // Cái này là list movie (hiện tại Đã SHOW ĐƯỢC được danh sách actor trong movie)
-            CreateMap<MovieDAL, GetMovieRes>().ReverseMap();
+            CreateMap<MovieDAL, GetMovieRes>()
+                .ForMember(dest => dest.Formats, opt => opt.MapFrom(src => src.Formats))
+                .ReverseMap();
             CreateMap<AddMovieDAL, AddMovieReq>()
                 .ForMember(dest => dest.Thumbnail, opt => opt.Ignore()) // ko map iformfile thumnail => string thumnailURL
                 .ForMember(dest => dest.Banner, opt => opt.Ignore())    // ko map iformfile banner => string bannerURL
@@ -331,7 +339,6 @@ namespace DATN_Models.Mapper
 
 
             #region statistic
-            CreateMap<StatisticTopServicesDAL, StatisticTopServicesRes>().ReverseMap();
             CreateMap<StatisticSeatProfitabilityDAL, StatisticSeatProfitabilityRes>().ReverseMap();
             CreateMap<StatisticSeatOccupancyDAL, StatisticSeatOccupancyRes>().ReverseMap();
             CreateMap<StatisticRevenueByTimeDAL, StatisticRevenueByTimeRes>().ReverseMap();
@@ -341,7 +348,7 @@ namespace DATN_Models.Mapper
             CreateMap<StatisticPopularGenresDAL, StatisticPopularGenresRes>().ReverseMap();
             CreateMap<StatisticPeakHoursDAL, StatisticPeakHoursRes>().ReverseMap();
             CreateMap<StatisticCustomerGenderDAL, StatisticCustomerGenderRes>().ReverseMap();
-            CreateMap<StatisticBundledServicesDAL, StatisticBundledServicesRes>().ReverseMap();
+            CreateMap<Statistic_ServiceDetailDAL, Statistic_ServiceDetailRes>().ReverseMap();
             #endregion
 
 
@@ -369,7 +376,20 @@ namespace DATN_Models.Mapper
             CreateMap<ShowTimeReq, ShowTime>();
             #endregion
 
+            #region AgeRating
+            CreateMap<AgeRatingDAL, AgeRatingRes>().ReverseMap();
+            CreateMap<CreateAgeRatingReq, AgeRatingDAL>().ReverseMap();
+            CreateMap<UpdateAgeRatingReq, AgeRatingDAL>().ReverseMap();
+            #endregion
 
+            #region MovieFormat
+            CreateMap<DATN_Models.DAL.MovieFormat.MovieFormatDAL, DATN_Models.DTOS.MovieFormat.Res.MovieFormatRes>().ReverseMap();
+            CreateMap<DATN_Models.DTOS.MovieFormat.Req.CreateMovieFormatReq, DATN_Models.DAL.MovieFormat.MovieFormatDAL>().ReverseMap();
+            CreateMap<DATN_Models.DTOS.MovieFormat.Req.UpdateMovieFormatReq, DATN_Models.DAL.MovieFormat.MovieFormatDAL>().ReverseMap();
+            CreateMap<DATN_Models.DAL.MovieFormat.MovieFormatMovieDAL, DATN_Models.DTOS.MovieFormat.Res.MovieFormatMovieRes>().ReverseMap();
+            CreateMap<DATN_Models.DTOS.MovieFormat.Req.AssignFormatToMovieReq, DATN_Models.DAL.MovieFormat.MovieFormatMovieDAL>().ReverseMap();
+            CreateMap<DATN_Models.DAL.Movie.MovieFormatInfoDAL, DATN_Models.DTOS.Movies.Res.MovieFormatInfoRes>().ReverseMap();
+            #endregion
 
             #endregion
 

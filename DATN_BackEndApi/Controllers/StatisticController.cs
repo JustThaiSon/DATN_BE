@@ -32,20 +32,7 @@ namespace DATN_BackEndApi.Controllers
         }
 
 
-        [HttpGet("GetTopServices")]
-        public CommonResponse<List<StatisticTopServicesRes>> GetTopServices(
-       [FromQuery] DateTime? startDate,
-       [FromQuery] DateTime? endDate)
-        {
-            var res = new CommonResponse<List<StatisticTopServicesRes>>();
-            var result = _statisticDAO.GetTopServices(startDate, endDate, out int response);
 
-            res.Data = _mapper.Map<List<StatisticTopServicesRes>>(result);
-            res.ResponseCode = response;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-
-            return res;
-        }
 
         [HttpGet("GetSeatProfitability")]
         public CommonResponse<List<StatisticSeatProfitabilityRes>> GetSeatProfitability(
@@ -152,20 +139,7 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-        [HttpGet("GetBundledServices")]
-        public CommonResponse<List<StatisticBundledServicesRes>> GetBundledServices(
-            [FromQuery] DateTime? startDate,
-            [FromQuery] DateTime? endDate)
-        {
-            var res = new CommonResponse<List<StatisticBundledServicesRes>>();
-            var result = _statisticDAO.GetBundledServices(startDate, endDate, out int response);
 
-            res.Data = _mapper.Map<List<StatisticBundledServicesRes>>(result);
-            res.ResponseCode = response;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-
-            return res;
-        }
 
 
 
@@ -193,6 +167,21 @@ namespace DATN_BackEndApi.Controllers
             var res = new CommonPagination<List<Statistic_MovieDetailRes>>();
             var result = _statisticDAO.Movie_DateRange(Start, End, out int response);
             var resultMapper = _mapper.Map<List<Statistic_MovieDetailRes>>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+
+            return res;
+        }
+
+        [HttpGet]
+        [Route("GetServiceSummary_DateRange")]
+        public async Task<CommonPagination<List<Statistic_ServiceDetailRes>>> GetServiceSummary_DateRange(DateTime? Start, DateTime? End)
+        {
+            var res = new CommonPagination<List<Statistic_ServiceDetailRes>>();
+            var result = _statisticDAO.Service_DateRange(Start, End, out int response);
+            var resultMapper = _mapper.Map<List<Statistic_ServiceDetailRes>>(result);
 
             res.Data = resultMapper;
             res.Message = MessageUtils.GetMessage(response, _langCode);
