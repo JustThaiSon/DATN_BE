@@ -92,12 +92,11 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[4];
                 pars[0] = new SqlParameter("@_Name", movieFormat.Name);
                 pars[1] = new SqlParameter("@_Description", movieFormat.Description);
-                pars[2] = new SqlParameter("@_PriceMultiplier", movieFormat.PriceMultiplier);
-                pars[3] = new SqlParameter("@_Status", movieFormat.Status);
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[2] = new SqlParameter("@_Status", movieFormat.Status);
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
                 db.ExecuteNonQuerySP("SP_MovieFormat_Create", pars);
@@ -123,18 +122,17 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[6];
+                var pars = new SqlParameter[5];
                 pars[0] = new SqlParameter("@_FormatId", movieFormat.FormatId);
                 pars[1] = new SqlParameter("@_Name", movieFormat.Name);
                 pars[2] = new SqlParameter("@_Description", movieFormat.Description);
-                pars[3] = new SqlParameter("@_PriceMultiplier", movieFormat.PriceMultiplier);
-                pars[4] = new SqlParameter("@_Status", movieFormat.Status);
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_Status", movieFormat.Status);
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
                 db.ExecuteNonQuerySP("SP_MovieFormat_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[5].Value);
+                response = ConvertUtil.ToInt(pars[4].Value);
             }
             catch (Exception ex)
             {

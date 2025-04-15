@@ -16,10 +16,7 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.Description)
                 .HasMaxLength(200);
 
-            builder.Property(x => x.PriceMultiplier)
-                .HasColumnType("decimal(5, 2)")
-                .HasDefaultValue(1.0m)
-                .IsRequired();
+
 
             builder.Property(x => x.Status)
                 .HasDefaultValue(1);

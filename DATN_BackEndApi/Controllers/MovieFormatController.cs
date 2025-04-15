@@ -67,7 +67,6 @@ namespace DATN_BackEndApi.Controllers
             {
                 Name = request.Name,
                 Description = request.Description,
-                PriceMultiplier = request.PriceMultiplier,
                 Status = 1 // Mặc định là active
             };
 

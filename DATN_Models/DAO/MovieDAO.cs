@@ -48,9 +48,104 @@ namespace DATN_Models.DAO
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                var (movies, actors) = db.GetMultipleSP<MovieDAL, ActorDAL>("SP_Movie_GetList", pars);
+                // Sử dụng phương thức tùy chỉnh để lấy 3 kết quả từ stored procedure
+                SqlConnection conn = null;
+                List<MovieDAL> movies = new List<MovieDAL>();
+                List<ActorDAL> actors = new List<ActorDAL>();
+                Dictionary<Guid, List<MovieFormatInfoDAL>> movieFormats = new Dictionary<Guid, List<MovieFormatInfoDAL>>();
 
-                // Process each movie to add actors and genres
+                try
+                {
+                    conn = db.OpenConnection();
+
+                    using (var command = new SqlCommand("SP_Movie_GetList", conn))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddRange(pars);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Đọc danh sách phim
+                            while (reader.Read())
+                            {
+                                var movie = new MovieDAL();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    var columnName = reader.GetName(i);
+                                    var property = typeof(MovieDAL).GetProperty(columnName);
+                                    if (property != null && !reader.IsDBNull(i))
+                                    {
+                                        property.SetValue(movie, reader.GetValue(i));
+                                    }
+                                }
+                                movies.Add(movie);
+                            }
+
+                            // Đọc danh sách diễn viên
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    var actor = new ActorDAL();
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        var columnName = reader.GetName(i);
+                                        var property = typeof(ActorDAL).GetProperty(columnName);
+                                        if (property != null && !reader.IsDBNull(i))
+                                        {
+                                            property.SetValue(actor, reader.GetValue(i));
+                                        }
+                                    }
+                                    actors.Add(actor);
+                                }
+                            }
+
+                            // Đọc danh sách định dạng phim
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    var format = new MovieFormatInfoDAL();
+                                    Guid movieId = Guid.Empty;
+
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        var columnName = reader.GetName(i);
+                                        if (columnName == "MovieId" && !reader.IsDBNull(i))
+                                        {
+                                            movieId = reader.GetGuid(i);
+                                            continue;
+                                        }
+
+                                        var property = typeof(MovieFormatInfoDAL).GetProperty(columnName);
+                                        if (property != null && !reader.IsDBNull(i))
+                                        {
+                                            property.SetValue(format, reader.GetValue(i));
+                                        }
+                                    }
+
+                                    if (movieId != Guid.Empty)
+                                    {
+                                        if (!movieFormats.ContainsKey(movieId))
+                                        {
+                                            movieFormats[movieId] = new List<MovieFormatInfoDAL>();
+                                        }
+                                        movieFormats[movieId].Add(format);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    if (conn != null)
+                    {
+                        conn.Close();
+                    }
+                }
+
+                // Process each movie to add actors, genres and formats
                 foreach (var item in movies)
                 {
                     // Add actors to the movie
@@ -58,6 +153,16 @@ namespace DATN_Models.DAO
 
                     // Add genres to the movie
                     item.genres = GetMovieGenres(item.Id, out int genreResponse);
+
+                    // Add formats to the movie
+                    if (movieFormats.ContainsKey(item.Id))
+                    {
+                        item.Formats = movieFormats[item.Id];
+                    }
+                    else
+                    {
+                        item.Formats = new List<MovieFormatInfoDAL>();
+                    }
                 }
 
                 response = ConvertUtil.ToInt(pars[3].Value);
@@ -162,8 +267,88 @@ namespace DATN_Models.DAO
 
                 db = new DBHelper(connectionString);
 
-                // Get movie details including average rating
-                var (movies, actors) = db.GetSingleSP<MovieDAL, ActorDAL>("SP_Movie_MovieDetail", pars);
+                // Sử dụng phương thức tùy chỉnh để lấy 3 kết quả từ stored procedure
+                SqlConnection conn = null;
+                MovieDAL movies = null;
+                List<ActorDAL> actors = new List<ActorDAL>();
+                List<MovieFormatInfoDAL> formats = new List<MovieFormatInfoDAL>();
+
+                try
+                {
+                    conn = db.OpenConnection();
+
+                    using (var command = new SqlCommand("SP_Movie_MovieDetail", conn))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddRange(pars);
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Đọc thông tin phim
+                            var moviesList = new List<MovieDAL>();
+                            while (reader.Read())
+                            {
+                                var movie = new MovieDAL();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    var columnName = reader.GetName(i);
+                                    var property = typeof(MovieDAL).GetProperty(columnName);
+                                    if (property != null && !reader.IsDBNull(i))
+                                    {
+                                        property.SetValue(movie, reader.GetValue(i));
+                                    }
+                                }
+                                moviesList.Add(movie);
+                            }
+                            movies = moviesList.FirstOrDefault();
+
+                            // Đọc thông tin diễn viên
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    var actor = new ActorDAL();
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        var columnName = reader.GetName(i);
+                                        var property = typeof(ActorDAL).GetProperty(columnName);
+                                        if (property != null && !reader.IsDBNull(i))
+                                        {
+                                            property.SetValue(actor, reader.GetValue(i));
+                                        }
+                                    }
+                                    actors.Add(actor);
+                                }
+                            }
+
+                            // Đọc thông tin định dạng phim
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    var format = new MovieFormatInfoDAL();
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        var columnName = reader.GetName(i);
+                                        var property = typeof(MovieFormatInfoDAL).GetProperty(columnName);
+                                        if (property != null && !reader.IsDBNull(i))
+                                        {
+                                            property.SetValue(format, reader.GetValue(i));
+                                        }
+                                    }
+                                    formats.Add(format);
+                                }
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    if (conn != null)
+                    {
+                        conn.Close();
+                    }
+                }
 
                 if (movies != null)
                 {
@@ -172,9 +357,15 @@ namespace DATN_Models.DAO
 
                     // Add genres to the movie
                     movies.genres = GetMovieGenres(Id, out int genreResponse);
-                    movies.AverageRating = GetMovieRating(Id);
 
-                    // Note: AverageRating should now be populated from the SQL procedure directly
+                    // Add formats to the movie
+                    movies.Formats = formats;
+
+                    // Ensure average rating is set
+                    if (movies.AverageRating == 0)
+                    {
+                        movies.AverageRating = GetMovieRating(Id);
+                    }
                 }
 
                 response = ConvertUtil.ToInt(pars[1].Value);
