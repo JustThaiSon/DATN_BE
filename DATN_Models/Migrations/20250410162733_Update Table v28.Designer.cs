@@ -4,6 +4,7 @@ using DATN_Models.HandleData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DATN_Models.Migrations
 {
     [DbContext(typeof(DATN_Context))]
-    partial class DATN_ContextModelSnapshot : ModelSnapshot
+    [Migration("20250410162733_Update Table v28")]
+    partial class UpdateTablev28
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,35 +57,6 @@ namespace DATN_Models.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Actors");
-                });
-
-            modelBuilder.Entity("DATN_Models.Models.AgeRatings", b =>
-                {
-                    b.Property<Guid>("AgeRatingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("MinimumAge")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.HasKey("AgeRatingId");
-
-                    b.ToTable("AgeRatings");
                 });
 
             modelBuilder.Entity("DATN_Models.Models.AppRoles", b =>
@@ -499,57 +473,10 @@ namespace DATN_Models.Migrations
                     b.ToTable("MovieActors");
                 });
 
-            modelBuilder.Entity("DATN_Models.Models.MovieFormats", b =>
-                {
-                    b.Property<Guid>("FormatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<decimal>("PriceMultiplier")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(5, 2)")
-                        .HasDefaultValue(1.0m);
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
-                    b.HasKey("FormatId");
-
-                    b.ToTable("MovieFormats");
-                });
-
-            modelBuilder.Entity("DATN_Models.Models.MovieFormats_Movies", b =>
-                {
-                    b.Property<Guid>("MovieId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FormatId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("MovieId", "FormatId");
-
-                    b.ToTable("MovieFormats_Movies");
-                });
-
             modelBuilder.Entity("DATN_Models.Models.Movies", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AgeRatingId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Banner")
@@ -1339,10 +1266,10 @@ namespace DATN_Models.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
+                    b.Property<bool>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

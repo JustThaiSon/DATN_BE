@@ -304,6 +304,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Order không tồn tại !.
+        /// </summary>
+        internal static string _407 {
+            get {
+                return ResourceManager.GetString("-407", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lỗi hệ thống.
         /// </summary>
         internal static string _500 {

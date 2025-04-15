@@ -12,12 +12,17 @@ namespace DATN_Models.DAO
 {
     public class AgeRatingDAO : IAgeRatingDAO
     {
-        private readonly string connectionString;
+        private static string connectionString = string.Empty;
 
-        public AgeRatingDAO(IConfiguration configuration)
+        public AgeRatingDAO()
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                .Build();
+
+            connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
+
 
         public List<AgeRatingDAL> GetAgeRatings(int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
@@ -119,18 +124,17 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[6];
+                var pars = new SqlParameter[5];
                 pars[0] = new SqlParameter("@_AgeRatingId", ageRating.AgeRatingId);
                 pars[1] = new SqlParameter("@_Code", ageRating.Code);
                 pars[2] = new SqlParameter("@_Description", ageRating.Description);
                 pars[3] = new SqlParameter("@_MinimumAge", ageRating.MinimumAge);
-                pars[4] = new SqlParameter("@_Status", ageRating.Status);
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
                 db.ExecuteNonQuerySP("SP_AgeRating_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[5].Value);
+                response = ConvertUtil.ToInt(pars[4].Value);
             }
             catch (Exception ex)
             {

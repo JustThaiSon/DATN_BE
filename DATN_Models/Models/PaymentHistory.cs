@@ -8,6 +8,5 @@
         public long AmountPaid { get; set; }  
         public DateTime PaymentDate { get; set; } 
         public string TransactionCode { get; set; } 
-
     }
 }

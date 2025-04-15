@@ -12,11 +12,15 @@ namespace DATN_Models.DAO
 {
     public class MovieFormatDAO : IMovieFormatDAO
     {
-        private readonly string connectionString;
+        private static string connectionString = string.Empty;
 
-        public MovieFormatDAO(IConfiguration configuration)
+        public MovieFormatDAO()
         {
-            connectionString = configuration.GetConnectionString("DefaultConnection");
+            var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                .Build();
+
+            connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
         public List<MovieFormatDAL> GetMovieFormats(int currentPage, int recordPerPage, out int totalRecord, out int response)

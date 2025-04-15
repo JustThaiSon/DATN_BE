@@ -353,5 +353,122 @@ namespace DATN_Models.DAO
 
             return result;
         }
+        public GetOrderDetailLangdingDAL GetOrderDetailLangding(Guid orderId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            GetOrderDetailLangdingDAL result = null;
+
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderId", orderId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var dataTable = db.GetDataTableSP("SP_Order_GetOrderDetail", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                if (response == 200 && dataTable.Rows.Count > 0)
+                {
+                    var row = dataTable.Rows[0];
+
+                    var sessionParts = ConvertUtil.ToString(row["SessionTime"]).Split(" - ");
+                    var sessionTime = sessionParts.Length == 2 ? sessionParts[0] : string.Empty;
+                    var sessionDate = sessionParts.Length == 2 ? sessionParts[1] : string.Empty;
+
+                    var serviceList = new List<ServiceInfoRes>();
+                    var rawServiceList = ConvertUtil.ToString(row["ServiceList"]);
+
+                    if (!string.IsNullOrWhiteSpace(rawServiceList))
+                    {
+                        var serviceGroups = rawServiceList.Split("],");
+
+                        foreach (var group in serviceGroups)
+                        {
+                            var colonIndex = group.IndexOf(':');
+                            if (colonIndex == -1) continue;
+                            var serviceType = group.Substring(0, colonIndex).Trim();
+                            var itemsStr = group.Substring(colonIndex + 1).Trim().TrimStart('[').TrimEnd(']');
+                            var items = itemsStr.Split(',');
+
+                            foreach (var item in items)
+                            {
+                                var parts = item.Split(new[] { " x", " - " }, StringSplitOptions.None);
+                                if (parts.Length == 3)
+                                {
+                                    serviceList.Add(new ServiceInfoRes
+                                    {
+                                        ServiceTypeName = serviceType,
+                                        Name = parts[0].Trim(),
+                                        Quantity = int.TryParse(parts[1].Trim(), out var qty) ? qty : 0,
+                                        TotalPrice = long.TryParse(parts[2].Replace("đ", "").Trim(), out var price) ? price : 0
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    result = new GetOrderDetailLangdingDAL
+                    {
+                        Id = ConvertUtil.ToGuid(row["Id"]),
+                        MovieName = ConvertUtil.ToString(row["MovieName"]),
+                        Duration = ConvertUtil.ToString(row["Duration"]),
+                        Description = ConvertUtil.ToString(row["Description"]),
+                        OrderCode = ConvertUtil.ToString(row["OrderCode"]),
+                        CinemaName = ConvertUtil.ToString(row["CinemaName"]),
+                        Address = ConvertUtil.ToString(row["Address"]),
+                        Thumbnail = ConvertUtil.ToString(row["Thumbnail"]),
+                        DiscountPrice = ConvertUtil.ToLong(row["DiscountPrice"]),
+                        TotalPriceTicket = ConvertUtil.ToLong(row["TotalPriceTicket"]),
+                        PointChange = ConvertUtil.ToLong(row["PointChange"]),
+                        SessionTime = sessionTime,
+                        SessionDate = sessionDate,
+                        RoomName = ConvertUtil.ToString(row["RoomName"]),
+                        SeatList = ConvertUtil.ToString(row["RawSeatList"]).Split(',').Select(s => s.Trim()).ToList(),
+                        ServiceList = serviceList,
+                        ConcessionAmount = ConvertUtil.ToLong(row["ConcessionAmount"]),
+                        TotalPrice = ConvertUtil.ToLong(row["TotalPrice"]),
+                        Email = ConvertUtil.ToString(row["Email"]),
+                        CreatedDate = ConvertUtil.ToDateTime(row["CreatedDate"])
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ;
+            }
+            finally
+            {
+                db?.Close();
+            }
+
+            return result;
+        }
+
+        public CheckRefundDAL CheckRefund(Guid orderId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderId", orderId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<CheckRefundDAL>("SP_Order_CheckOrderUsed", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
-    }
+}

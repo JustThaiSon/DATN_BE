@@ -11,10 +11,6 @@ namespace DATN_Models.Models.Configurations
 
             builder.Property(x => x.UserId)
                 .IsRequired();
-
-            builder.Property(x => x.DateOfBirth)
-                .IsRequired();
-
             builder.Property(x => x.TotalPoint)
                 .IsRequired();
 

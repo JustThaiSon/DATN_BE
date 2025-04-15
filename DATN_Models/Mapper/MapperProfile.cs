@@ -5,11 +5,10 @@ using DATN_Models.DAL.Cinemas;
 using DATN_Models.DAL.Comment;
 using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
-using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;
+using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
-using DATN_Models.DAL.MovieFormat;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAL.Rating;
@@ -23,6 +22,7 @@ using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAL.Statistic;
 using DATN_Models.DAL.Voucher;
 using DATN_Models.DTOS.Account.Req;
+using DATN_Models.DTOS.Account.Res;
 using DATN_Models.DTOS.Actor;
 using DATN_Models.DTOS.AgeRating.Req;
 using DATN_Models.DTOS.AgeRating.Res;
@@ -33,14 +33,11 @@ using DATN_Models.DTOS.Comments.Res;
 using DATN_Models.DTOS.Customer.Req;
 using DATN_Models.DTOS.Customer.Res;
 using DATN_Models.DTOS.Employee.Req;
-using DATN_Models.DTOS.Employee.Req;
-using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Employee.Res;
 using DATN_Models.DTOS.Genre.Req;
 using DATN_Models.DTOS.Genre.Res;
 using DATN_Models.DTOS.Logs.Res;
-using DATN_Models.DTOS.MovieFormat.Req;
-using DATN_Models.DTOS.MovieFormat.Res;
+using DATN_Models.DTOS.Membership.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -63,13 +60,10 @@ using DATN_Models.DTOS.ServiceType.Res;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
 using DATN_Models.DTOS.Statistic.Res;
-using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.DTOS.Voucher.Req;
 using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.Models;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
-using DATN_Models.DAL.Comment;
-using DATN_Models.DTOS.Account.Res;
 
 namespace DATN_Models.Mapper
 {
@@ -168,6 +162,10 @@ namespace DATN_Models.Mapper
             CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
+            CreateMap<GetmembershipByUserDAL, GetmembershipByUserRes>().ReverseMap();
+            CreateMap<MembershipBenefitRes, MembershipBenefitDAL>().ReverseMap();
+            CreateMap<UserMembershipDetailsDAL, UserMembershipDetailsRes>().ReverseMap();
             //CreateMap<ChangePasswordReq, ChangePasswordReq>().ReverseMap();
             #endregion
 
@@ -314,6 +312,9 @@ namespace DATN_Models.Mapper
             CreateMap<CreateOrderReq, CreateOrderDAL>().ReverseMap();
             CreateMap<TicketReq, TicketDAL>().ReverseMap();
             CreateMap<ServiceReq, ServiceDAL>().ReverseMap();
+            CreateMap<CheckMemberShipRes, CheckMemberShipDAL>().ReverseMap();
+            CreateMap<MembershipPreviewDAL, MembershipPreviewRes>().ReverseMap();
+            CreateMap<GetOrderDetailLangdingRes, GetOrderDetailLangdingDAL>().ReverseMap();
             #endregion
             #region SeatbyShowTime
             CreateMap<GetListSeatByShowTimeRes, ListSeatByShowTimeDAL>().ReverseMap();

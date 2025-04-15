@@ -188,7 +188,7 @@ namespace DATN_LandingPage.Controllers
         [Route("GetPayment")]
         public async Task<CommonResponse<List<GetPaymentRes>>> GetPayment()
         {
-            var res = new CommonResponse<List<GetPaymentRes>> ();
+            var res = new CommonResponse<List<GetPaymentRes>>();
             var result = _orderDAO.GetPayment(out int response);
             var resultMapper = _mapper.Map<List<GetPaymentRes>>(result);
             res.Data = resultMapper;
@@ -248,6 +248,32 @@ namespace DATN_LandingPage.Controllers
             var userId = HttpContextHelper.GetUserId();
             var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, out int response);
             res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        //[BAuthorize]
+        [HttpGet]
+        [Route("GetOrderDetailLangding")]
+        public async Task<CommonResponse<GetOrderDetailLangdingRes>> GetOrderDetailLangdingRes(Guid orderId)
+        {
+            var res = new CommonResponse<GetOrderDetailLangdingRes>();
+            var result = _orderDAO.GetOrderDetailLangding(orderId, out int response);
+            var resultMapper = _mapper.Map<GetOrderDetailLangdingRes>(result);
+            resultMapper.OrderCodeB64 = _mailService.GenerateQrCode(resultMapper.OrderCode);
+            res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [HttpGet]
+        [Route("CheckRefund")]
+        public async Task<CommonResponse<CheckRefundRes>> CheckRefund(Guid orderId)
+        {
+            var res = new CommonResponse<CheckRefundRes>();
+            var result = _orderDAO.CheckRefund(orderId, out int response);
+            var resultMapper = _mapper.Map<CheckRefundRes>(result);
+            res.Data = resultMapper;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
