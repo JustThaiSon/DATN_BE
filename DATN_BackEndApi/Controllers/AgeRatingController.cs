@@ -67,7 +67,6 @@ namespace DATN_BackEndApi.Controllers
                 Code = request.Code,
                 Description = request.Description,
                 MinimumAge = request.MinimumAge,
-                Status = 1 // Mặc định là active
             };
 
             _ageRatingDAO.CreateAgeRating(ageRatingDAL, out int response);

@@ -93,17 +93,16 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[4];
                 pars[0] = new SqlParameter("@_Code", ageRating.Code);
                 pars[1] = new SqlParameter("@_Description", ageRating.Description);
                 pars[2] = new SqlParameter("@_MinimumAge", ageRating.MinimumAge);
-                pars[3] = new SqlParameter("@_Status", ageRating.Status);
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
                 db.ExecuteNonQuerySP("SP_AgeRating_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[3].Value);
             }
             catch (Exception ex)
             {
