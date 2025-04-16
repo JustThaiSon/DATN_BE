@@ -88,6 +88,24 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voucher đã hết hạn.
+        /// </summary>
+        internal static string _110 {
+            get {
+                return ResourceManager.GetString("-110", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voucher này đã đạt giới hạn sử dụng.
+        /// </summary>
+        internal static string _111 {
+            get {
+                return ResourceManager.GetString("-111", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Showtime không tồn tại !.
         /// </summary>
         internal static string _120 {
@@ -363,6 +381,33 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _607 {
             get {
                 return ResourceManager.GetString("-607", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phòng này đã có đủ suất chiếu ngày hôm nay.
+        /// </summary>
+        internal static string _999900 {
+            get {
+                return ResourceManager.GetString("-999900", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phim này đã có 1 suất chiếu hôm nay trong phòng này.
+        /// </summary>
+        internal static string _999901 {
+            get {
+                return ResourceManager.GetString("-999901", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể thay đổi/xóa thông tin suất chiếu vì đã có người đặt vé.
+        /// </summary>
+        internal static string _999902 {
+            get {
+                return ResourceManager.GetString("-999902", resourceCulture);
             }
         }
         

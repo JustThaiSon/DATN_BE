@@ -12,5 +12,7 @@
         public int Status { get; set; }
         public List<Guid>? ListActorID { get; set; }
         public List<Guid>? ListGenreID { get; set; }
+        public Guid? AgeRatingId { get; set; }
+        public List<Guid>? ListFormatID { get; set; }
     }
 }

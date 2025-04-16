@@ -72,5 +72,8 @@ namespace DATN_Models.HandleData
 
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<VoucherUsage> VoucherUsages { get; set; }
+        public DbSet<AgeRatings> AgeRatings { get; set; }
+        public DbSet<MovieFormats> MovieFormats { get; set; }
+        public DbSet<MovieFormats_Movies> MovieFormats_Movies { get; set; }
     }
 }

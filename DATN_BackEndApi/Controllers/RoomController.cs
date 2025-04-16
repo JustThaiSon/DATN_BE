@@ -87,7 +87,7 @@ namespace DATN_BackEndApi.Controllers
         [HttpPost]
         [Route("UpdateRoom")]
 
-        public async Task<CommonResponse<dynamic>> UpdateRoom( UpdateRoomReq rq)
+        public async Task<CommonResponse<dynamic>> UpdateRoom(UpdateRoomReq rq)
         {
             var res = new CommonResponse<dynamic>();
             var Rqmapper = _mapper.Map<UpdateRoomDAL>(rq);
@@ -95,6 +95,29 @@ namespace DATN_BackEndApi.Controllers
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             res.ResponseCode = response;
+            return res;
+        }
+
+
+
+
+
+        [HttpGet]
+        [Route("GetAllRoomByCinema")]
+
+        public async Task<CommonPagination<List<GetListRoomByCinemaRes>>> GetAllRoomByCinema(Guid CinemaID)
+        {
+
+            var res = new CommonPagination<List<GetListRoomByCinemaRes>>();
+
+            var result = _roomDAO.GetListRoomByCinema(CinemaID, out int response);
+
+            var resultMapper = _mapper.Map<List<GetListRoomByCinemaRes>>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+
             return res;
         }
 

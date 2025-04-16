@@ -7,58 +7,58 @@ using DATN_Models.DTOS.Statistic.Res;
 using Microsoft.AspNetCore.Mvc;
 //using OfficeOpenXml;
 
-namespace DATN_BackEndApi.Controllers.Test
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StatisticController : ControllerBase
-    {
-        private readonly IStatisticDAO _statisticDAO;
+//namespace DATN_BackEndApi.Controllers.Test
+//{
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    public class StatisticController : ControllerBase
+//    {
+//        private readonly IStatisticDAO _statisticDAO;
 
-        private readonly string _langCode;
-        private readonly IUltil _ultils;
-        private readonly IMapper _mapper;
+//        private readonly string _langCode;
+//        private readonly IUltil _ultils;
+//        private readonly IMapper _mapper;
 
-        public StatisticController(IStatisticDAO statisticDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
-        {
-            _statisticDAO = statisticDAO;
-            _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
-            _ultils = ultils;
-            _mapper = mapper;
-        }
-
-
-        #region Membership_Nghia
-        [HttpGet]
-        [Route("GetSummary_DateRange")]
-        public async Task<CommonPagination<List<Statistic_SummaryDetailRes>>> GetSummary_DateRange(DateTime? Start, DateTime? End)
-        {
-            var res = new CommonPagination<List<Statistic_SummaryDetailRes>>();
-            var result = _statisticDAO.Summary_DateRange(Start, End, out int response);
-            var resultMapper = _mapper.Map<List<Statistic_SummaryDetailRes>>(result);
-
-            res.Data = resultMapper;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
-
-            return res;
-        }
+//        public StatisticController(IStatisticDAO statisticDAO, IConfiguration configuration, IUltil ultils, IMapper mapper)
+//        {
+//            _statisticDAO = statisticDAO;
+//            _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
+//            _ultils = ultils;
+//            _mapper = mapper;
+//        }
 
 
-        [HttpGet]
-        [Route("GetMovie_DateRange")]
-        public async Task<CommonPagination<List<Statistic_MovieDetailRes>>> GetMovie_DateRange(Guid MovieID, DateTime? Start, DateTime? End)
-        {
-            var res = new CommonPagination<List<Statistic_MovieDetailRes>>();
-            var result = _statisticDAO.Movie_DateRange(MovieID, Start, End, out int response);
-            var resultMapper = _mapper.Map<List<Statistic_MovieDetailRes>>(result);
+//        #region Membership_Nghia
+//        [HttpGet]
+//        [Route("GetSummary_DateRange")]
+//        public async Task<CommonPagination<List<Statistic_SummaryDetailRes>>> GetSummary_DateRange(DateTime? Start, DateTime? End)
+//        {
+//            var res = new CommonPagination<List<Statistic_SummaryDetailRes>>();
+//            var result = _statisticDAO.Summary_DateRange(Start, End, out int response);
+//            var resultMapper = _mapper.Map<List<Statistic_SummaryDetailRes>>(result);
 
-            res.Data = resultMapper;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.ResponseCode = response;
+//            res.Data = resultMapper;
+//            res.Message = MessageUtils.GetMessage(response, _langCode);
+//            res.ResponseCode = response;
 
-            return res;
-        }
+//            return res;
+//        }
+
+
+//        [HttpGet]
+//        [Route("GetMovie_DateRange")]
+//        public async Task<CommonPagination<List<Statistic_MovieDetailRes>>> GetMovie_DateRange(Guid MovieID, DateTime? Start, DateTime? End)
+//        {
+//            var res = new CommonPagination<List<Statistic_MovieDetailRes>>();
+//            var result = _statisticDAO.Movie_DateRange(MovieID, Start, End, out int response);
+//            var resultMapper = _mapper.Map<List<Statistic_MovieDetailRes>>(result);
+
+//            res.Data = resultMapper;
+//            res.Message = MessageUtils.GetMessage(response, _langCode);
+//            res.ResponseCode = response;
+
+//            return res;
+//        }
 
 
         //[HttpGet]
@@ -101,8 +101,8 @@ namespace DATN_BackEndApi.Controllers.Test
         //}
 
 
-        #endregion
+//        #endregion
 
 
-    }
-}
+    //}
+//}

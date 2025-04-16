@@ -3,6 +3,7 @@ using DATN_Helpers.Common;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,26 @@ namespace DATN_BackEndApi.Controllers
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
         }
 
+
+        [HttpGet]
+        [Route("GetAutoDate")]
+        public async Task<CommonResponse<ShowtimeAutoDateRes>> GetAutoDate([FromQuery] ShowtimeAutoDateReq showtimereq)
+        {
+            var res = new CommonResponse<ShowtimeAutoDateRes>();
+            var result = _showTimeDAO.AutoDateNghia(showtimereq, out int response);
+            var resultMapper = _mapper.Map<ShowtimeAutoDateRes>(result);
+
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+
+            return res;
+
+        }
+
+
+
+
         /// <summary>
         /// Lấy danh sách lịch chiếu có phân trang
         /// </summary>
@@ -42,7 +63,7 @@ namespace DATN_BackEndApi.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
 
             return res;
-        }  
+        }
         /// <summary>
         /// Lấy chi tiết một lịch chiếu
         /// </summary>
@@ -122,7 +143,7 @@ namespace DATN_BackEndApi.Controllers
         public CommonResponse<string> Update(Guid id, [FromBody] UpdateShowTimeReq request)
         {
             var res = new CommonResponse<string>();
-            
+
             try
             {
                 _showTimeDAO.UpdateShowTime(id, request, out int response);
@@ -156,16 +177,25 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("UpdateShowTimeStatus")]
-        public CommonResponse<string> UpdateShowTimeStatus(Guid id,int status)
+        public CommonResponse<string> UpdateShowTimeStatus(Guid id, int status)
         {
             var res = new CommonResponse<string>();
-            _showTimeDAO.UpdateShowTimeStatus(id,status, out int response);
+            _showTimeDAO.UpdateShowTimeStatus(id, status, out int response);
 
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
 
             return res;
         }
+
+
+        [HttpPost]
+        [Route("ShowtimeCronjob")]
+        public void ShowtimeCronjob()
+        {
+            _showTimeDAO.ShowtimeCronjob();
+        }
+
 
     }
 }
