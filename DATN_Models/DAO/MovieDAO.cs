@@ -442,25 +442,38 @@ namespace DATN_Models.DAO
                     }
                 }
 
-                var pars = new SqlParameter[12]; // Updated parameter count
+                // Create DataTable for format IDs
+                DataTable formatTable = new DataTable();
+                formatTable.Columns.Add("Id", typeof(Guid));
+                if (req.ListFormatID != null && req.ListFormatID.Any())
+                {
+                    foreach (var formatId in req.ListFormatID)
+                    {
+                        formatTable.Rows.Add(formatId);
+                    }
+                }
+
+                var pars = new SqlParameter[14]; // Updated parameter count
 
                 pars[0] = new SqlParameter("@_MovieID", req.MovieID);
                 pars[1] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[2] = new SqlParameter("@_Description", req.Description);
-                pars[3] = new SqlParameter("@_Thumbnail", req.ThumbnailURL);
-                pars[4] = new SqlParameter("@_Banner", req.BannerURL);
-                pars[5] = new SqlParameter("@_Trailer", req.TrailerURL);
+                pars[3] = new SqlParameter("@_Thumbnail", (object)req.ThumbnailURL ?? DBNull.Value);
+                pars[4] = new SqlParameter("@_Banner", (object)req.BannerURL ?? DBNull.Value);
+                pars[5] = new SqlParameter("@_Trailer", (object)req.TrailerURL ?? DBNull.Value);
                 pars[6] = new SqlParameter("@_Duration", req.Duration);
                 pars[7] = new SqlParameter("@_ReleaseDate", req.ReleaseDate);
                 pars[8] = new SqlParameter("@_Status", req.Status);
                 pars[9] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
                 pars[10] = new SqlParameter("@_GenreIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = genreTable };
-                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[11] = new SqlParameter("@_AgeRatingId", (object)req.AgeRatingId ?? DBNull.Value);
+                pars[12] = new SqlParameter("@_FormatIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = formatTable };
+                pars[13] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[11].Value);
+                response = ConvertUtil.ToInt(pars[13].Value);
             }
             catch (Exception ex)
             {

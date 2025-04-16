@@ -15,5 +15,7 @@ namespace DATN_Models.DTOS.Movies.Req.Movie
         public int Status { get; set; }
         public List<Guid>? ListActorID { get; set; }
         public List<Guid>? ListGenreID { get; set; }
+        public List<Guid>? ListFormatID { get; set; }
+        public Guid? AgeRatingId { get; set; }
     }
 }
