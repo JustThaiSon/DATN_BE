@@ -17,5 +17,8 @@ namespace DATN_Models.DTOS.Employee.Res
         public int Sex { get; set; }
         public string Address { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int Status { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public DateTimeOffset? LockoutEnd { get; set; }
     }
 }

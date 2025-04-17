@@ -214,6 +214,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Phim không phù hợp với phòng.
+        /// </summary>
+        internal static string _127 {
+            get {
+                return ResourceManager.GetString("-127", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ngày tìm kiếm không hợp lệ .
         /// </summary>
         internal static string _1700 {
@@ -367,15 +376,6 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Người dùng đã đánh giá/ comment phim này rồi.
-        /// </summary>
-        internal static string _2004 {
-            get {
-                return ResourceManager.GetString("-2004", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Không tìm thấy movie.
         /// </summary>
         internal static string _2000 {
@@ -408,6 +408,24 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _2003 {
             get {
                 return ResourceManager.GetString("-2003", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Người dùng đã đánh giá/ comment phim này rồi.
+        /// </summary>
+        internal static string _2004 {
+            get {
+                return ResourceManager.GetString("-2004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa thể sửa SEAT này vì đang có người đặt.
+        /// </summary>
+        internal static string _3000 {
+            get {
+                return ResourceManager.GetString("-3000", resourceCulture);
             }
         }
         

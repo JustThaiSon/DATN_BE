@@ -335,4 +335,10 @@
   <data name="-117" xml:space="preserve">
     <value>Người dùng đã sử dụng hết voucher này</value>
   </data>
+  <data name="-3000" xml:space="preserve">
+    <value>Chưa thể sửa SEAT này vì đang có người đặt</value>
+  </data>
+  <data name="-127" xml:space="preserve">
+    <value>Phim không phù hợp với phòng</value>
+  </data>
 </root>
