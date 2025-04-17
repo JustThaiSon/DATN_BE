@@ -3,6 +3,7 @@ using DATN_Helpers.Database;
 using DATN_Models.DAL.Membership;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Membership.Req;
+using DATN_Models.DTOS.Membership.Res;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -92,7 +93,7 @@ namespace DATN_Models.DAO
                 // Parse JSON từ raw string thành object nếu không null
                 if (!string.IsNullOrEmpty(result.RawUserMembershipDetails))
                 {
-                    result.UserMembershipDetails =  JsonSerializer.Deserialize<UserMembershipDetailsDAL>(result.RawUserMembershipDetails);
+                    result.UserMembershipDetails = JsonSerializer.Deserialize<UserMembershipDetailsDAL>(result.RawUserMembershipDetails);
                 }
                 if (!string.IsNullOrEmpty(result.RawCurrentLevelBenefits))
                 {
@@ -108,6 +109,61 @@ namespace DATN_Models.DAO
             catch (Exception)
             {
                 throw;
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
+
+        public GetPointByUserRes GetPointByUser(Guid userId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetPointByUserRes>("SP_Point_GetPointByUser", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding user membership", ex);
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
+
+        public List<GetPointHistoryRes> GetPointHistory(Guid userId,int type, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[6];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_Type", type);
+                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetPointHistoryRes>("SP_Point_GetHistoryPoint", pars);
+                response = ConvertUtil.ToInt(pars[5].Value);
+                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding user membership", ex);
             }
             finally
             {

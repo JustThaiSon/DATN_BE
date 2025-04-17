@@ -77,6 +77,19 @@ namespace DATN_LandingPage.Controllers
         }
         [BAuthorize]
         [HttpGet]
+        [Route("GetPointByUser")]
+        public async Task<CommonResponse<GetPointByUserRes>> GetPointByUser()
+        {
+            var res = new CommonResponse<GetPointByUserRes>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _membershipDAO.GetPointByUser(userId,  out int responseCode);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = result;
+            return res;
+        }
+        [BAuthorize]
+        [HttpGet]
         [Route("GetmembershipByUserRes")]
         public async Task<CommonResponse<GetmembershipByUserRes>> GetmembershipByUser()
         {
@@ -88,6 +101,19 @@ namespace DATN_LandingPage.Controllers
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = resultMapper;
+            return res;
+        }
+        [BAuthorize]
+        [HttpGet]
+        [Route("GetPointHistory")]
+        public async Task<CommonResponse<List<GetPointHistoryRes>>> GetPointHistory(int type,int currentPage, int recordPerPage)
+        {
+            var res = new CommonResponse<List<GetPointHistoryRes>>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _membershipDAO.GetPointHistory(userId, type, currentPage, recordPerPage, out int totalRecord, out int response);
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.Data = result;
             return res;
         }
     }

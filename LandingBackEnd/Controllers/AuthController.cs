@@ -36,7 +36,7 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpPost]
         [Route("Resgister")]
-        public async Task<CommonResponse<dynamic>> Resgister(CreateAccountReq request)
+        public async Task<CommonResponse<dynamic>> Resgister([FromBody]CreateAccountReq request)
         {
             var res = new CommonResponse<dynamic>();
             var (response, Opt) = await _loginDAO.RegisterUserAsync(request);

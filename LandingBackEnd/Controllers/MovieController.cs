@@ -252,7 +252,7 @@ namespace DATN_LandingPage.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
         }
-        //[BAuthorize]
+        [BAuthorize]
         [HttpGet]
         [Route("GetOrderDetailLangding")]
         public async Task<CommonResponse<GetOrderDetailLangdingRes>> GetOrderDetailLangdingRes(Guid orderId)

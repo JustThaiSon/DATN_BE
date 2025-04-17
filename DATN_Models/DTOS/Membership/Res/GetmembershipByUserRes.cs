@@ -17,6 +17,7 @@ namespace DATN_Models.DTOS.Membership.Res
         public byte[] MemberCodeBase64 { get; set; }
         public string MembershipName { get; set; }
         public decimal MembershipPrice { get; set; }
+        public decimal MembershipPriceNext { get; set; }
         public DateTime PurchasedAt { get; set; }
         public DateTime ExpiryDate { get; set; }
         public int MembershipLevel { get; set; }

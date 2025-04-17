@@ -130,7 +130,15 @@
     <value>ID Không tồn tại</value>
     <comment>(Rating)</comment>
   </data>
+  <data name="-2002" xml:space="preserve">
+    <value>ID Không tồn tại</value>
+    <comment>(Rating)</comment>
+  </data>
   <data name="-1996" xml:space="preserve">
+    <value>Giá trị rating không hợp lệ</value>
+    <comment>Rating thuộc khoảng 1 - 10</comment>
+  </data>
+  <data name="-2003" xml:space="preserve">
     <value>Giá trị rating không hợp lệ</value>
     <comment>Rating thuộc khoảng 1 - 10</comment>
   </data>
@@ -161,10 +169,17 @@
     <value>ID Không tồn tại (Khách Hàng)</value>
     <comment>Khách Hàng</comment>
   </data>
+  <data name="-2001" xml:space="preserve">
+    <value>ID Không tồn tại (Khách Hàng)</value>
+    <comment>Khách Hàng</comment>
+  </data>
   <data name="-2" xml:space="preserve">
     <value>lịch chiếu kông tồn tại</value>
   </data>
   <data name="-404" xml:space="preserve">
+    <value>không tìm thấy rạp chiếu phim</value>
+  </data>
+  <data name="-408" xml:space="preserve">
     <value>không tìm thấy rạp chiếu phim</value>
   </data>
   <data name="200" xml:space="preserve">
@@ -173,13 +188,26 @@
   <data name="-1800" xml:space="preserve">
     <value>Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100)</value>
   </data>
+  <data name="-1801" xml:space="preserve">
+    <value>Discount Percentage không hơp lệ (chỉ thuộc khoảng từ 1 - 100)</value>
+  </data>
   <data name="-1810" xml:space="preserve">
+    <value>Membership không tồn tại hoặc đã bị XOÁ</value>
+  </data>
+  <data name="-1811" xml:space="preserve">
     <value>Membership không tồn tại hoặc đã bị XOÁ</value>
   </data>
   <data name="-1993" xml:space="preserve">
     <value>Không tìm thấy movie</value>
   </data>
+  <data name="-2000" xml:space="preserve">
+    <value>Không tìm thấy movie</value>
+  </data>
   <data name="-1700" xml:space="preserve">
+    <value>Ngày tìm kiếm không hợp lệ </value>
+    <comment>lỗi  Ngày bắt đầu &gt; ngày kết thúc</comment>
+  </data>
+  <data name="-1701" xml:space="preserve">
     <value>Ngày tìm kiếm không hợp lệ </value>
     <comment>lỗi  Ngày bắt đầu &gt; ngày kết thúc</comment>
   </data>
@@ -187,25 +215,50 @@
     <value>Không có dữ liệu tìm kiếm</value>
     <comment>Theo khoảng ngày</comment>
   </data>
+  <data name="-1721" xml:space="preserve">
+    <value>Không có dữ liệu tìm kiếm</value>
+    <comment>Theo khoảng ngày</comment>
+  </data>
   <data name="-601" xml:space="preserve">
+    <value>{0} được yêu cầu.</value>
+  </data>
+  <data name="-608" xml:space="preserve">
     <value>{0} được yêu cầu.</value>
   </data>
   <data name="-602" xml:space="preserve">
     <value>Không được nhập quá {0} ký tự.</value>
   </data>
+  <data name="-609" xml:space="preserve">
+    <value>Không được nhập quá {0} ký tự.</value>
+  </data>
   <data name="-603" xml:space="preserve">
+    <value>Nhập ít nhất {0} ký tự.</value>
+  </data>
+  <data name="-610" xml:space="preserve">
     <value>Nhập ít nhất {0} ký tự.</value>
   </data>
   <data name="-604" xml:space="preserve">
     <value>Nhập trong khoảng từ {0} đến {1} ký tự.</value>
   </data>
+  <data name="-611" xml:space="preserve">
+    <value>Nhập trong khoảng từ {0} đến {1} ký tự.</value>
+  </data>
   <data name="-605" xml:space="preserve">
+    <value>Giá trị không được âm.</value>
+  </data>
+  <data name="-612" xml:space="preserve">
     <value>Giá trị không được âm.</value>
   </data>
   <data name="-606" xml:space="preserve">
     <value>Giá trị phải lớn hơn 0</value>
   </data>
+  <data name="-613" xml:space="preserve">
+    <value>Giá trị phải lớn hơn 0</value>
+  </data>
   <data name="-607" xml:space="preserve">
+    <value>Giá trị phải là số nguyên</value>
+  </data>
+  <data name="-614" xml:space="preserve">
     <value>Giá trị phải là số nguyên</value>
   </data>
   <data name="-125" xml:space="preserve">
@@ -217,10 +270,19 @@
   <data name="-405" xml:space="preserve">
     <value>Lỗi Resfresh Token</value>
   </data>
+  <data name="-409" xml:space="preserve">
+    <value>Lỗi Resfresh Token</value>
+  </data>
   <data name="-406" xml:space="preserve">
     <value>Mật Khẩu hoặc tài khoản không chính xác !</value>
   </data>
+  <data name="-410" xml:space="preserve">
+    <value>Mật Khẩu hoặc tài khoản không chính xác !</value>
+  </data>
   <data name="-407" xml:space="preserve">
+    <value>Order không tồn tại !</value>
+  </data>
+  <data name="-411" xml:space="preserve">
     <value>Order không tồn tại !</value>
   </data>
   <data name="-999998" xml:space="preserve">
@@ -230,6 +292,9 @@
     <value>Người dùng không tồn tại (đổi mật khẩu)</value>
   </data>
   <data name="-500" xml:space="preserve">
+    <value>Lỗi hệ thống</value>
+  </data>
+  <data name="-501" xml:space="preserve">
     <value>Lỗi hệ thống</value>
   </data>
 </root>
