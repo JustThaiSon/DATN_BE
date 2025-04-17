@@ -249,4 +249,7 @@
   <data name="-999902" xml:space="preserve">
     <value>Không thể thay đổi/xóa thông tin suất chiếu vì đã có người đặt vé</value>
   </data>
+  <data name="-2004" xml:space="preserve">
+    <value>Người dùng đã đánh giá/ comment phim này rồi</value>
+  </data>
 </root>

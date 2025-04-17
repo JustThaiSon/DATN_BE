@@ -76,6 +76,8 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IServiceTypeDAO, ServiceTypeDAO>();
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
             services.AddTransient<ICinemasDAO, CinemasDAO>();
+            services.AddTransient<IRoomTypeDAO, RoomTypeDAO>();
+
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();

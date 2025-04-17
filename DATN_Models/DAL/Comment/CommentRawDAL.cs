@@ -1,7 +1,8 @@
-﻿namespace DATN_Models.DTOS.Comments.Res
+namespace DATN_Models.DAL.Comment
 {
-    public class GetListCommentRes
+    public class CommentRawDAL
     {
+        // Tên thuộc tính phải khớp chính xác với tên cột trong kết quả SQL
         public Guid Id { get; set; }
         public Guid UserID { get; set; }
         public Guid MovieID { get; set; }

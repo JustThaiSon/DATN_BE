@@ -17,7 +17,7 @@ namespace DATN_BackEndApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CommentController : ControllerBase
+    public class TestController : ControllerBase
     {
         //private readonly CloudService _cloudService;
         private readonly ICommentDAO _commentDAO;
@@ -28,7 +28,7 @@ namespace DATN_BackEndApi.Controllers
         private readonly IRatingDAO _ratingDAO;
         private readonly IUltil _ultils;
 
-        public CommentController(
+        public TestController(
             ICommentDAO commentDAO,
             IConfiguration configuration,
             IUltil ultils,
@@ -47,6 +47,29 @@ namespace DATN_BackEndApi.Controllers
         #endregion
 
 
+        [HttpPost]
+        [Route("userinfo_test_nghia")]
+        //[BAuthorize]
+        public async Task<CommonResponse<dynamic>> userinfo(CreateCommentReq req)
+        {
+            var userId = await GetUserId();
+
+            var res = new CommonResponse<dynamic>();
+            var resultMapper = _mapper.Map<CreateCommentDAL>(req);
+
+            _commentDAO.CreateComment(userId, resultMapper, out int response);
+
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            res.Data = null;
+
+            return res;
+        }
+
+
+
+
+
         #region Comment_Nghia
 
         /* 
@@ -59,14 +82,11 @@ namespace DATN_BackEndApi.Controllers
         //[BAuthorize]
         public async Task<CommonResponse<dynamic>> AddComment(CreateCommentReq req)
         {
-            //var userId = await GetUserId();
+            var userId = await GetUserId();
 
             var res = new CommonResponse<dynamic>();
             var resultMapper = _mapper.Map<CreateCommentDAL>(req);
 
-
-
-            var userId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
             _commentDAO.CreateComment(userId, resultMapper, out int response);
 
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -162,9 +182,7 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddRatingDAL>(req);
-            //reqMapper.UserId = await GetUserId().ConfigureAwait(false);
-
-            reqMapper.UserId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
+            reqMapper.UserId = await GetUserId().ConfigureAwait(false);
             _ratingDAO.CreateRating(reqMapper, out int response);
 
             res.Data = null;

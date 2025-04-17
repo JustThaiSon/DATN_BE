@@ -2,6 +2,7 @@
 using DATN_Helpers.Common;
 using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
+using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Template.Req;
 using Microsoft.AspNetCore.Mvc;
 
@@ -82,6 +83,21 @@ namespace DATN_BackEndApi.Controllers
 
             return Ok(new { Message = "Language updated successfully.", LanguageCode = langCode });
         }
+        [HttpPost]
+        [Route("userinfo_test_nghia")]
+        //[BAuthorize]
+        public async Task<CommonResponse<dynamic>> userinfo(CreateCommentReq req)
+        {
+            var userId = HttpContextHelper.GetUserId();
+
+            var res = new CommonResponse<dynamic>();
+            res.ResponseCode = (int)ResponseCodeEnum.SUCCESS;
+            res.Message = MessageUtils.GetMessage((int)ResponseCodeEnum.SUCCESS, GetLanguageCode());
+            res.Data = new { UserId = userId };
+
+            return res;
+        }
+
         #region
         private string GetLanguageCode()
         {

@@ -277,6 +277,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Người dùng đã đánh giá/ comment phim này rồi.
+        /// </summary>
+        internal static string _2004 {
+            get {
+                return ResourceManager.GetString("-2004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to không tìm thấy rạp chiếu phim.
         /// </summary>
         internal static string _404 {

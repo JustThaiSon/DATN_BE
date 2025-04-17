@@ -628,11 +628,13 @@ namespace DATN_Models.DAO
                     {
                         item.Showtimes = item.ListShowTime.Split(',')
                             .Select(x => x.Split('|'))
-                            .Where(parts => Guid.TryParse(parts[0].Trim(), out _))
+                            .Where(parts => parts.Length >= 4 && Guid.TryParse(parts[0].Trim(), out _))
                             .Select(parts => new ShowtimesLangdingDAL
                             {
                                 Id = Guid.Parse(parts[0].Trim()),
-                                StartTime = TimeSpan.Parse(parts[1].Trim())
+                                StartTime = TimeSpan.Parse(parts[1].Trim()),
+                                RoomTypeId = Guid.Parse(parts[2].Trim()),
+                                RoomTypeName = parts[3].Trim()
                             })
                             .ToList();
                     }
