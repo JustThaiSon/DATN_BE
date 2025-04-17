@@ -93,7 +93,15 @@ namespace DATN_BackEndApi.Extension
             var serviceProvider = services.BuildServiceProvider();
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
 
-            services.AddIdentity<AppUsers, AppRoles>()
+            services.AddIdentity<AppUsers, AppRoles>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 0;
+            })
                .AddEntityFrameworkStores<DATN_Context>()
                .AddDefaultTokenProviders();
             services.AddSession(options =>
