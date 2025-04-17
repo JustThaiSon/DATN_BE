@@ -148,6 +148,12 @@ namespace DATN_Models.Mapper
             CreateMap<UserVoucherDAL, UserVoucherRes>().ReverseMap();
             CreateMap<UserVoucherDAL, ClaimVoucherReq>().ReverseMap();
             CreateMap<VoucherDAL, AvailableVoucherRes>().ReverseMap();
+
+            // VoucherUI mappings
+            CreateMap<VoucherUIDAL, VoucherUIRes>().ReverseMap();
+            CreateMap<VoucherUIDAL, VoucherUIReq>()
+                .ForMember(dest => dest.Photo, opt => opt.Ignore())
+                .ReverseMap();
             #endregion
 
             #region Genre

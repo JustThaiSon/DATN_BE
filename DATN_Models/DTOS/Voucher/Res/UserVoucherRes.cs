@@ -34,7 +34,10 @@ namespace DATN_Models.DTOS.Voucher.Res
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }
         public int UsedCount { get; set; }
+        public int ClaimedCount { get; set; }
+        public int MaxClaimCount { get; set; }
         public int Status { get; set; }
         public bool IsStackable { get; set; }
+        public int RemainingClaims { get { return MaxClaimCount - ClaimedCount; } }
     }
 }
