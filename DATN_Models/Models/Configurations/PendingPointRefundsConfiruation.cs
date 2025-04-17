@@ -9,10 +9,6 @@ namespace DATN_Models.Models.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.PhoneNumber)
-                .HasMaxLength(20)
-                .IsRequired(false);
-
             builder.Property(x => x.Email)
                 .HasMaxLength(100)
                 .IsRequired(false);
