@@ -106,7 +106,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Voucher này đã được nhận.
+        ///   Looks up a localized string similar to Voucher này đã được người dùng này nhận 1 lan rồi.
         /// </summary>
         internal static string _112 {
             get {
@@ -147,6 +147,15 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _116 {
             get {
                 return ResourceManager.GetString("-116", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Người dùng đã sử dụng hết voucher này.
+        /// </summary>
+        internal static string _117 {
+            get {
+                return ResourceManager.GetString("-117", resourceCulture);
             }
         }
         

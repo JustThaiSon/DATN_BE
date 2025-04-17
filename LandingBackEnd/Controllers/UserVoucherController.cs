@@ -147,20 +147,18 @@ namespace DATN_LandingPage.Controllers
         }
 
         [HttpPost]
-        [Route("IncreaseQuantity")]
-        public CommonResponse<string> IncreaseQuantity([FromBody] ClaimVoucherReq request)
+        [Route("CheckVoucherAvailability")]
+        public CommonResponse<string> CheckVoucherAvailability([FromBody] CheckVoucherAvailabilityReq request)
         {
             var res = new CommonResponse<string>();
 
-            // Sử dụng mapper để chuyển đổi từ ClaimVoucherReq sang UserVoucherDAL
-            // Trong trường hợp này, chúng ta chỉ cần các thông tin cơ bản
-            _userVoucherDAO.IncreaseUserVoucherQuantity(request.UserId, request.VoucherId, request.Quantity, out int response);
+            // Gọi trực tiếp đến stored procedure, mọi logic kiểm tra sẽ được xử lý trong SP
+            _userVoucherDAO.CheckVoucherAvailability(request.UserId, request.VoucherCode, out int response);
 
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
 
             return res;
         }
-
     }
 }

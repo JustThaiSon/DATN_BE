@@ -253,7 +253,7 @@
     <value>Người dùng đã đánh giá/ comment phim này rồi</value>
   </data>
   <data name="-112" xml:space="preserve">
-    <value>Voucher này đã được nhận</value>
+    <value>Voucher này đã được người dùng này nhận 1 lan rồi</value>
   </data>
   <data name="-113" xml:space="preserve">
     <value>Voucher không tồn tại</value>
@@ -266,5 +266,8 @@
   </data>
   <data name="-116" xml:space="preserve">
     <value>Voucher này chưa đến ngày sử dụng</value>
+  </data>
+  <data name="-117" xml:space="preserve">
+    <value>Người dùng đã sử dụng hết voucher này</value>
   </data>
 </root>

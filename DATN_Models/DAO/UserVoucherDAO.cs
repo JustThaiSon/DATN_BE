@@ -234,6 +234,32 @@ namespace DATN_Models.DAO
             }
         }
 
+        public void CheckVoucherAvailability(Guid userId, string voucherCode, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_UserId", userId);
+                pars[1] = new SqlParameter("@_VoucherCode", voucherCode);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_UserVoucher_CheckAvailavbility", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 }

@@ -18,7 +18,8 @@ namespace DATN_Models.DAO.Interface
         // Cập nhật trạng thái voucher của người dùng (đã sử dụng, hết hạn, hủy)
         void UpdateUserVoucherStatus(Guid id, int status, out int response);
 
-
+        // Kiểm tra tính xác minh của voucher
+        void CheckVoucherAvailability(Guid userId, string voucherCode, out int response);
 
         // Lấy danh sách voucher có thể nhận
         List<VoucherDAL> GetAvailableVouchers(int currentPage, int recordPerPage, out int totalRecord, out int response);
