@@ -28,10 +28,10 @@ namespace DATN_Models.DAO
             try
             {
                 var pars = new SqlParameter[6];
-                pars[0] = new SqlParameter("@_ServiceName", req.ServiceName);
-                pars[1] = new SqlParameter("@_Description", req.Description);
-                pars[2] = new SqlParameter("@_Price", req.Price);
-                pars[3] = new SqlParameter("@_CategoryName", req.CategoryName);
+                pars[0] = new SqlParameter("@_ServiceTypeID", req.ServiceTypeID);
+                pars[1] = new SqlParameter("@_ServiceName", req.ServiceName);
+                pars[2] = new SqlParameter("@_Description", req.Description);
+                pars[3] = new SqlParameter("@_Price", req.Price);
                 pars[4] = new SqlParameter("@_ImageUrl", req.ImageUrl);
                 pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
@@ -117,8 +117,8 @@ namespace DATN_Models.DAO
                 pars[1] = new SqlParameter("@_ServiceName", req.ServiceName);
                 pars[2] = new SqlParameter("@_Description", req.Description);
                 pars[3] = new SqlParameter("@_Price", req.Price);
-                pars[4] = new SqlParameter("@_CategoryName", req.CategoryName);
-                pars[5] = new SqlParameter("@_ImageUrl", req.ImageUrl);
+                pars[4] = new SqlParameter("@_ImageUrl", req.ImageUrl);
+                pars[5] = new SqlParameter("@_ServiceTypeID", req.ServiceTypeID);
                 pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 var result = db.ExecuteNonQuerySP("SP_Service_UpdateService", pars);

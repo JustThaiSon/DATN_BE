@@ -20,6 +20,6 @@ namespace DATN_Models.DTOS.Voucher.Req
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }
-        public bool Status { get; set; }
+        public int Status { get; set; }
     }
 }

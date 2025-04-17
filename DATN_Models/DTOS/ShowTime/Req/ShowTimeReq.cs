@@ -8,4 +8,15 @@
         public DateTime EndTime { get; set; }
         public int Status { get; set; }
     }
+
+
+
+
+    public class ShowtimeAutoDateReq
+    {
+        public Guid CinemasId { get; set; }
+        public Guid RoomId { get; set; }
+        public DateTime Date { get; set; }
+        public Guid MovieId { get; set; }
+    }
 }

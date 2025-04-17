@@ -26,36 +26,7 @@ namespace DATN_Models.DAO
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
-        public List<StatisticTopServicesDAL> GetTopServices(DateTime? startDate, DateTime? endDate, out int response)
-        {
-            response = 0;
-            DBHelper db = null;
 
-            try
-            {
-                var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@StartDate", startDate ?? (object)DBNull.Value);
-                pars[1] = new SqlParameter("@EndDate", endDate ?? (object)DBNull.Value);
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
-
-                db = new DBHelper(connectionString);
-                var result = db.GetListSP<StatisticTopServicesDAL>("SP_Statistic_TopServices", pars);
-
-                response = ConvertUtil.ToInt(pars[2].Value);
-
-                return result ?? new List<StatisticTopServicesDAL>();
-            }
-            catch (Exception ex)
-            {
-                response = -99;
-                throw new Exception("Error getting top services statistics", ex);
-            }
-            finally
-            {
-                if (db != null)
-                    db.Close();
-            }
-        }
 
         public List<StatisticSeatProfitabilityDAL> GetSeatProfitability(DateTime? startDate, DateTime? endDate, out int response)
         {
@@ -127,8 +98,8 @@ namespace DATN_Models.DAO
             try
             {
                 var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@StartDate", startDate ?? (object)DBNull.Value);
-                pars[1] = new SqlParameter("@EndDate", endDate ?? (object)DBNull.Value);
+                pars[0] = new SqlParameter("@_StartDate", startDate ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", endDate ?? (object)DBNull.Value);
                 pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
@@ -158,8 +129,8 @@ namespace DATN_Models.DAO
             try
             {
                 var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@StartDate", startDate ?? (object)DBNull.Value);
-                pars[1] = new SqlParameter("@EndDate", endDate ?? (object)DBNull.Value);
+                pars[0] = new SqlParameter("@_StartDate", startDate ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", endDate ?? (object)DBNull.Value);
                 pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
@@ -274,7 +245,9 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<StatisticBundledServicesDAL> GetBundledServices(DateTime? startDate, DateTime? endDate, out int response)
+
+
+        public List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -282,16 +255,16 @@ namespace DATN_Models.DAO
             try
             {
                 var pars = new SqlParameter[3];
-                pars[0] = new SqlParameter("@StartDate", startDate ?? (object)DBNull.Value);
-                pars[1] = new SqlParameter("@EndDate", endDate ?? (object)DBNull.Value);
+                pars[0] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
                 pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
-                var result = db.GetListSP<StatisticBundledServicesDAL>("SP_Statistic_BundledServices", pars);
+                var result = db.GetListSP<Statistic_SummaryDetailDAL>("SP_Statistic_Summary_DateRange", pars);
 
                 response = ConvertUtil.ToInt(pars[2].Value);
 
-                return result ?? new List<StatisticBundledServicesDAL>();
+                return result ?? new List<Statistic_SummaryDetailDAL>();
             }
             catch (Exception ex)
             {
@@ -305,14 +278,133 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<Statistic_SummaryDetailDAL> Summary_DateRange(DateTime? start_date, DateTime? end_date, out int response)
+
+
+
+
+        public List<Statistic_SummaryDetailDAL> Summary_DateRange_Detail(DateTime? start_date, DateTime? end_date, out int response)
         {
-            throw new NotImplementedException();
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<Statistic_SummaryDetailDAL>("SP_Statistic_Summary_DateRange_Detail", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+
+                return result ?? new List<Statistic_SummaryDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting bundled services statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
         }
 
-        public List<Statistic_MovieDetailDAL> Movie_DateRange(Guid MovieID, DateTime? start_date, DateTime? end_date, out int response)
+        public List<StatisticRevenueDetailDAL> GetRevenueDetail(Guid? cinemasId, DateTime? start_date, DateTime? end_date, out int response)
         {
-            throw new NotImplementedException();
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[4];
+                pars[0] = new SqlParameter("@_CinemasID", cinemasId ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<StatisticRevenueDetailDAL>("SP_Statistic_Revenue_Detail", pars);
+
+                response = ConvertUtil.ToInt(pars[3].Value);
+
+                return result ?? new List<StatisticRevenueDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting revenue detail statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<Statistic_MovieDetailDAL> Movie_DateRange(DateTime? start_date, DateTime? end_date, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<Statistic_MovieDetailDAL>("SP_Statistic_Movie", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+
+                return result ?? new List<Statistic_MovieDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting movie statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<Statistic_ServiceDetailDAL> Service_DateRange(DateTime? start_date, DateTime? end_date, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_StartDate", start_date ?? (object)DBNull.Value);
+                pars[1] = new SqlParameter("@_EndDate", end_date ?? (object)DBNull.Value);
+                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<Statistic_ServiceDetailDAL>("SP_Statistic_TopServiceDetail", pars);
+
+                response = ConvertUtil.ToInt(pars[2].Value);
+
+                return result ?? new List<Statistic_ServiceDetailDAL>();
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error getting service statistics", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
         }
 
         public Task Summary(out int response)

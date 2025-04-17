@@ -29,7 +29,7 @@ namespace DATN_Models.DAL.Voucher
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }
         public int UsedCount { get; set; }
-        public bool Status { get; set; }
+        public int Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

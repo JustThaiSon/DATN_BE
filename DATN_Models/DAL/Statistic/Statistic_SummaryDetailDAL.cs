@@ -8,4 +8,7 @@
         public long TotalTickets { get; set; }
         public long TotalServices { get; set; }
     }
+
+
+
 }
