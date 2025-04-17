@@ -106,6 +106,51 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Voucher này đã được nhận.
+        /// </summary>
+        internal static string _112 {
+            get {
+                return ResourceManager.GetString("-112", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voucher không tồn tại.
+        /// </summary>
+        internal static string _113 {
+            get {
+                return ResourceManager.GetString("-113", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voucher này không thể cộng dồn.
+        /// </summary>
+        internal static string _114 {
+            get {
+                return ResourceManager.GetString("-114", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voucher không hoạt động nữa (?).
+        /// </summary>
+        internal static string _115 {
+            get {
+                return ResourceManager.GetString("-115", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voucher này chưa đến ngày sử dụng.
+        /// </summary>
+        internal static string _116 {
+            get {
+                return ResourceManager.GetString("-116", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Showtime không tồn tại !.
         /// </summary>
         internal static string _120 {

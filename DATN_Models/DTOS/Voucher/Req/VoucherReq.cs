@@ -21,5 +21,6 @@ namespace DATN_Models.DTOS.Voucher.Req
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }
         public int Status { get; set; }
+        public bool IsStackable { get; set; } = false; // Mặc định là không stack được
     }
 }

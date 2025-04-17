@@ -143,6 +143,11 @@ namespace DATN_Models.Mapper
             CreateMap<VoucherDAL, VoucherReq>().ReverseMap();
             CreateMap<VoucherUsageDAL, VoucherUsageRes>().ReverseMap();
             CreateMap<VoucherUsageDAL, UseVoucherReq>().ReverseMap();
+
+            // UserVoucher mappings
+            CreateMap<UserVoucherDAL, UserVoucherRes>().ReverseMap();
+            CreateMap<UserVoucherDAL, ClaimVoucherReq>().ReverseMap();
+            CreateMap<VoucherDAL, AvailableVoucherRes>().ReverseMap();
             #endregion
 
             #region Genre

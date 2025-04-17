@@ -29,15 +29,16 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[11];
+                var pars = new SqlParameter[12];
                 pars[0] = new SqlParameter("@_Code", req.Code);
                 pars[1] = new SqlParameter("@_Description", req.Description);
                 pars[2] = new SqlParameter("@_DiscountType", req.DiscountType);
                 pars[3] = new SqlParameter("@_DiscountValue", req.DiscountValue);
-                pars[5] = new SqlParameter("@_StartDate", req.StartDate);
-                pars[6] = new SqlParameter("@_EndDate", req.EndDate);
-                pars[7] = new SqlParameter("@_MaxUsage", req.MaxUsage);
-                pars[8] = new SqlParameter("@_Status", req.Status);
+                pars[4] = new SqlParameter("@_StartDate", req.StartDate);
+                pars[5] = new SqlParameter("@_EndDate", req.EndDate);
+                pars[6] = new SqlParameter("@_MaxUsage", req.MaxUsage);
+                pars[7] = new SqlParameter("@_Status", req.Status);
+                pars[8] = new SqlParameter("@_IsStackable", req.IsStackable);
                 pars[9] = new SqlParameter("@_CreatedAt", DateTime.Now);
                 pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
@@ -64,7 +65,7 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[11];
+                var pars = new SqlParameter[12];
                 pars[0] = new SqlParameter("@_Id", req.Id);
                 pars[1] = new SqlParameter("@_Code", req.Code);
                 pars[2] = new SqlParameter("@_Description", req.Description);
@@ -74,8 +75,9 @@ namespace DATN_Models.DAO
                 pars[6] = new SqlParameter("@_EndDate", req.EndDate);
                 pars[7] = new SqlParameter("@_MaxUsage", req.MaxUsage);
                 pars[8] = new SqlParameter("@_Status", req.Status);
-                pars[9] = new SqlParameter("@_UpdatedAt", DateTime.Now);
-                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[9] = new SqlParameter("@_IsStackable", req.IsStackable);
+                pars[10] = new SqlParameter("@_UpdatedAt", DateTime.Now);
+                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Voucher_Update", pars);

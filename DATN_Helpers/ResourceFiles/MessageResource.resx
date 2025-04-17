@@ -252,4 +252,19 @@
   <data name="-2004" xml:space="preserve">
     <value>Người dùng đã đánh giá/ comment phim này rồi</value>
   </data>
+  <data name="-112" xml:space="preserve">
+    <value>Voucher này đã được nhận</value>
+  </data>
+  <data name="-113" xml:space="preserve">
+    <value>Voucher không tồn tại</value>
+  </data>
+  <data name="-114" xml:space="preserve">
+    <value>Voucher này không thể cộng dồn</value>
+  </data>
+  <data name="-115" xml:space="preserve">
+    <value>Voucher không hoạt động nữa (?)</value>
+  </data>
+  <data name="-116" xml:space="preserve">
+    <value>Voucher này chưa đến ngày sử dụng</value>
+  </data>
 </root>
