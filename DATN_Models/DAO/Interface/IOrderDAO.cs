@@ -1,4 +1,5 @@
 ﻿using DATN_Models.DAL.Orders;
+using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Order.Res;
 
 namespace DATN_Models.DAO.Interface
@@ -15,5 +16,7 @@ namespace DATN_Models.DAO.Interface
         List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response);
         GetOrderDetailLangdingDAL GetOrderDetailLangding(Guid orderId,out int response);
         CheckRefundDAL CheckRefund(Guid orderId, out int response);
+        GetInfoRefundRes RefundOrderById(RefundOrderByIdReq req, out int response);
+        List<GetInfoRefundRes> RefundByShowtime(RefundByShowtimeReq req, out int response);
     }
 }

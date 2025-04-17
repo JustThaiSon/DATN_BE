@@ -3,8 +3,10 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Order.Res;
 using DATN_Models.Models;
+using MailKit.Search;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -285,7 +287,7 @@ namespace DATN_Models.DAO
 
             return result;
         }
-    public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response)
+        public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -438,7 +440,7 @@ namespace DATN_Models.DAO
             }
             catch (Exception ex)
             {
-                throw ;
+                throw;
             }
             finally
             {
@@ -465,6 +467,58 @@ namespace DATN_Models.DAO
             }
             catch (Exception ex)
             {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public GetInfoRefundRes RefundOrderById(RefundOrderByIdReq req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderId", req.OrderId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetInfoRefundRes>("SP_Order_RefundOrderByOrderId", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<GetInfoRefundRes> RefundByShowtime(RefundByShowtimeReq req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_ShowTimeId", req.ShowtimeId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetInfoRefundRes>("SP_Order_RefundOrderByShowtime", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
                 throw;
             }
             finally
