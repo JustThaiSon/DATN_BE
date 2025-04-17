@@ -15,11 +15,16 @@ namespace DATN_Models.DAL.Voucher
         public int Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        
-        // Thông tin bổ sung (để hiển thị)
+
+        // Thông tin bổ sung về voucher
         public string VoucherCode { get; set; }
         public string VoucherDescription { get; set; }
         public string DiscountType { get; set; }
         public decimal DiscountValue { get; set; }
+        public int MaxUsage { get; set; }
+        public int UsedCount { get; set; }
+        public int ClaimedCount { get; set; }
+        public int MaxClaimCount { get; set; }
+        public bool IsStackable { get; set; }
     }
 }

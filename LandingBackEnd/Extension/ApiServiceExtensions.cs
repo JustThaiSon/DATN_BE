@@ -79,6 +79,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IRoomTypeDAO, RoomTypeDAO>();
             services.AddTransient<IUserVoucherDAO, UserVoucherDAO>();
             services.AddTransient<IVoucherDAO, VoucherDAO>();
+            services.AddTransient<IVoucherUIDAO, VoucherUIDAO>();
 
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
