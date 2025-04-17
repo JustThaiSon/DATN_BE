@@ -16,6 +16,7 @@ namespace DATN_Models.DAO.Interface
         Task<(List<EmployeeDAL>, int, int)> GetListEmployee(int currentPage, int recordPerPage);
         Task<(EmployeeDAL, int)> GetEmployeeDetail(Guid id);
         Task<int> ChangePassword(ChangePasswordReq req);
+        Task<int> ToggleLockoutEmployee(Guid id);
     }
 
 }
