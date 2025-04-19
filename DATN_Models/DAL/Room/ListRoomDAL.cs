@@ -14,6 +14,7 @@ namespace DATN_Models.DAL.Room
         public int TotalSeats { get; set; }
         public bool Isdeleted { get; set; }
         public RoomStatusEnum Status { get; set; }
+        public string RoomTypeName { get; set; }
     }
 
 
