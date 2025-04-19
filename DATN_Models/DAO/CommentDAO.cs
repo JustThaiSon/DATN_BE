@@ -7,6 +7,7 @@ using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Diagnostics;
 
 namespace DATN_Models.DAO
 {
@@ -45,7 +46,7 @@ namespace DATN_Models.DAO
             catch (Exception ex)
             {
                 response = -99;
-                throw;
+                Console.WriteLine($"Error in CreateComment: {ex.Message}");
             }
             finally
             {
@@ -75,7 +76,7 @@ namespace DATN_Models.DAO
             catch (Exception ex)
             {
                 response = -99;
-                throw;
+                Console.WriteLine($"Error in UpdateComment: {ex.Message}");
             }
             finally
             {
@@ -104,7 +105,7 @@ namespace DATN_Models.DAO
             catch (Exception ex)
             {
                 response = -99;
-                throw;
+                Console.WriteLine($"Error in DeleteComment: {ex.Message}");
             }
             finally
             {
@@ -128,15 +129,16 @@ namespace DATN_Models.DAO
                 pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
-                var result = db.GetListSP<ListCommentDAL>("SP_Comment_GetList", pars);
-  
+                // Sử dụng CommentRawDAL để lấy dữ liệu trực tiếp từ stored procedure
+                Debug.WriteLine("Executing SP_Comment_GetList with parameters:");
+                Debug.WriteLine($"@_MovieID: {MovieId}");
+                Debug.WriteLine($"@_CurrentPage: {currentPage}");
+                Debug.WriteLine($"@_RecordPerPage: {recordPerPage}");
+
+                var rawResult = db.GetListSP<CommentRawDAL>("SP_Comment_GetList", pars);
+
                 response = ConvertUtil.ToInt(pars[4].Value);
                 totalRecord = ConvertUtil.ToInt(pars[3].Value);
-
-
-
-
-
 
                 // Kiểm tra response code
                 if (response != 200)
@@ -144,16 +146,38 @@ namespace DATN_Models.DAO
                     Console.WriteLine($"SP returned error code: {response}");
                 }
 
-
-
-
+                // Chuyển đổi từ CommentRawDAL sang ListCommentDAL
+                var result = new List<ListCommentDAL>();
+                foreach (var item in rawResult)
+                {
+                    result.Add(new ListCommentDAL
+                    {
+                        Id = item.Id,
+                        UserID = item.UserID,
+                        MovieID = item.MovieID,
+                        Username = item.Username,
+                        Content = item.Content,
+                        ratingvalue = item.ratingvalue,
+                        CreateDate = item.CreateDate,
+                        Status = item.Status
+                    });
+                }
 
                 return result;
             }
             catch (Exception ex)
             {
                 response = -99;
-                throw;
+                Debug.WriteLine($"Error in GetListComment: {ex.Message}");
+                Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                if (ex.InnerException != null)
+                {
+                    Debug.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                    Debug.WriteLine($"Inner stack trace: {ex.InnerException.StackTrace}");
+                }
+
+                return new List<ListCommentDAL>();
             }
             finally
             {
@@ -168,7 +192,7 @@ namespace DATN_Models.DAO
 
 
 
-        
+
 
 
     }

@@ -58,7 +58,8 @@ namespace DATN_BackEndApi.Controllers
         [BAuthorize]
         public async Task<CommonResponse<dynamic>> AddComment(CreateCommentReq req)
         {
-            var userId = await GetUserId();
+            //var userId = await GetUserId();
+            var userId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
 
             var res = new CommonResponse<dynamic>();
             var resultMapper = _mapper.Map<CreateCommentDAL>(req);
@@ -153,12 +154,14 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("CreateRating")]
-        [BAuthorize]
+        //[BAuthorize]
         public async Task<CommonResponse<dynamic>> CreateRating(AddRatingReq req)
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddRatingDAL>(req);
-            reqMapper.UserId = await GetUserId().ConfigureAwait(false);
+            //reqMapper.UserId = await GetUserId().ConfigureAwait(false);
+            reqMapper.UserId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
+
             _ratingDAO.CreateRating(reqMapper, out int response);
 
             res.Data = null;

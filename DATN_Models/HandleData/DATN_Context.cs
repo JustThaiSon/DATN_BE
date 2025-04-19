@@ -45,7 +45,7 @@ namespace DATN_Models.HandleData
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderServices> OrderServices { get; set; }
-         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Ratings> Ratings { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
@@ -71,6 +71,7 @@ namespace DATN_Models.HandleData
 
 
         public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<UserVoucher> UserVouchers { get; set; }
         public DbSet<VoucherUsage> VoucherUsages { get; set; }
         public DbSet<AgeRatings> AgeRatings { get; set; }
         public DbSet<MovieFormats> MovieFormats { get; set; }

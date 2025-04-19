@@ -1,24 +1,29 @@
-﻿using System;
+﻿﻿using System;
 
-namespace DATN_Models.DAL.Voucher
+namespace DATN_Models.DTOS.Voucher.Res
 {
-    public class VoucherUsageDAL
+    public class UserVoucherRes
     {
         public Guid Id { get; set; }
         public Guid VoucherId { get; set; }
-        public Guid? UserId { get; set; }
-        public Guid? OrderId { get; set; }
-        public DateTime UsedAt { get; set; }
+        public Guid UserId { get; set; }
+        public DateTime ClaimedAt { get; set; }
+        public DateTime ExpiryDate { get; set; }
         public int Status { get; set; }
+        public int Quantity { get; set; }
+        public int UsedQuantity { get; set; }
+        public int RemainingQuantity { get { return Quantity - UsedQuantity; } }
 
-        // Thêm các thông tin bổ sung (để hiển thị)
+        // Thông tin bổ sung
         public string VoucherCode { get; set; }
+        public string VoucherDescription { get; set; }
+        public string DiscountType { get; set; }
+        public decimal DiscountValue { get; set; }
         public string UserName { get; set; }
-        public string OrderCode { get; set; }
+        public string UserEmail { get; set; }
     }
 
-
-    public class VoucherDAL
+    public class AvailableVoucherRes
     {
         public Guid Id { get; set; }
         public string Code { get; set; }
@@ -33,7 +38,6 @@ namespace DATN_Models.DAL.Voucher
         public int MaxClaimCount { get; set; }
         public int Status { get; set; }
         public bool IsStackable { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public int RemainingClaims { get { return MaxClaimCount - ClaimedCount; } }
     }
 }

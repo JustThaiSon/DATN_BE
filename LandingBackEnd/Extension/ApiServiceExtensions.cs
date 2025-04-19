@@ -76,6 +76,11 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IServiceTypeDAO, ServiceTypeDAO>();
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
             services.AddTransient<ICinemasDAO, CinemasDAO>();
+            services.AddTransient<IRoomTypeDAO, RoomTypeDAO>();
+            services.AddTransient<IUserVoucherDAO, UserVoucherDAO>();
+            services.AddTransient<IVoucherDAO, VoucherDAO>();
+            services.AddTransient<IVoucherUIDAO, VoucherUIDAO>();
+
             // AddScoped
             services.AddScoped<IUltil, Ultil>();
             services.AddScoped<WebSocketService>();
@@ -88,7 +93,15 @@ namespace DATN_BackEndApi.Extension
             var serviceProvider = services.BuildServiceProvider();
             var httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
 
-            services.AddIdentity<AppUsers, AppRoles>()
+            services.AddIdentity<AppUsers, AppRoles>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 0;
+            })
                .AddEntityFrameworkStores<DATN_Context>()
                .AddDefaultTokenProviders();
             services.AddSession(options =>

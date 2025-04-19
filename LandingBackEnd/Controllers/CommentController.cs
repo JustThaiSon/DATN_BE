@@ -3,6 +3,7 @@ using DATN_BackEndApi.Extension;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
+using DATN_LandingPage.Extension;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Rating;
 using DATN_Models.DAO.Interface;
@@ -58,11 +59,14 @@ namespace DATN_BackEndApi.Controllers
         //[BAuthorize]
         public async Task<CommonResponse<dynamic>> AddComment(CreateCommentReq req)
         {
-            var userId = await GetUserId();
+            //var userId = await GetUserId();
 
             var res = new CommonResponse<dynamic>();
             var resultMapper = _mapper.Map<CreateCommentDAL>(req);
 
+
+
+            var userId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
             _commentDAO.CreateComment(userId, resultMapper, out int response);
 
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -158,7 +162,9 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddRatingDAL>(req);
-            reqMapper.UserId = await GetUserId().ConfigureAwait(false);
+            //reqMapper.UserId = await GetUserId().ConfigureAwait(false);
+
+            reqMapper.UserId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
             _ratingDAO.CreateRating(reqMapper, out int response);
 
             res.Data = null;
