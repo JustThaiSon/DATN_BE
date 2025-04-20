@@ -15,7 +15,7 @@ namespace DATN_Models.DTOS.Voucher.Res
         public int Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-
+        
         // Thông tin bổ sung về voucher
         public string VoucherCode { get; set; }
         public string VoucherDescription { get; set; }
