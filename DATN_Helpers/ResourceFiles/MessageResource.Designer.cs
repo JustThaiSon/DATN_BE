@@ -88,24 +88,6 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Voucher đã hết hạn.
-        /// </summary>
-        internal static string _110 {
-            get {
-                return ResourceManager.GetString("-110", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Voucher này đã đạt giới hạn sử dụng.
-        /// </summary>
-        internal static string _111 {
-            get {
-                return ResourceManager.GetString("-111", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Showtime không tồn tại !.
         /// </summary>
         internal static string _120 {
@@ -295,6 +277,24 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mật Khẩu hoặc tài khoản không chính xác !.
+        /// </summary>
+        internal static string _406 {
+            get {
+                return ResourceManager.GetString("-406", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order không tồn tại !.
+        /// </summary>
+        internal static string _407 {
+            get {
+                return ResourceManager.GetString("-407", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lỗi hệ thống.
         /// </summary>
         internal static string _500 {
@@ -368,8 +368,6 @@ namespace DATN_Helpers.ResourceFiles {
         
         /// <summary>
         ///   Looks up a localized string similar to Mật khẩu có thể không đúng.
-        ///   Looks up a localized string similar to Thành Công.
-        ///   Looks up a localized string similar to Thành công.
         /// </summary>
         internal static string _999998 {
             get {

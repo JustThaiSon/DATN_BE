@@ -14,6 +14,7 @@ namespace DATN_Models.Models.Configurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.PaymentMethodName).HasMaxLength(1000).IsRequired();
+            builder.Property(x => x.LogoUrl).HasMaxLength(1000).IsRequired();
         }
     }
 }

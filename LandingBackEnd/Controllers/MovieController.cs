@@ -3,6 +3,7 @@ using DATN_BackEndApi.VNPay;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
 using DATN_Helpers.Extensions;
+using DATN_LandingPage.Extension;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.ServiceType;
@@ -11,6 +12,7 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.DTOS.Seat.Res;
 using DATN_Models.DTOS.SeatType.Res;
 using DATN_Models.DTOS.Service.Response;
@@ -104,10 +106,9 @@ namespace DATN_LandingPage.Controllers
         [Route("CreateOrder")]
         public async Task<CommonResponse<string>> CreateOrder(CreateOrderReq req)
         {
-            var userId = HttpContextHelper.GetUserId();
             var res = new CommonResponse<string>();
             var reqpMapper = _mapper.Map<CreateOrderDAL>(req);
-            var result = _orderDAO.CreateOrder(userId, reqpMapper, out int responseCode);
+            var result = _orderDAO.CreateOrder(reqpMapper, out int responseCode);
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.ResponseCode = responseCode;
             if (result != null)
@@ -169,7 +170,33 @@ namespace DATN_LandingPage.Controllers
             res.TotalRecord = totalRecord;
             return res;
         }
-     
+
+        [HttpGet]
+        [Route("GetMovieByShowTime")]
+        public async Task<CommonResponse<GetMovieByShowTimeRes>> GetMovieByShowTime(Guid showtimeId)
+        {
+            var res = new CommonResponse<GetMovieByShowTimeRes>();
+            var result = _movieDAO.GetMovieByShowTime(showtimeId, out int response);
+            var resultMapper = _mapper.Map<GetMovieByShowTimeRes>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
+        [HttpGet]
+        [Route("GetPayment")]
+        public async Task<CommonResponse<List<GetPaymentRes>>> GetPayment()
+        {
+            var res = new CommonResponse<List<GetPaymentRes>>();
+            var result = _orderDAO.GetPayment(out int response);
+            var resultMapper = _mapper.Map<List<GetPaymentRes>>(result);
+            res.Data = resultMapper;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            return res;
+        }
+
         [HttpPost]
         [Route("create-payment")]
         public async Task<CommonResponse<string>> CreatePayment([FromBody] OrderInfo orderInfo)
@@ -189,13 +216,6 @@ namespace DATN_LandingPage.Controllers
             }
             return res;
         }
-
-
-
-
-
-
-
         [HttpGet]
         [Route("payment-callback")]
         public IActionResult PaymentCallback()
@@ -206,8 +226,57 @@ namespace DATN_LandingPage.Controllers
             var queryString = $"?vnp_ResponseCode={response.VnPayResponseCode}&vnp_TxnRef={response.OrderId}";
             return Redirect(redirectUrl + queryString);
         }
-
-
-
+        [BAuthorize]
+        [HttpGet]
+        [Route("GetListHistoryOrderByUser")]
+        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser()
+        {
+            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _orderDAO.GetListHistoryOrderByUser(userId, out int response);
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [BAuthorize]
+        [HttpGet]
+        [Route("GetPastShowTimesByTimeFilter")]
+        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetPastShowTimesByTimeFilter(string filter)
+        {
+            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var userId = HttpContextHelper.GetUserId();
+            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, out int response);
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        //[BAuthorize]
+        [HttpGet]
+        [Route("GetOrderDetailLangding")]
+        public async Task<CommonResponse<GetOrderDetailLangdingRes>> GetOrderDetailLangdingRes(Guid orderId)
+        {
+            var res = new CommonResponse<GetOrderDetailLangdingRes>();
+            var result = _orderDAO.GetOrderDetailLangding(orderId, out int response);
+            var resultMapper = _mapper.Map<GetOrderDetailLangdingRes>(result);
+            resultMapper.OrderCodeB64 = _mailService.GenerateQrCode(resultMapper.OrderCode);
+            res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [HttpGet]
+        [Route("CheckRefund")]
+        public async Task<CommonResponse<CheckRefundRes>> CheckRefund(Guid orderId)
+        {
+            var res = new CommonResponse<CheckRefundRes>();
+            var result = _orderDAO.CheckRefund(orderId, out int response);
+            var resultMapper = _mapper.Map<CheckRefundRes>(result);
+            res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
     }
 }

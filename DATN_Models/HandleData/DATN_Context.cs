@@ -45,7 +45,7 @@ namespace DATN_Models.HandleData
         public DbSet<OrderDetails> OrderDetails { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderServices> OrderServices { get; set; }
-        // public DbSet<PaymentMethod> PaymentMethods { get; set; }
+         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<Ratings> Ratings { get; set; }
         public DbSet<Rooms> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
@@ -60,6 +60,10 @@ namespace DATN_Models.HandleData
         public DbSet<ErrorLog> ErrorLog { get; set; }
         public DbSet<ParamConfig> ParamConfig { get; set; }
         public DbSet<ChangeLog> ChangeLogs { get; set; }
+        public DbSet<Membership> Membership { get; set; }
+        public DbSet<MembershipBenefit> MembershipBenefit { get; set; }
+        public DbSet<MembershipPurchase> MembershipPurchase { get; set; }
+        public DbSet<UserMembership> UserMembership { get; set; }
 
 
 
