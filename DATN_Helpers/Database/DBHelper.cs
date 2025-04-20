@@ -1,6 +1,7 @@
 ﻿using DATN_Helpers.Extensions;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Data.Common;
 
 namespace DATN_Helpers.Database
 {
@@ -951,5 +952,61 @@ namespace DATN_Helpers.Database
             return (result1, result2);
         }
         #endregion
+
+
+        public DataSet ExecuteDataSetSP(string spName, SqlParameter[] pars)
+        {
+            SqlConnection conn = null;
+            try
+            {
+                // Đảm bảo connection không null và đã mở
+                if (_ConnectionToDB == null || _ConnectionToDB.State != ConnectionState.Open)
+                {
+                    conn = OpenConnection();
+                }
+
+                // Sử dụng kết nối đã được xác nhận
+                SqlConnection activeConnection = conn ?? _ConnectionToDB;
+
+                // Kiểm tra lại một lần nữa
+                if (activeConnection == null || activeConnection.State != ConnectionState.Open)
+                {
+                    throw new InvalidOperationException("Không thể thiết lập kết nối database");
+                }
+
+                SqlCommand cmd = new SqlCommand(spName, activeConnection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+
+                var userId = HttpContextHelper.GetUserId();
+                if (userId != Guid.Empty)
+                {
+                    SetSessionContext(userId);
+                }
+
+                if (pars != null)
+                {
+                    cmd.Parameters.AddRange(pars);
+                }
+
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                DataSet ds = new DataSet();
+                adapter.Fill(ds);
+
+                return ds;
+            }
+            catch (Exception ex)
+            {
+                throw; // Ném lại ngoại lệ gốc để giữ stack trace
+            }
+            finally
+            {
+                if (conn != null)
+                {
+                    CloseConnection(conn);
+                }
+            }
+        }
     }
 }

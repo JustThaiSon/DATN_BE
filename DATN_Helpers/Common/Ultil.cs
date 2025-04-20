@@ -130,5 +130,10 @@ namespace DATN_Helpers.Common
                 throw;
             }
         }
+
+        public string FormatMoney(long amount)
+        {
+            return string.Format("{0:n0} VNĐ", amount);
+        }
     }
 }
