@@ -9,6 +9,7 @@ using DATN_Models.DAL.Customer;
 using DATN_Models.DAL.Employee;
 using DATN_Models.DAL.Genre;
 using DATN_Models.DAL.Membership;
+using DATN_Models.DAL.MembershipBenefit;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Orders;
@@ -41,6 +42,8 @@ using DATN_Models.DTOS.Genre.Req;
 using DATN_Models.DTOS.Genre.Res;
 using DATN_Models.DTOS.Logs.Res;
 using DATN_Models.DTOS.Membership.Res;
+using DATN_Models.DTOS.MembershipBenefit.Req;
+using DATN_Models.DTOS.MembershipBenefit.Res;
 using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
@@ -66,6 +69,7 @@ using DATN_Models.DTOS.Statistic.Res;
 using DATN_Models.DTOS.Voucher.Req;
 using DATN_Models.DTOS.Voucher.Res;
 using DATN_Models.Models;
+using System.Text.Json;
 using static DATN_Models.DTOS.Statistic.Res.StatisticRes;
 
 namespace DATN_Models.Mapper
@@ -137,8 +141,9 @@ namespace DATN_Models.Mapper
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
             CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
             CreateMap<GetmembershipByUserDAL, GetmembershipByUserRes>().ReverseMap();
-            CreateMap<MembershipBenefitRes, MembershipBenefitDAL>().ReverseMap();
+            CreateMap<DATN_Models.DTOS.Membership.Res.MembershipBenefitRes, DATN_Models.DAL.Membership.MembershipBenefitDAL>().ReverseMap();
             CreateMap<UserMembershipDetailsDAL, UserMembershipDetailsRes>().ReverseMap();
+            CreateMap<MembershipDAL, MembershipRes>().ReverseMap();
             #endregion
 
             #region Voucher
@@ -203,7 +208,18 @@ namespace DATN_Models.Mapper
             CreateMap<UpdateSeatTypeMultiplierDAL, UpdateSeatTypeMultiplierReq>().ReverseMap();
             #endregion
 
+            #region MembershipBenefit
+            CreateMap<DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL, DATN_Models.DTOS.MembershipBenefit.Res.MembershipBenefitRes>();
 
+            CreateMap<DATN_Models.DTOS.MembershipBenefit.Req.MembershipBenefitReq, DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL>()
+                .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
+                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
+
+            CreateMap<DATN_Models.DTOS.MembershipBenefit.Req.UpdateMembershipBenefitReq, DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL>()
+                .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
+                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
+
+            #endregion
 
 
 
@@ -287,6 +303,49 @@ namespace DATN_Models.Mapper
             CreateMap<Counter_NowPlayingMovies_GetList_DTO, Counter_NowPlayingMovies_GetList_DAL>().ReverseMap();
 
 
+
+
+
+
+
+
+
+
+
+
         }
+
+        private string CreateConfigJson(DATN_Models.DTOS.MembershipBenefit.Req.MembershipBenefitReq req)
+        {
+            switch (req.BenefitType)
+            {
+                case "Discount":
+                    return JsonSerializer.Serialize(new
+                    {
+                        Target = req.Target,
+                        Value = req.Value
+                    });
+                case "PointBonus":
+                    return JsonSerializer.Serialize(new
+                    {
+                        Multiplier = req.Multiplier
+                    });
+                case "Service":
+                    return JsonSerializer.Serialize(new
+                    {
+                        ServiceId = req.ServiceId,
+                        Quantity = req.Quantity,
+                        Limit = req.Limit
+                    });
+                case "UsePoint":
+                    return JsonSerializer.Serialize(new
+                    {
+                        UsePoint = req.UsePointValue
+                    });
+                default:
+                    return "{}";
+            }
+        }
+
     }
 }

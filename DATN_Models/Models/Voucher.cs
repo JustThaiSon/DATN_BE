@@ -9,6 +9,7 @@ namespace DATN_Models.Models
         public string Description { get; set; }
         public string DiscountType { get; set; } // "PERCENT" hoặc "FIXED"
         public decimal DiscountValue { get; set; }
+        public decimal MinOrderValue { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }
@@ -17,6 +18,7 @@ namespace DATN_Models.Models
         public int MaxClaimCount { get; set; }
         public int Status { get; set; }
         public bool IsStackable { get; set; }
+        public int VoucherType { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

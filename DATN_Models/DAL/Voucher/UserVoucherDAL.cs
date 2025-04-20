@@ -18,6 +18,8 @@ namespace DATN_Models.DAL.Voucher
         public string VoucherDescription { get; set; }
         public string DiscountType { get; set; }
         public decimal DiscountValue { get; set; }
+        public int VoucherType { get; set; }
+        public decimal MinOrderValue { get; set; } // Giá trị đơn hàng tối thiểu để áp dụng voucher
         public string UserName { get; set; }
         public string UserEmail { get; set; }
     }
