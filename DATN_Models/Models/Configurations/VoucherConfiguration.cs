@@ -29,6 +29,10 @@ namespace DATN_Models.Models.Configurations
                 .IsRequired()
                 .HasColumnType("decimal(10,2)");
 
+            builder.Property(x => x.MinOrderValue)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)");
+
             builder.Property(x => x.StartDate)
                 .IsRequired();
 

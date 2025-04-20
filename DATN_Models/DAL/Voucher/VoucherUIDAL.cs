@@ -21,6 +21,7 @@ namespace DATN_Models.DAL.Voucher
         public string VoucherDescription { get; set; }
         public string DiscountType { get; set; }
         public decimal DiscountValue { get; set; }
+        public decimal MinOrderValue { get; set; } // Thêm trường MinOrderValue
         public int MaxUsage { get; set; }
         public int UsedCount { get; set; }
         public int ClaimedCount { get; set; }
