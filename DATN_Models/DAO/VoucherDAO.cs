@@ -29,7 +29,7 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[12];
+                var pars = new SqlParameter[13];
                 pars[0] = new SqlParameter("@_Code", req.Code);
                 pars[1] = new SqlParameter("@_Description", req.Description);
                 pars[2] = new SqlParameter("@_DiscountType", req.DiscountType);
@@ -40,12 +40,13 @@ namespace DATN_Models.DAO
                 pars[7] = new SqlParameter("@_Status", req.Status);
                 pars[8] = new SqlParameter("@_IsStackable", req.IsStackable);
                 pars[9] = new SqlParameter("@_CreatedAt", DateTime.Now);
-                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[10] = new SqlParameter("@_VoucherType", req.VoucherType);
+                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Voucher_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[10].Value);
+                response = ConvertUtil.ToInt(pars[11].Value);
             }
             catch (Exception ex)
             {
@@ -65,7 +66,7 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[12];
+                var pars = new SqlParameter[13];
                 pars[0] = new SqlParameter("@_Id", req.Id);
                 pars[1] = new SqlParameter("@_Code", req.Code);
                 pars[2] = new SqlParameter("@_Description", req.Description);
@@ -77,12 +78,13 @@ namespace DATN_Models.DAO
                 pars[8] = new SqlParameter("@_Status", req.Status);
                 pars[9] = new SqlParameter("@_IsStackable", req.IsStackable);
                 pars[10] = new SqlParameter("@_UpdatedAt", DateTime.Now);
-                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[11] = new SqlParameter("@_VoucherType", req.VoucherType);
+                pars[12] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Voucher_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[10].Value);
+                response = ConvertUtil.ToInt(pars[12].Value);
             }
             catch (Exception ex)
             {

@@ -58,7 +58,7 @@ namespace DATN_Models.DTOS.Statistic.Res
         {
             public string GenreName { get; set; }
             public int TotalShowtimes { get; set; }
-            public decimal TotalRevenue { get; set; }
+            public int TotalBookedSeats { get; set; }
         }
 
         // StatisticPeakHoursRes.cs
