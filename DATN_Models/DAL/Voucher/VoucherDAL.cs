@@ -33,6 +33,7 @@ namespace DATN_Models.DAL.Voucher
         public int MaxClaimCount { get; set; }
         public int Status { get; set; }
         public bool IsStackable { get; set; }
+        public int VoucherType { get; set; } = 0; // Mặc định là 0
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

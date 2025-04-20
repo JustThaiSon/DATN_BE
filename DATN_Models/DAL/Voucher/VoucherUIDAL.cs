@@ -26,5 +26,6 @@ namespace DATN_Models.DAL.Voucher
         public int ClaimedCount { get; set; }
         public int MaxClaimCount { get; set; }
         public bool IsStackable { get; set; }
+        public int VoucherType { get; set; }
     }
 }

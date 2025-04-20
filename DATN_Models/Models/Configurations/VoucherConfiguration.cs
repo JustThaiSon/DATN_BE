@@ -50,6 +50,9 @@ namespace DATN_Models.Models.Configurations
                 .IsRequired()
                 .HasDefaultValue(false);
 
+            builder.Property(x => x.VoucherType)
+                .IsRequired();
+
             builder.Property(x => x.CreatedAt)
                 .IsRequired()
                 .HasDefaultValueSql("GETDATE()");
