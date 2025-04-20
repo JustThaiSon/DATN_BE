@@ -14,5 +14,14 @@ namespace DATN_Models.DTOS.Room.Res
         public int TotalSeats { get; set; }
         public bool Isdeleted { get; set; }
         public RoomStatusEnum Status { get; set; }
+        public string RoomTypeName { get; set; }
+    }
+
+    public class GetListRoomByCinemaRes
+    {
+        public Guid Id { get; set; }
+        public Guid CinemasId { get; set; }
+        public string Name { get; set; }
+        public string RoomType { get; set; }
     }
 }

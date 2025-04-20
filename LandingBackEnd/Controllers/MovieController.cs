@@ -252,7 +252,7 @@ namespace DATN_LandingPage.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
         }
-        //[BAuthorize]
+        [BAuthorize]
         [HttpGet]
         [Route("GetOrderDetailLangding")]
         public async Task<CommonResponse<GetOrderDetailLangdingRes>> GetOrderDetailLangdingRes(Guid orderId)
@@ -274,6 +274,39 @@ namespace DATN_LandingPage.Controllers
             var result = _orderDAO.CheckRefund(orderId, out int response);
             var resultMapper = _mapper.Map<CheckRefundRes>(result);
             res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [HttpPost]
+        [Route("RefundOrder")]
+        public async Task<CommonResponse<GetInfoRefundRes>> RefundOrder(RefundOrderByIdReq req)
+        {
+            var res = new CommonResponse<GetInfoRefundRes>();
+            var result = _orderDAO.RefundOrderById(req, out int response);
+            if (result != null)
+            {
+                await _mailService.SendMailRefund(result);
+            }
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [HttpPost]
+        [Route("RefundByShowtime")]
+        public async Task<CommonResponse<List<GetInfoRefundRes>>> RefundByShowtime(RefundByShowtimeReq req)
+        {
+            var res = new CommonResponse<List<GetInfoRefundRes>>();
+            var result = _orderDAO.RefundByShowtime(req, out int response);
+            if (result != null)
+            {
+                foreach (var item in result)
+                {
+                    await _mailService.SendMailRefund(item);
+                }
+            }
+            res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;

@@ -1,8 +1,12 @@
-﻿using DATN_Helpers.Common;
+﻿using Azure;
+using DATN_Helpers.Common;
 using DATN_Helpers.Database;
+using DATN_Models.DAL.Movie;
+using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.ShowTime;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.ShowTime.Req;
+using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -21,6 +25,52 @@ namespace DATN_Models.DAO
 
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
+
+
+        public ShowtimeAutoDateDAL AutoDateNghia(ShowtimeAutoDateReq showtimereq, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[5];
+                pars[0] = new SqlParameter("@_CinemaId", showtimereq.CinemasId);
+                pars[1] = new SqlParameter("@_RoomId", showtimereq.RoomId);
+                pars[2] = new SqlParameter("@_Date", showtimereq.Date);
+                pars[3] = new SqlParameter("@_MovieID", showtimereq.MovieId);
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<ShowtimeAutoDateDAL>("SP_ShowTime_AutoDate_Nghia", pars);
+                response = ConvertUtil.ToInt(pars[4].Value);
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         public void CreateShowTime(ShowTimeReq request, out int response)
         {
             response = 0; // Khởi tạo mã phản hồi
@@ -67,12 +117,13 @@ namespace DATN_Models.DAO
             try
             {
                 // Tạo danh sách tham số cho Stored Procedure
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[6];
                 pars[0] = new SqlParameter("@_ShowTimeId", ShowTimeId);
-                pars[1] = new SqlParameter("@_RoomId", request.RoomId);
-                pars[2] = new SqlParameter("@_StartTime", request.StartTime);
-                pars[3] = new SqlParameter("@_EndTime", request.EndTime);
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int)
+                pars[1] = new SqlParameter("@_MovieId", ShowTimeId);
+                pars[2] = new SqlParameter("@_RoomId", request.RoomId);
+                pars[3] = new SqlParameter("@_StartTime", request.StartTime);
+                pars[4] = new SqlParameter("@_EndTime", request.EndTime);
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.Output
                 };
@@ -82,7 +133,7 @@ namespace DATN_Models.DAO
                 db.ExecuteNonQuerySP("SP_ShowTime_Update", pars);
 
                 // Lấy mã phản hồi từ tham số OUTPUT
-                response = Convert.ToInt32(pars[4].Value);
+                response = Convert.ToInt32(pars[5].Value);
 
                 // Log thông tin để debug
                 if (response == -1) // Lỗi trùng lịch
@@ -91,7 +142,7 @@ namespace DATN_Models.DAO
                     var checkPars = new SqlParameter[1];
                     checkPars[0] = new SqlParameter("@_RoomId", request.RoomId);
                     var existingShowtimes = db.GetListSP<ShowTimeDAL>("SP_ShowTime_GetListByRoom", checkPars);
-                    
+
                     if (existingShowtimes != null)
                     {
                         foreach (var showtime in existingShowtimes)
@@ -304,5 +355,41 @@ namespace DATN_Models.DAO
                     db.Close(); // Đóng kết nối
             }
         }
+
+
+
+
+        public void ShowtimeCronjob()
+        {
+            DBHelper db = null;
+
+            try
+            {
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_ShowTime_Cronjob_Nghia");
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error deleting show time", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

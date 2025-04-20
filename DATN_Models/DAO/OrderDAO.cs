@@ -3,8 +3,10 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Database;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Order.Res;
 using DATN_Models.Models;
+using MailKit.Search;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -163,20 +165,21 @@ namespace DATN_Models.DAO
                 string servicesXml = ConvertServicesToXml(req.Services);
                 string ticketsXml = ConvertTicketsToXml(req.Tickets);
 
-                var pars = new SqlParameter[10];
+                var pars = new SqlParameter[11];
                 pars[0] = new SqlParameter("@UserId", req.UserId == Guid.Empty ? DBNull.Value : req.UserId);
                 pars[1] = new SqlParameter("@_Email", req.Email);
                 pars[2] = new SqlParameter("@IsAnonymous", req.IsAnonymous);
-                pars[3] = new SqlParameter("@PaymentId", req.PaymentId);
-                pars[4] = new SqlParameter("@Services", servicesXml);
-                pars[5] = new SqlParameter("@Tickets", ticketsXml);
-                pars[6] = new SqlParameter("@TransactionCode", req.TransactionCode);
-                pars[7] = new SqlParameter("@_VoucherCode", req.VoucherCode);
-                pars[8] = new SqlParameter("@_TotalPriceMethod", req.TotalPriceMethod);
-                pars[9] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[3] = new SqlParameter("@_UsePoint", req.PointUse);
+                pars[4] = new SqlParameter("@PaymentId", req.PaymentId);
+                pars[5] = new SqlParameter("@Services", servicesXml);
+                pars[6] = new SqlParameter("@Tickets", ticketsXml);
+                pars[7] = new SqlParameter("@TransactionCode", req.TransactionCode);
+                pars[8] = new SqlParameter("@_VoucherCode", req.VoucherCode);
+                pars[9] = new SqlParameter("@_TotalPriceMethod", req.TotalPriceMethod);
+                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<OrderMailResultDAL>("SP_Order_CreateOrder", pars);
-                response = ConvertUtil.ToInt(pars[9].Value);
+                response = ConvertUtil.ToInt(pars[10].Value);
                 return result;
             }
             catch (Exception ex)
@@ -265,6 +268,7 @@ namespace DATN_Models.DAO
                             ConcessionAmount = ConvertUtil.ToLong(row["ConcessionAmount"]),
                             TotalPrice = ConvertUtil.ToLong(row["TotalPrice"]),
                             Email = ConvertUtil.ToString(row["Email"]),
+                            Status = ConvertUtil.ToInt(row["Status"]),
                             CreatedDate = ConvertUtil.ToDateTime(row["CreatedDate"])
                         };
                         result.Add(order);
@@ -283,7 +287,7 @@ namespace DATN_Models.DAO
 
             return result;
         }
-    public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response)
+        public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response)
         {
             response = 0;
             DBHelper db = null;
@@ -335,6 +339,7 @@ namespace DATN_Models.DAO
                             ConcessionAmount = ConvertUtil.ToLong(row["ConcessionAmount"]),
                             TotalPrice = ConvertUtil.ToLong(row["TotalPrice"]),
                             Email = ConvertUtil.ToString(row["Email"]),
+                            Status = ConvertUtil.ToInt(row["Status"]),
                             CreatedDate = ConvertUtil.ToDateTime(row["CreatedDate"])
                         };
                         result.Add(showTime);
@@ -435,7 +440,7 @@ namespace DATN_Models.DAO
             }
             catch (Exception ex)
             {
-                throw ;
+                throw;
             }
             finally
             {
@@ -462,6 +467,58 @@ namespace DATN_Models.DAO
             }
             catch (Exception ex)
             {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public GetInfoRefundRes RefundOrderById(RefundOrderByIdReq req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderId", req.OrderId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetInfoRefundRes>("SP_Order_RefundOrderByOrderId", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public List<GetInfoRefundRes> RefundByShowtime(RefundByShowtimeReq req, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_ShowTimeId", req.ShowtimeId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetInfoRefundRes>("SP_Order_RefundOrderByShowtime", pars);
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
                 throw;
             }
             finally

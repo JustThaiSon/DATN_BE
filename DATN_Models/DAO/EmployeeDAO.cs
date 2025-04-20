@@ -203,5 +203,29 @@ namespace DATN_Models.DAO
                 throw new Exception("An error occurred while changing the password.", ex);
             }
         }
+
+        public async Task<int> ToggleLockoutEmployee(Guid id)
+        {
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_EmployeeId", id);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Employee_LockoutToggle", pars);
+                int response = ConvertUtil.ToInt(pars[1].Value);
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while toggling employee lockout status.", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 }

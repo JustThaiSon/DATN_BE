@@ -105,7 +105,7 @@ namespace DATN_LandingPage.Handlers
                                 break;
 
                             case "JoinRoom":
-                                _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, 120, true); // Default 120 seconds
+                                _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, 600, true); // Default 120 seconds
                                 break;
 
                             case "ExtendCountdown":

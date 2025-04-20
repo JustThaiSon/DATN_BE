@@ -7,9 +7,8 @@
         public Guid MovieID { get; set; }
         public string Username { get; set; }
         public string Content { get; set; }
-        public double ratingvalue { get; set; }
+        public decimal? ratingvalue { get; set; } // Thay đổi từ double? sang decimal?
         public string CreateDate { get; set; }
         public int Status { get; set; }
-
     }
 }

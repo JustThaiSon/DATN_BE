@@ -1,4 +1,5 @@
 ﻿using DATN_Models.DAL.Orders;
+using DATN_Models.DTOS.Order.Res;
 
 namespace DATN_Services.Service.Interfaces
 {
@@ -8,5 +9,6 @@ namespace DATN_Services.Service.Interfaces
 
         Task<bool> SendQrCodeEmail(OrderMailResultDAL req);
         byte[] GenerateQrCode(string text);
+        Task<bool> SendMailRefund(GetInfoRefundRes req);
     }
 }

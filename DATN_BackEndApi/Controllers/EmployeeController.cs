@@ -124,6 +124,21 @@ namespace DATN_BackEndApi.Controllers
 
             return res;
         }
+
+        [HttpPost]
+        [Route("ToggleLockout")]
+        public async Task<CommonResponse<dynamic>> ToggleLockoutEmployee(Guid id)
+        {
+            var res = new CommonResponse<dynamic>();
+
+            int response = await _employeeDAO.ToggleLockoutEmployee(id);
+
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.ResponseCode = response;
+            res.Data = null;
+
+            return res;
+        }
     }
 }
 

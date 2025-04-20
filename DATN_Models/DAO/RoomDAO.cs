@@ -164,6 +164,35 @@ namespace DATN_Models.DAO
                     db.Close();
             }
         }
+
+        public List<ListRoomByCinemaDAL> GetListRoomByCinema(Guid CinemaID, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_CinemaID", CinemaID);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+
+                var result = db.GetListSP<ListRoomByCinemaDAL>("SP_Room_GetListByCinema", pars);
+
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 
 

@@ -12,6 +12,7 @@
         public string SessionTime { get; set; }
         public string SessionDate { get; set; }
         public string RoomName { get; set; }
+        public int Status { get; set; }
         public List<string> SeatList { get; set; }
         public List<ServiceInfoModel> ServiceList { get; set; }
         public long ConcessionAmount { get; set; }

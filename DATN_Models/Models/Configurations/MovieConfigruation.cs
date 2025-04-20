@@ -30,6 +30,9 @@ namespace DATN_Models.Models.Configurations
 
             builder.Property(x => x.ReleaseDate)
                 .IsRequired();
+
+            builder.Property(x => x.AgeRatingId)
+                .IsRequired(false);
         }
     }
 }

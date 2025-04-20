@@ -40,9 +40,11 @@ namespace DATN_Models.DAL.Statistic
 
     public class StatisticRevenueByCinemaDAL
     {
-        public string CinemaName { get; set; }
+        public Guid CinemasId { get; set; }
+        public string Name { get; set; }
+        public int TotalRooms { get; set; }
         public decimal TotalRevenue { get; set; }
-        public int TotalOrders { get; set; }
+        public int TotalTickets { get; set; }
     }
 
     public class StatisticPopularGenresDAL

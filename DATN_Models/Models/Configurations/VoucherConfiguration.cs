@@ -44,7 +44,11 @@ namespace DATN_Models.Models.Configurations
 
             builder.Property(x => x.Status)
                 .IsRequired()
-                .HasDefaultValue(true);
+                .HasDefaultValue(1);
+
+            builder.Property(x => x.IsStackable)
+                .IsRequired()
+                .HasDefaultValue(false);
 
             builder.Property(x => x.CreatedAt)
                 .IsRequired()

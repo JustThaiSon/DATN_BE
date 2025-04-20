@@ -1,8 +1,11 @@
 ﻿using DATN_Models.DAL.Orders;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Services.Service.Interfaces;
+using Org.BouncyCastle.Ocsp;
 using QRCoder;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace DATN_Services.Service
 {
@@ -217,10 +220,83 @@ namespace DATN_Services.Service
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.L);
             PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-            return qrCode.GetGraphic(10); // Thay đổi độ phân giải nếu cần
+            return qrCode.GetGraphic(10); 
         }
 
+        public async Task<bool> SendMailRefund(GetInfoRefundRes req)
+        {
+            try
+            {
+                string email = req.Email;
+                string subject = "Thông báo hoàn điểm";
+                string body = $@"
+        <!DOCTYPE html>
+        <html lang='en'>
+        <head>
+            <meta charset='UTF-8'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <title>Thông báo hoàn điểm</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                }}
+                .container {{
+                    max-width: 600px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                    background-color: #f9f9f9;
+                }}
+                h2 {{
+                    color: #333;
+                }}
+                p {{
+                    margin-bottom: 10px;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h2>Thông báo hoàn điểm</h2>
+                <p>Xin chào,</p>
+                <p>Số điểm của bạn được hoàn lại là: <strong>{req.PointRefund}</strong>.</p>
+                <p>Vui lòng đăng nhập vào để xem chi tiết hơn.</p>
+                <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
+                <p>Trân trọng,</p>
+                <p>Đội ngũ hỗ trợ khách hàng</p>
+            </div>
+        </body>
+        </html>";
 
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.To.Add(email.Trim());
+                    mail.From = new MailAddress("thaothaobatbai123@gmail.com", "Hệ thống hỗ trợ");
+                    mail.Subject = subject;
+                    mail.IsBodyHtml = true;
+                    mail.Body = body;
+                    mail.BodyEncoding = Encoding.UTF8;
+
+                    using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                    {
+                        smtp.EnableSsl = true;
+                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        smtp.UseDefaultCredentials = false;
+                        smtp.Credentials = new NetworkCredential("thaothaobatbai123@gmail.com", "kaefdapftqcriiwj");
+
+                        await smtp.SendMailAsync(mail);
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi gửi email: {ex.Message}");
+                return false;
+            }
+        }
     }
 }
 

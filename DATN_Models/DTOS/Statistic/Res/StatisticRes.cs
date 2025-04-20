@@ -46,9 +46,11 @@ namespace DATN_Models.DTOS.Statistic.Res
         // StatisticRevenueByCinemaRes.cs
         public class StatisticRevenueByCinemaRes
         {
-            public string CinemaName { get; set; }
+            public Guid CinemasId { get; set; }
+            public string Name { get; set; }
+            public int TotalRooms { get; set; }
             public decimal TotalRevenue { get; set; }
-            public int TotalOrders { get; set; }
+            public int TotalTickets { get; set; }
         }
 
         // StatisticPopularGenresRes.cs

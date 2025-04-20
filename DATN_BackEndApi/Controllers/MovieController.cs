@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
 {
-    //[BAuthorize] 
+    //[BAuthorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MovieController : ControllerBase
@@ -89,22 +89,45 @@ namespace DATN_BackEndApi.Controllers
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<UpdateMovieDAL>(req);
 
-
+            // Chỉ cập nhật URL khi có file được tải lên
             if (req.Thumbnail != null)
             {
                 reqMapper.ThumbnailURL = await _cloudService.UploadImageAsync(req.Thumbnail).ConfigureAwait(false);
+            }
+            else
+            {
+                // Nếu không có file mới, để nguyên giá trị null để không cập nhật trong DB
+                reqMapper.ThumbnailURL = null;
             }
 
             if (req.Banner != null)
             {
                 reqMapper.BannerURL = await _cloudService.UploadImageAsync(req.Banner).ConfigureAwait(false);
             }
+            else
+            {
+                reqMapper.BannerURL = null;
+            }
 
             if (req.Trailer != null)
             {
                 reqMapper.TrailerURL = await _cloudService.UploadVideoAsync(req.Trailer).ConfigureAwait(false);
             }
+            else
+            {
+                reqMapper.TrailerURL = null;
+            }
 
+            // Cập nhật AgeRatingId và ListFormatID từ request
+            if (req.AgeRatingId.HasValue)
+            {
+                reqMapper.AgeRatingId = req.AgeRatingId.Value;
+            }
+
+            if (req.ListFormatID != null && req.ListFormatID.Any())
+            {
+                reqMapper.ListFormatID = req.ListFormatID;
+            }
 
             _movieDAO.UpdateMovie(reqMapper, out int response);
             res.Data = null;

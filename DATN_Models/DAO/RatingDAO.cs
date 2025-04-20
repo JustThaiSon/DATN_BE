@@ -70,7 +70,7 @@ namespace DATN_Models.DAO
                 pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
-                db.ExecuteNonQuerySP("SP_Movie_Create", pars);
+                db.ExecuteNonQuerySP("SP_Rating_Create", pars);
 
                 response = ConvertUtil.ToInt(pars[3].Value);
             }
