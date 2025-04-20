@@ -103,6 +103,11 @@ namespace DATN_Models.DAO
                 response = (int)ResponseCodeEnum.ERR_EMAIL_EXIST;
                 return (response, null);
             }
+            if (_context.Users.Any(x => x.PhoneNumber == request.PhoneNumber))
+            {
+                response = (int)ResponseCodeEnum.ERR_EXISTS_PHONENUMBER;
+                return (response, null);
+            }
 
             string otp = GenerateOtp();
 
@@ -149,9 +154,9 @@ namespace DATN_Models.DAO
                 return (int)ResponseCodeEnum.ERR_INVALID_OTP;
             }
 
-            if (otpCacheEntry.Otp != req.Opt)
+            if (otpCacheEntry.Otp != req.Otp)
             {
-                Console.WriteLine($"OTP không khớp. Nhập: {req.Opt}, Lưu: {otpCacheEntry.Otp}");
+                Console.WriteLine($"OTP không khớp. Nhập: {req.Otp}, Lưu: {otpCacheEntry.Otp}");
                 return (int)ResponseCodeEnum.ERR_INVALID_OTP;
             }
             var userInfo = otpCacheEntry.UserInfo;

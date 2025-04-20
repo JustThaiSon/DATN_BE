@@ -91,6 +91,8 @@ namespace DATN_Models.DAO
                 response = ConvertUtil.ToInt(pars[1].Value);
 
                 // Parse JSON từ raw string thành object nếu không null
+                if (result != null)
+                {    
                 if (!string.IsNullOrEmpty(result.RawUserMembershipDetails))
                 {
                     result.UserMembershipDetails = JsonSerializer.Deserialize<UserMembershipDetailsDAL>(result.RawUserMembershipDetails);
@@ -103,7 +105,7 @@ namespace DATN_Models.DAO
                 {
                     result.NextLevelBenefits = JsonSerializer.Deserialize<List<MembershipBenefitDAL>>(result.RawNextLevelBenefits);
                 }
-
+                }
                 return result;
             }
             catch (Exception)

@@ -70,6 +70,42 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email không hợp lệ!.
+        /// </summary>
+        internal static string _102 {
+            get {
+                return ResourceManager.GetString("-102", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số điện thoại không hợp lệ!.
+        /// </summary>
+        internal static string _103 {
+            get {
+                return ResourceManager.GetString("-103", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email đã tồn tại!.
+        /// </summary>
+        internal static string _104 {
+            get {
+                return ResourceManager.GetString("-104", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số điện thoại đã tồn tại!.
+        /// </summary>
+        internal static string _105 {
+            get {
+                return ResourceManager.GetString("-105", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opt Sai.
         /// </summary>
         internal static string _107 {
@@ -417,6 +453,15 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _2004 {
             get {
                 return ResourceManager.GetString("-2004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lịch chiếu bị trùng.
+        /// </summary>
+        internal static string _3 {
+            get {
+                return ResourceManager.GetString("-3", resourceCulture);
             }
         }
         

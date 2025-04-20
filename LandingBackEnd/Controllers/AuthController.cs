@@ -46,7 +46,7 @@ namespace DATN_LandingPage.Controllers
             }
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
-            res.Data = null;
+            res.Data = Opt;
             return res;
         }
         [HttpGet]
@@ -90,7 +90,7 @@ namespace DATN_LandingPage.Controllers
             return res;
         }
         [HttpPost("verify-otp")]
-        public async Task<CommonResponse<dynamic>> VerifyOtp(VerifyOtpReq req)
+        public async Task<CommonResponse<dynamic>> VerifyOtp([FromBody]VerifyOtpReq req)
         {
             var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(req);
             var res = new CommonResponse<dynamic>
