@@ -76,5 +76,6 @@ namespace DATN_Models.HandleData
         public DbSet<AgeRatings> AgeRatings { get; set; }
         public DbSet<MovieFormats> MovieFormats { get; set; }
         public DbSet<MovieFormats_Movies> MovieFormats_Movies { get; set; }
+        public DbSet<OptLog> OptLog { get; set; }
     }
 }

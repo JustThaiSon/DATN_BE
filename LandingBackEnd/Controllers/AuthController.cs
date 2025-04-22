@@ -90,7 +90,7 @@ namespace DATN_LandingPage.Controllers
             return res;
         }
         [HttpPost("verify-otp")]
-        public async Task<CommonResponse<dynamic>> VerifyOtp([FromBody]VerifyOtpReq req)
+        public async Task<CommonResponse<dynamic>> VerifyOtp([FromBody]VerifyOtpReq  req)
         {
             var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(req);
             var res = new CommonResponse<dynamic>
