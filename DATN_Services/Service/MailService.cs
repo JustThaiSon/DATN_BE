@@ -13,16 +13,18 @@ namespace DATN_Services.Service
     {
         public async Task<bool> SendMail(string email, string subject, string body)
         {
-
             try
             {
                 using (MailMessage mail = new MailMessage())
                 {
                     mail.To.Add(email.Trim());
-                    mail.From = new MailAddress("thaothaobatbai123@gmail.com");
+                    mail.From = new MailAddress("thaothaobatbai123@gmail.com", "CGV Booking System");
+                    mail.Sender = new MailAddress("thaothaobatbai123@gmail.com");
                     mail.Subject = subject;
                     mail.IsBodyHtml = true;
                     mail.Body = body;
+                    mail.BodyEncoding = Encoding.UTF8;
+                    mail.SubjectEncoding = Encoding.UTF8;
 
                     using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                     {
@@ -39,6 +41,9 @@ namespace DATN_Services.Service
             catch (Exception ex)
             {
                 Console.WriteLine($"Lỗi gửi email: {ex.Message}");
+                if (ex.InnerException != null)
+                    Console.WriteLine($"Chi tiết nội tại: {ex.InnerException.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
                 return false;
             }
         }
