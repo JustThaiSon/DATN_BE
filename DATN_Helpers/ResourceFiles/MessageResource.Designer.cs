@@ -259,6 +259,24 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OrderId này không tồn tại!.
+        /// </summary>
+        internal static string _128 {
+            get {
+                return ResourceManager.GetString("-128", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn chỉ được phép hoàn vé trước thời gian chiếu 3 giờ!.
+        /// </summary>
+        internal static string _129 {
+            get {
+                return ResourceManager.GetString("-129", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ngày tìm kiếm không hợp lệ .
         /// </summary>
         internal static string _1700 {

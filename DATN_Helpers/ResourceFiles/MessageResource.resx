@@ -350,6 +350,12 @@
   <data name="-127" xml:space="preserve">
     <value>Phim không phù hợp với phòng</value>
   </data>
+  <data name="-128" xml:space="preserve">
+    <value>OrderId này không tồn tại!</value>
+  </data>
+  <data name="-129" xml:space="preserve">
+    <value>Bạn chỉ được phép hoàn vé trước thời gian chiếu 3 giờ!</value>
+  </data>
   <data name="-104" xml:space="preserve">
     <value>Email đã tồn tại!</value>
   </data>
