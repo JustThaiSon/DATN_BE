@@ -375,31 +375,46 @@ namespace DATN_LandingPage.Handlers
 
             var modifiedSeats = seats.Select(seat =>
             {
+                var seatIdStr = seat.SeatStatusByShowTimeId.ToString();
                 var seatStatus = _seatStatusService.GetSeatStatus(seat.SeatStatusByShowTimeId);
+
                 if (seatStatus != null)
                 {
-                    // Nếu trạng thái là Paid, xóa cache và gán trạng thái Paid cho ghế
+                    // ✅ Nếu trạng thái là Paid
                     if (seatStatus.Status == (int)SeatStatusEnum.Paied)
                     {
-                        _seatStatusService.RemoveSeat(seat.SeatStatusByShowTimeId);
-                        if (updatedSeats != null)
+                        // Kiểm tra xem ghế đó có đang được giữ bởi user hiện tại không
+                        var heldByCurrentUser = _seatStatusService
+                            .GetHeldSeatsByUser(currentUserId)
+                            .Contains(seatIdStr);
+
+                        // Nếu không phải của user hiện tại => cập nhật Paid
+                        if (!heldByCurrentUser)
                         {
-                            var itemToRemove = updatedSeats.FirstOrDefault(x => x.SeatId == seat.SeatStatusByShowTimeId.ToString());
-                            if (itemToRemove != null)
+                            _seatStatusService.RemoveSeat(seat.SeatStatusByShowTimeId);
+
+                            if (updatedSeats != null)
                             {
-                                updatedSeats.Remove(itemToRemove);
+                                var itemToRemove = updatedSeats.FirstOrDefault(x => x.SeatId == seatIdStr);
+                                if (itemToRemove != null)
+                                {
+                                    updatedSeats.Remove(itemToRemove);
+                                }
                             }
+
+                            seat.Status = (int)SeatStatusEnum.Paied;
                         }
-                        seat.Status = (int)SeatStatusEnum.Paied;
+                        else
+                        {
+                            // Nếu là của user hiện tại => vẫn giữ nguyên trạng thái đang giữ
+                            seat.Status = seatStatus.Status;
+                        }
                     }
                     else
                     {
-                        // Nếu có danh sách cập nhật, kiểm tra ghế có trong updatedSeats không
                         if (updatedSeats != null)
                         {
-                            var updatedSeat = updatedSeats.FirstOrDefault(
-                                us => us.SeatId == seat.SeatStatusByShowTimeId.ToString()
-                            );
+                            var updatedSeat = updatedSeats.FirstOrDefault(us => us.SeatId == seatIdStr);
 
                             if (updatedSeat != null)
                             {
@@ -407,13 +422,12 @@ namespace DATN_LandingPage.Handlers
                             }
                             else if (_seatStatusService
                                 .GetHeldSeatsByUser(currentUserId)
-                                .Contains(seat.SeatStatusByShowTimeId.ToString()))
+                                .Contains(seatIdStr))
                             {
                                 seat.Status = seatStatus.Status;
                             }
                             else
                             {
-                                // Nếu là UnAvailable => Reserved (cho user khác)
                                 seat.Status = seatStatus.Status == (int)SeatStatusEnum.UnAvailable
                                     ? (int)SeatStatusEnum.Reserved
                                     : seatStatus.Status;
@@ -421,10 +435,9 @@ namespace DATN_LandingPage.Handlers
                         }
                         else
                         {
-                            // Nếu không có danh sách cập nhật => lấy theo seatStatus
                             if (_seatStatusService
                                 .GetHeldSeatsByUser(currentUserId)
-                                .Contains(seat.SeatStatusByShowTimeId.ToString()))
+                                .Contains(seatIdStr))
                             {
                                 seat.Status = seatStatus.Status;
                             }
@@ -437,6 +450,7 @@ namespace DATN_LandingPage.Handlers
                         }
                     }
                 }
+
                 return seat;
             }).ToList();
 

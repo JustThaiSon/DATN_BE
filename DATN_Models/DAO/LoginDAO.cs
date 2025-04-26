@@ -10,6 +10,7 @@ using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
 using DATN_Models.HandleData;
 using DATN_Models.Models;
+using MailKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -259,5 +260,45 @@ namespace DATN_Models.DAO
 
             return (int)ResponseCodeEnum.SUCCESS;
         }
+
+        public async Task<(int, string)> ReSendOpt(ReSendOptReq req)
+        {
+            int response = 0;
+
+            if (!StringExtension.IsValidEmail(req.Email))
+            {
+                response = (int)ResponseCodeEnum.ERR_INVALID_EMAIL;
+                return (response, null);
+            }
+
+            var userExists = await _context.Users.AnyAsync(x => x.Email == req.Email);
+            if (!userExists)
+            {
+                response = (int)ResponseCodeEnum.ERR_USER_NOT_FOUND; 
+                return (response, null);
+            }
+
+            string otp = GenerateOtp();
+
+            var existingOtp = await _context.OptLog.FirstOrDefaultAsync(x => x.Email == req.Email);
+            if (existingOtp != null)
+            {
+                _context.OptLog.Remove(existingOtp);
+                await _context.SaveChangesAsync();
+            }
+            var newOtp = new OptLog
+            {
+                Id = Guid.NewGuid(),
+                Email = req.Email,
+                OtpCode = otp,
+                CreatedAt = DateTime.UtcNow
+            };
+            await _context.OptLog.AddAsync(newOtp);
+            await _context.SaveChangesAsync();
+          
+            response = (int)ResponseCodeEnum.SUCCESS;
+            return (response, otp);
+        }
+
     }
 }

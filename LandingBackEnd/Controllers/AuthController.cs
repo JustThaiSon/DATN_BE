@@ -10,8 +10,11 @@ using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
 using DATN_Models.DTOS.Employee.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Services.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using static QRCoder.PayloadGenerator;
 
 namespace DATN_LandingPage.Controllers
 {
@@ -36,13 +39,13 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpPost]
         [Route("Resgister")]
-        public async Task<CommonResponse<dynamic>> Resgister([FromBody]CreateAccountReq request)
+        public async Task<CommonResponse<dynamic>> Resgister([FromBody] CreateAccountReq request)
         {
             var res = new CommonResponse<dynamic>();
             var (response, Opt) = await _loginDAO.RegisterUserAsync(request);
             if (response == (int)ResponseCodeEnum.SUCCESS)
             {
-                await _mailService.SendMail(request.Email, MailHelper.SubjectOPT, MailHelper.BodyOPT + Opt);
+                await _mailService.SendOtpEmail(request.Email, Opt);
             }
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -90,7 +93,7 @@ namespace DATN_LandingPage.Controllers
             return res;
         }
         [HttpPost("verify-otp")]
-        public async Task<CommonResponse<dynamic>> VerifyOtp([FromBody]VerifyOtpReq  req)
+        public async Task<CommonResponse<dynamic>> VerifyOtp([FromBody] VerifyOtpReq req)
         {
             var result = await _loginDAO.VerifyOtpAndRegisterUserAsync(req);
             var res = new CommonResponse<dynamic>
@@ -147,6 +150,42 @@ namespace DATN_LandingPage.Controllers
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             return res;
+        }
+        [HttpPost]
+        [Route("ReSendOpt")]
+        public async Task<CommonResponse<dynamic>> ReSendOpt(ReSendOptReq req)
+        {
+            var res = new CommonResponse<dynamic>();
+            var (response, Opt) = await _loginDAO.ReSendOpt(req);
+            if (response == (int)ResponseCodeEnum.SUCCESS)
+            {
+                await _mailService.SendOtpEmail(req.Email, Opt);
+            }
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.Data = Opt;
+            return res;
+        }
+         [HttpPost]
+        [Route("Test")]
+        public async Task<IActionResult> Test(GetInfoRefundRes req)
+        {
+            await _mailService.SendMailRefundAll(req);
+            return Ok("Test");
+        }
+        [HttpPost]
+        [Route("SendMailRefund")]
+        public async Task<IActionResult> SendMailRefund(GetInfoRefundRes req)
+        {
+            await _mailService.SendMailRefund(req);
+            return Ok("Test");
+        }
+        [HttpPost]
+        [Route("SendOtpEmail")]
+        public async Task<IActionResult> SendOtpEmail(string email,string opt)
+        {
+            await _mailService.SendOtpEmail(email,opt);
+            return Ok("Test");
         }
     }
 }
