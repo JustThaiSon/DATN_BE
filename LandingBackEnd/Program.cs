@@ -1,4 +1,3 @@
-using DATN_BackEndApi.Extension;
 using DATN_LandingPage.Extension;
 using FluentValidation;
 using FluentValidation.Results;
