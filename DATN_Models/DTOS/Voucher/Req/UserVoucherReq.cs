@@ -17,7 +17,6 @@ namespace DATN_Models.DTOS.Voucher.Req
 
     public class CheckVoucherAvailabilityReq
     {
-        public Guid UserId { get; set; }
         public string VoucherCode { get; set; }
     }
 }

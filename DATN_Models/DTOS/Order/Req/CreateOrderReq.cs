@@ -10,6 +10,8 @@ namespace DATN_Models.DTOS.Order.Req
         public string? TransactionCode { get; set; }
         public string? VoucherCode { get; set; }
         public long PointUse { get; set; }
+        public decimal TotalDiscount { get; set; }
+
         public decimal TotalPriceMethod { get; set; }
         public List<ServiceReq>? Services { get; set; }
         public List<TicketReq>? Tickets { get; set; }

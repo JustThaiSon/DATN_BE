@@ -8,5 +8,7 @@
         public DateTime StartTime { get; set; }
         public string StartTimeFormatted { get; set; }
         public string DurationFormatted { get; set; }
+        public double? AverageRating { get; set; }
+        public string RoomTypeName { get; set; }
     }
 }

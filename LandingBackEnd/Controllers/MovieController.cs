@@ -2,8 +2,10 @@
 using DATN_BackEndApi.VNPay;
 using DATN_Helpers.Common;
 using DATN_Helpers.Common.interfaces;
+using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
 using DATN_LandingPage.Extension;
+using DATN_LandingPage.Handlers;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.ServiceType;
@@ -19,6 +21,9 @@ using DATN_Models.DTOS.Service.Response;
 using DATN_Models.DTOS.ServiceType.Res;
 using DATN_Services.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Net.WebSockets;
+using System.Text;
 
 namespace DATN_LandingPage.Controllers
 {
@@ -278,21 +283,81 @@ namespace DATN_LandingPage.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
         }
+        [BAuthorize]
         [HttpPost]
         [Route("RefundOrder")]
         public async Task<CommonResponse<GetInfoRefundRes>> RefundOrder(RefundOrderByIdReq req)
         {
             var res = new CommonResponse<GetInfoRefundRes>();
             var result = _orderDAO.RefundOrderById(req, out int response);
-            if (result != null)
+
+            if (result != null && response == 200)
             {
-                await _mailService.SendMailRefund(result);
+                if (result.Email != null)
+                {
+                    await _mailService.SendMailRefund(result);
+                }
+
+                var userId = HttpContextHelper.GetUserId();
+
+                List<Guid> seatStatusByShowTimeIds = result.SeatStatusByShowTimeIds
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(id => Guid.Parse(id.Trim()))
+                    .ToList();
+
+                using (var webSocket = new ClientWebSocket())
+                {
+                    try
+                    {
+                        var uri = new Uri($"wss://localhost:7105/ws/KeepSeat?roomId={result.ShowTimeId}&userId={userId}");
+                        await webSocket.ConnectAsync(uri, CancellationToken.None);
+
+                        // Prepare the seat status update requests
+                        var seatStatusUpdateRequests = seatStatusByShowTimeIds
+                            .Select(seatId => new SeatStatusShowHandler.SeatStatusUpdateRequest
+                            {
+                                SeatId = seatId.ToString(),
+                                Status = SeatStatusEnum.Available
+                            })
+                            .ToList();
+
+                        var refundRequest = new SeatStatusShowHandler.SeatActionRequest
+                        {
+                            Action = "Refund",
+                            SeatStatusUpdateRequests = seatStatusUpdateRequests
+                        };
+
+                        // Send the refund request via WebSocket
+                        var message = JsonConvert.SerializeObject(refundRequest);
+                        var buffer = Encoding.UTF8.GetBytes(message);
+                        await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+
+                        var responseBuffer = new byte[1024];
+                        var webSocketResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(responseBuffer), CancellationToken.None);
+                        var responseMessage = Encoding.UTF8.GetString(responseBuffer, 0, webSocketResult.Count);
+                        Console.WriteLine($"WebSocket Response: {responseMessage}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"WebSocket Error: {ex.Message}");
+                    }
+                    finally
+                    {
+                        // Ensure the WebSocket is properly closed
+                        if (webSocket.State == WebSocketState.Open)
+                        {
+                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Operation completed", CancellationToken.None);
+                        }
+                    }
+                }
             }
-            res.Data = result;
+
             res.ResponseCode = response;
+            res.Data = result;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
         }
+
         [HttpPost]
         [Route("RefundByShowtime")]
         public async Task<CommonResponse<List<GetInfoRefundRes>>> RefundByShowtime(RefundByShowtimeReq req)

@@ -24,6 +24,30 @@ namespace DATN_Models.DAO
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
+        public List<MembershipDAL> GetAllMemberships(out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[1];
+                pars[0] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<MembershipDAL>("SP_Membership_GetAll", pars);
+                response = ConvertUtil.ToInt(pars[0].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while getting all memberships", ex);
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
+
         public void AddUserMembership(Guid userId, AddUserMembershipReq userMembership, out int response)
         {
             response = 0;
@@ -91,6 +115,8 @@ namespace DATN_Models.DAO
                 response = ConvertUtil.ToInt(pars[1].Value);
 
                 // Parse JSON từ raw string thành object nếu không null
+                if (result != null)
+                {    
                 if (!string.IsNullOrEmpty(result.RawUserMembershipDetails))
                 {
                     result.UserMembershipDetails = JsonSerializer.Deserialize<UserMembershipDetailsDAL>(result.RawUserMembershipDetails);
@@ -103,7 +129,7 @@ namespace DATN_Models.DAO
                 {
                     result.NextLevelBenefits = JsonSerializer.Deserialize<List<MembershipBenefitDAL>>(result.RawNextLevelBenefits);
                 }
-
+                }
                 return result;
             }
             catch (Exception)

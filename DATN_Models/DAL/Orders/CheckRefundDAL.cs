@@ -3,5 +3,6 @@
    public class CheckRefundDAL
     {
         public bool ISREFUND { get; set; }
+
     }
 }
