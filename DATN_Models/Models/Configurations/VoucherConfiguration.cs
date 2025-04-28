@@ -29,6 +29,10 @@ namespace DATN_Models.Models.Configurations
                 .IsRequired()
                 .HasColumnType("decimal(10,2)");
 
+            builder.Property(x => x.MinOrderValue)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)");
+
             builder.Property(x => x.StartDate)
                 .IsRequired();
 
@@ -49,6 +53,9 @@ namespace DATN_Models.Models.Configurations
             builder.Property(x => x.IsStackable)
                 .IsRequired()
                 .HasDefaultValue(false);
+
+            builder.Property(x => x.VoucherType)
+                .IsRequired();
 
             builder.Property(x => x.CreatedAt)
                 .IsRequired()

@@ -587,6 +587,28 @@ namespace DATN_Models.Migrations
                     b.ToTable("Movies");
                 });
 
+            modelBuilder.Entity("DATN_Models.Models.OptLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OtpCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OptLog");
+                });
+
             modelBuilder.Entity("DATN_Models.Models.OrderDetails", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1376,6 +1398,9 @@ namespace DATN_Models.Migrations
                     b.Property<int>("MaxUsage")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("MinOrderValue")
+                        .HasColumnType("decimal(10,2)");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -1391,6 +1416,9 @@ namespace DATN_Models.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
+
+                    b.Property<int>("VoucherType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

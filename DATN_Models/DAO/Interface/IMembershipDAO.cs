@@ -12,5 +12,6 @@ namespace DATN_Models.DAO.Interface
         GetmembershipByUserDAL GetmembershipByUser(Guid userId, out int response);
         GetPointByUserRes GetPointByUser(Guid userId, out int response);
         List<GetPointHistoryRes> GetPointHistory(Guid userId,int type, int currentPage, int recordPerPage, out int totalRecord, out int response);
+        List<MembershipDAL> GetAllMemberships(out int response);
     }
 }

@@ -10,9 +10,11 @@ using DATN_Models.DTOS.Account.Req;
 using DATN_Models.DTOS.Account.Res;
 using DATN_Models.HandleData;
 using DATN_Models.Models;
+using MailKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -85,10 +87,10 @@ namespace DATN_Models.DAO
         public async Task<(int, string)> RegisterUserAsync(CreateAccountReq request)
         {
             int response = 0;
+
             if (!StringExtension.IsValidEmail(request.Email))
             {
                 response = (int)ResponseCodeEnum.ERR_INVALID_EMAIL;
-
                 return (response, null);
             }
 
@@ -104,18 +106,38 @@ namespace DATN_Models.DAO
                 return (response, null);
             }
 
+            if (_context.Users.Any(x => x.PhoneNumber == request.PhoneNumber))
+            {
+                response = (int)ResponseCodeEnum.ERR_EXISTS_PHONENUMBER;
+                return (response, null);
+            }
+
+            // Sinh OTP
             string otp = GenerateOtp();
 
-            var otpCacheEntry = new OtpCacheEntry
+            // Xóa bản ghi cũ nếu tồn tại
+            var existingOtp = await _context.OptLog.FirstOrDefaultAsync(x => x.Email == request.Email);
+            if (existingOtp != null)
             {
-                Otp = otp,
-                UserInfo = request
+                _context.OptLog.Remove(existingOtp);
+            }
+
+            var newOtp = new OptLog
+            {
+                Id = Guid.NewGuid(),
+                Email = request.Email,
+                OtpCode = otp,
+                CreatedAt = DateTime.UtcNow
             };
-            _memoryCache.Set(request.Email, otpCacheEntry, TimeSpan.FromMinutes(5));
+            await _context.OptLog.AddAsync(newOtp);
+            await _context.SaveChangesAsync();
+
+            _memoryCache.Set(request.Email, request, TimeSpan.FromMinutes(5)); 
 
             response = (int)ResponseCodeEnum.SUCCESS;
             return (response, otp);
         }
+
 
         public void SaveSession(Guid userId)
         {
@@ -143,18 +165,27 @@ namespace DATN_Models.DAO
 
         public async Task<int> VerifyOtpAndRegisterUserAsync(VerifyOtpReq req)
         {
-            if (!_memoryCache.TryGetValue(req.Email, out OtpCacheEntry otpCacheEntry))
+            if (!_memoryCache.TryGetValue(req.Email, out CreateAccountReq userInfo))
             {
-                Console.WriteLine($"Key {req.Email} không tồn tại trong bộ nhớ cache.");
+                Console.WriteLine($"Không tìm thấy thông tin người dùng trong cache cho email: {req.Email}");
                 return (int)ResponseCodeEnum.ERR_INVALID_OTP;
             }
 
-            if (otpCacheEntry.Otp != req.Opt)
+            var otpEntry = await _context.OptLog.FirstOrDefaultAsync(x => x.Email == req.Email);
+
+            if (otpEntry == null)
             {
-                Console.WriteLine($"OTP không khớp. Nhập: {req.Opt}, Lưu: {otpCacheEntry.Otp}");
+                Console.WriteLine($"Không tìm thấy OTP trong DB cho email: {req.Email}");
                 return (int)ResponseCodeEnum.ERR_INVALID_OTP;
             }
-            var userInfo = otpCacheEntry.UserInfo;
+
+            if (otpEntry.OtpCode != req.Otp)
+            {
+                Console.WriteLine($"OTP không khớp. Nhập: {req.Otp}, DB: {otpEntry.OtpCode}");
+                return (int)ResponseCodeEnum.ERR_INVALID_OTP;
+            }
+
+            _context.OptLog.Remove(otpEntry);
             _memoryCache.Remove(req.Email);
 
             var newAccount = new AppUsers
@@ -170,7 +201,12 @@ namespace DATN_Models.DAO
 
             var result = await _userManager.CreateAsync(newAccount, userInfo.Password);
             if (!result.Succeeded)
+            {
+                Console.WriteLine("Tạo tài khoản thất bại: " + string.Join(", ", result.Errors.Select(e => e.Description)));
                 return (int)ResponseCodeEnum.ERR_SYSTEM;
+            }
+
+            await _context.SaveChangesAsync(); 
 
             return (int)ResponseCodeEnum.SUCCESS;
         }
@@ -224,5 +260,45 @@ namespace DATN_Models.DAO
 
             return (int)ResponseCodeEnum.SUCCESS;
         }
+
+        public async Task<(int, string)> ReSendOpt(ReSendOptReq req)
+        {
+            int response = 0;
+
+            if (!StringExtension.IsValidEmail(req.Email))
+            {
+                response = (int)ResponseCodeEnum.ERR_INVALID_EMAIL;
+                return (response, null);
+            }
+
+            var userExists = await _context.Users.AnyAsync(x => x.Email == req.Email);
+            if (!userExists)
+            {
+                response = (int)ResponseCodeEnum.ERR_USER_NOT_FOUND; 
+                return (response, null);
+            }
+
+            string otp = GenerateOtp();
+
+            var existingOtp = await _context.OptLog.FirstOrDefaultAsync(x => x.Email == req.Email);
+            if (existingOtp != null)
+            {
+                _context.OptLog.Remove(existingOtp);
+                await _context.SaveChangesAsync();
+            }
+            var newOtp = new OptLog
+            {
+                Id = Guid.NewGuid(),
+                Email = req.Email,
+                OtpCode = otp,
+                CreatedAt = DateTime.UtcNow
+            };
+            await _context.OptLog.AddAsync(newOtp);
+            await _context.SaveChangesAsync();
+          
+            response = (int)ResponseCodeEnum.SUCCESS;
+            return (response, otp);
+        }
+
     }
 }

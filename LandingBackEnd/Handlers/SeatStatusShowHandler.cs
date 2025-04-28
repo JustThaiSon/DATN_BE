@@ -70,7 +70,7 @@ namespace DATN_LandingPage.Handlers
                         await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
 
                         // Hủy countdown khi user thoát
-                        CancelUserCountdown(currentUserId);
+                        //CancelUserCountdown(currentUserId);
                         break;
                     }
 
@@ -118,10 +118,16 @@ namespace DATN_LandingPage.Handlers
                             case "Payment":
                                 if (request.SeatStatusUpdateRequests != null)
                                 {
-                                    await HandlePaymentStatusUpdate(request.SeatStatusUpdateRequests, hub, roomId);
+
+                                    await HandlePaymentStatusAction(request.SeatStatusUpdateRequests, hub, roomId);
                                 }
                                 break;
-
+                            case "Refund":
+                                if (request.SeatStatusUpdateRequests != null)
+                                {
+                                    await HandleRefundAction(request.SeatStatusUpdateRequests, hub, roomId);
+                                }
+                                break;
                             default:
                                 Console.WriteLine($"[WebSocket] Unknown action received: {request.Action}");
                                 break;
@@ -229,6 +235,42 @@ namespace DATN_LandingPage.Handlers
                 userPaymentStatus.TryRemove(userId, out _);
             }
         }
+        private async Task HandleRefundAction(
+            List<SeatStatusUpdateRequest> seatStatusUpdateRequests,
+            string hub,
+            Guid roomId)
+        {
+            bool isFirstSeatUpdate = !userSeatUpdates.Values.Any(seatUpdates => seatUpdates.Count > 0);
+            bool onlyCurrentUser = (userSeatUpdates.Count == 1 && userSeatUpdates.ContainsKey(currentUserId));
+            foreach (var updateRequest in seatStatusUpdateRequests)
+            {
+                if (updateRequest.SeatId != null)
+                {
+                    var seatGuid = Guid.Parse(updateRequest.SeatId);
+
+                    // Update the seat status to Available
+                    _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)SeatStatusEnum.Available);
+
+                    // Remove the seat from user updates
+                    if (userSeatUpdates.ContainsKey(currentUserId))
+                    {
+                        userSeatUpdates[currentUserId].RemoveAll(r => r.SeatId == updateRequest.SeatId);
+                    }
+                }
+            }
+
+            if (isFirstSeatUpdate || onlyCurrentUser)
+            {
+                var seatListForOthers = GenerateSeatList(roomId);
+                await SendSeatsToOthers(roomId, hub, seatListForOthers);
+            }
+            else
+            {
+                await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
+            }
+            await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
+        }
         private async Task RevertSeatsIfUnpaidAsync(string hub, Guid roomId, string userId)
         {
             if (userSeatUpdates.ContainsKey(userId))
@@ -327,12 +369,21 @@ namespace DATN_LandingPage.Handlers
             await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
         }
 
-        private async Task HandlePaymentStatusUpdate(
+
+        private async Task HandlePaymentStatusAction(
             List<SeatStatusUpdateRequest> seatStatusUpdateRequests,
             string hub,
             Guid roomId)
         {
-            // Duyệt qua các yêu cầu update
+            // Nếu chưa có user update nào, khởi tạo
+            if (!userSeatUpdates.ContainsKey(currentUserId))
+            {
+                userSeatUpdates[currentUserId] = new List<SeatStatusUpdateRequest>();
+            }
+            // Kiểm tra nếu chưa có update nào từ bất kỳ user nào
+            bool isFirstSeatUpdate = !userSeatUpdates.Values.Any(seatUpdates => seatUpdates.Count > 0);
+            bool onlyCurrentUser = (userSeatUpdates.Count == 1 && userSeatUpdates.ContainsKey(currentUserId));
+            // Duyệt qua các yêu cầu update trạng thái thanh toán
             foreach (var updateRequest in seatStatusUpdateRequests)
             {
                 if (updateRequest.SeatId != null)
@@ -340,31 +391,62 @@ namespace DATN_LandingPage.Handlers
                     var seatGuid = Guid.Parse(updateRequest.SeatId);
                     var currentStatus = _seatStatusService.GetSeatStatus(seatGuid);
 
-                    // Nếu trạng thái mới khác trạng thái hiện tại => cập nhật
+                    // Nếu trạng thái ghế mới khác trạng thái hiện tại => cập nhật
                     if (currentStatus == null || currentStatus.Status != (int)updateRequest.Status)
                     {
-                        _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)updateRequest.Status);
+                        // Kiểm tra xem ghế có phải đang được người dùng hiện tại giữ không
+                        var isHeldByCurrentUser = _seatStatusService.GetHeldSeatsByUser(currentUserId)
+                            .Contains(updateRequest.SeatId);
 
-                        // Nếu ghế "Paid" => cập nhật trạng thái
-                        if (updateRequest.Status == SeatStatusEnum.Paied)
+                        // Tránh cập nhật nếu ghế đang được giữ bởi user hiện tại
+                        if (!isHeldByCurrentUser)
                         {
-                            userSeatUpdates[currentUserId].RemoveAll(r => r.SeatId == updateRequest.SeatId);
+                            // Cập nhật trạng thái ghế nếu không phải đang được giữ bởi người dùng hiện tại
+                            _seatStatusService.AddOrUpdateSeatStatus(seatGuid, (int)updateRequest.Status);
+
+                            // Nếu ghế đã thanh toán (Paid) => kiểm tra lại và cập nhật trạng thái
+                            if (updateRequest.Status == SeatStatusEnum.Paied)
+                            {
+                                // Nếu ghế không phải của người dùng, gán trạng thái Paid và bỏ ghế khỏi các bản cập nhật của người dùng
+                                _seatStatusService.RemoveSeat(seatGuid);
+                                userSeatUpdates[currentUserId].RemoveAll(r => r.SeatId == updateRequest.SeatId);
+                                userSeatUpdates[currentUserId].Add(updateRequest);  // Add update request after removal
+                            }
+                            else
+                            {
+                                // Cập nhật các trạng thái khác (trạng thái không phải Paid)
+                                await SendUpdatedStatusToClient(roomId, hub, new List<SeatStatusUpdateRequest> { updateRequest });
+                            }
+                        }
+                        else
+                        {
+                            // Giữ nguyên trạng thái cho ghế đã thanh toán nếu là của người dùng hiện tại
+                            // Giữ ghế đang được giữ trong trạng thái "Held" hoặc "Paid" nếu người dùng đã thanh toán
                             userSeatUpdates[currentUserId].Add(updateRequest);
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"[WebSocket] No update needed for SeatId={seatGuid} (already {currentStatus?.Status})");
+                        Console.WriteLine($"[Payment] No update needed for SeatId={seatGuid} (already {currentStatus?.Status})");
                     }
                 }
             }
 
-            // Tạo danh sách ghế để gửi cho user khác
-            var seatListForOthers = GenerateSeatList(roomId);
+            // Lần cập nhật đầu tiên hoặc chỉ 1 user => gửi toàn bộ cho others
+            if (isFirstSeatUpdate || onlyCurrentUser)
+            {
+                // Tạo danh sách ghế để gửi cho các user khác
+                var seatListForOthers = GenerateSeatList(roomId);
+                await SendSeatsToOthers(roomId, hub, seatListForOthers);
+            }
+            else
+            {
+                // Nếu nhiều user => gửi update cho các user khác
+                await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
+            }
 
-            // Gửi cập nhật trạng thái ghế cho tất cả user khác
-            await SendSeatsToOthers(roomId, hub, seatListForOthers);
         }
+
 
         /// <summary>
         /// Sinh danh sách ghế, kèm trạng thái (Reserved, Selected, UnAvailable, ...)
@@ -375,31 +457,46 @@ namespace DATN_LandingPage.Handlers
 
             var modifiedSeats = seats.Select(seat =>
             {
+                var seatIdStr = seat.SeatStatusByShowTimeId.ToString();
                 var seatStatus = _seatStatusService.GetSeatStatus(seat.SeatStatusByShowTimeId);
+
                 if (seatStatus != null)
                 {
-                    // Nếu trạng thái là Paid, xóa cache và gán trạng thái Paid cho ghế
+                    // ✅ Nếu trạng thái là Paid
                     if (seatStatus.Status == (int)SeatStatusEnum.Paied)
                     {
-                        _seatStatusService.RemoveSeat(seat.SeatStatusByShowTimeId);
-                        if (updatedSeats != null)
+                        // Kiểm tra xem ghế đó có đang được giữ bởi user hiện tại không
+                        var heldByCurrentUser = _seatStatusService
+                            .GetHeldSeatsByUser(currentUserId)
+                            .Contains(seatIdStr);
+
+                        // Nếu không phải của user hiện tại => cập nhật Paid
+                        if (!heldByCurrentUser)
                         {
-                            var itemToRemove = updatedSeats.FirstOrDefault(x => x.SeatId == seat.SeatStatusByShowTimeId.ToString());
-                            if (itemToRemove != null)
+                            _seatStatusService.RemoveSeat(seat.SeatStatusByShowTimeId);
+
+                            if (updatedSeats != null)
                             {
-                                updatedSeats.Remove(itemToRemove);
+                                var itemToRemove = updatedSeats.FirstOrDefault(x => x.SeatId == seatIdStr);
+                                if (itemToRemove != null)
+                                {
+                                    updatedSeats.Remove(itemToRemove);
+                                }
                             }
+
+                            seat.Status = (int)SeatStatusEnum.Paied;
                         }
-                        seat.Status = (int)SeatStatusEnum.Paied;
+                        else
+                        {
+                            // Nếu là của user hiện tại => vẫn giữ nguyên trạng thái đang giữ
+                            seat.Status = seatStatus.Status;
+                        }
                     }
                     else
                     {
-                        // Nếu có danh sách cập nhật, kiểm tra ghế có trong updatedSeats không
                         if (updatedSeats != null)
                         {
-                            var updatedSeat = updatedSeats.FirstOrDefault(
-                                us => us.SeatId == seat.SeatStatusByShowTimeId.ToString()
-                            );
+                            var updatedSeat = updatedSeats.FirstOrDefault(us => us.SeatId == seatIdStr);
 
                             if (updatedSeat != null)
                             {
@@ -407,13 +504,12 @@ namespace DATN_LandingPage.Handlers
                             }
                             else if (_seatStatusService
                                 .GetHeldSeatsByUser(currentUserId)
-                                .Contains(seat.SeatStatusByShowTimeId.ToString()))
+                                .Contains(seatIdStr))
                             {
                                 seat.Status = seatStatus.Status;
                             }
                             else
                             {
-                                // Nếu là UnAvailable => Reserved (cho user khác)
                                 seat.Status = seatStatus.Status == (int)SeatStatusEnum.UnAvailable
                                     ? (int)SeatStatusEnum.Reserved
                                     : seatStatus.Status;
@@ -421,10 +517,9 @@ namespace DATN_LandingPage.Handlers
                         }
                         else
                         {
-                            // Nếu không có danh sách cập nhật => lấy theo seatStatus
                             if (_seatStatusService
                                 .GetHeldSeatsByUser(currentUserId)
-                                .Contains(seat.SeatStatusByShowTimeId.ToString()))
+                                .Contains(seatIdStr))
                             {
                                 seat.Status = seatStatus.Status;
                             }
@@ -437,6 +532,7 @@ namespace DATN_LandingPage.Handlers
                         }
                     }
                 }
+
                 return seat;
             }).ToList();
 
@@ -458,7 +554,7 @@ namespace DATN_LandingPage.Handlers
             );
         }
 
-       
+
 
         /// <summary>
         /// Gửi message báo lỗi cho chính user
@@ -580,7 +676,7 @@ namespace DATN_LandingPage.Handlers
             public string Action { get; set; } = string.Empty;
             public string? SeatId { get; set; }
             public List<SeatStatusUpdateRequest>? SeatStatusUpdateRequests { get; set; }
-            public int? ExtensionDuration { get; set; } 
+            public int? ExtensionDuration { get; set; }
         }
 
         public class SeatStatusUpdateRequest

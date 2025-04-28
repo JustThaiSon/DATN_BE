@@ -11,7 +11,9 @@
         public string SeatList { get; set; }
         public long ConcessionAmount { get; set; }
         public long TotalPrice { get; set; }
+        public long DiscountPrice { get; set; }
         public string Email { get; set; }
         public DateTime CreatedDate { get; set; }
+        public long PointChange { get; set; }
     }
 }

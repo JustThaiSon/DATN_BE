@@ -97,7 +97,10 @@ namespace DATN_LandingPage.Controllers
             var userId = HttpContextHelper.GetUserId();
             var result = _membershipDAO.GetmembershipByUser(userId, out int responseCode);
             var resultMapper = _mapper.Map<GetmembershipByUserRes>(result);
-            resultMapper.UserMembershipDetails.MemberCodeBase64 =  _mailService.GenerateQrCode(resultMapper.UserMembershipDetails.MemberCode);
+            if (result.UserMembershipDetails.MemberCode != null)
+            {
+             resultMapper.UserMembershipDetails.MemberCodeBase64 =  _mailService.GenerateQrCode(resultMapper.UserMembershipDetails.MemberCode);
+            }
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.Data = resultMapper;

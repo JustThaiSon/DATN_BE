@@ -15,5 +15,6 @@ namespace DATN_Models.DAO.Interface
         Task<int> ChangePasswordAsync(Guid userId, ChangePasswordCustomerReq req);
         GetUserInfoDAL GetUserInfo(Guid userId, out int response);
         //void SaveSession(Guid userId);
+        Task<(int,string)> ReSendOpt(ReSendOptReq req);
     }
 }

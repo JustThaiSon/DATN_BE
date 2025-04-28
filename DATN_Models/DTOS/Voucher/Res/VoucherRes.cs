@@ -24,6 +24,7 @@ namespace DATN_Models.DTOS.Voucher.Res
         public string Description { get; set; }
         public string DiscountType { get; set; }
         public decimal DiscountValue { get; set; }
+        public decimal MinOrderValue { get; set; } // Thêm trường MinOrderValue
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public int MaxUsage { get; set; }
@@ -32,6 +33,7 @@ namespace DATN_Models.DTOS.Voucher.Res
         public int MaxClaimCount { get; set; }
         public int Status { get; set; }
         public bool IsStackable { get; set; }
+        public int VoucherType { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
