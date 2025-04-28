@@ -304,6 +304,12 @@ namespace DATN_Models.Mapper
 
 
 
+            //counter
+
+            CreateMap<Counter_NowPlayingMovies_GetList_DTO, Counter_NowPlayingMovies_GetList_DAL>().ReverseMap();
+
+
+
 
 
 
