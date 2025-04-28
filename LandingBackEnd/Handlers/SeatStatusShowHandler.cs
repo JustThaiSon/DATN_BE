@@ -268,6 +268,7 @@ namespace DATN_LandingPage.Handlers
             {
                 await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
             }
+            await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
             await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
             await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
         }
@@ -444,6 +445,7 @@ namespace DATN_LandingPage.Handlers
                 // Nếu nhiều user => gửi update cho các user khác
                 await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
             }
+            await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
 
         }
 
