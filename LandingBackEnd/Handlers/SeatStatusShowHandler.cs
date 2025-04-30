@@ -70,7 +70,7 @@ namespace DATN_LandingPage.Handlers
                         await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
 
                         // Hủy countdown khi user thoát
-                        //CancelUserCountdown(currentUserId);
+                        CancelUserCountdown(currentUserId);
                         break;
                     }
 
@@ -446,6 +446,8 @@ namespace DATN_LandingPage.Handlers
                 await SendSeatStatusToAllUsersExceptSelf(roomId, hub);
             }
             await SendUpdatedStatusToClient(roomId, hub, userSeatUpdates[currentUserId]);
+            await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
 
         }
 

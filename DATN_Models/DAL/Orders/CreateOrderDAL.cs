@@ -3,6 +3,7 @@ namespace DATN_Models.DAL.Orders
 {
     public class CreateOrderDAL
     {
+        public int Type { get; set; }
         public string Email { get; set; }
         public Guid? UserId { get; set; }
         public int IsAnonymous { get; set; }
@@ -12,6 +13,7 @@ namespace DATN_Models.DAL.Orders
         public long PointUse { get; set; }
         public decimal TotalPriceMethod { get; set; }
         public decimal TotalDiscount { get; set; }
+        public decimal TotalPrice { get; set; }
         public List<ServiceDAL>? Services { get; set; }
         public List<TicketDAL>? Tickets { get; set; }
     }

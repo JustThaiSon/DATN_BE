@@ -114,11 +114,12 @@ namespace DATN_LandingPage.Controllers
             var res = new CommonResponse<string>();
             var reqpMapper = _mapper.Map<CreateOrderDAL>(req);
             var result = _orderDAO.CreateOrder(reqpMapper, out int responseCode);
+            var resultMapper = _mapper.Map<OrderMailResultRes>(result);
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
             res.ResponseCode = responseCode;
-            if (result != null)
+            if (resultMapper != null)
             {
-                await _mailService.SendQrCodeEmail(result);
+                await _mailService.SendQrCodeEmail(resultMapper);
             }
             return res;
         }
