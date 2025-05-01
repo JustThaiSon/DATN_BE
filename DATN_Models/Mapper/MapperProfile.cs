@@ -106,6 +106,7 @@ namespace DATN_Models.Mapper
             CreateMap<ShowtimesLangdingDAL, ShowtimesLangdingRes>().ReverseMap();
             CreateMap<MovieGenreDAL, MovieGenreRes>().ReverseMap();
             CreateMap<GetAllNameMovieDAL, GetAllNameMovieRes>().ReverseMap();
+            CreateMap<OrderMailResultRes, OrderMailResultDAL>().ReverseMap();
             #endregion
 
             #region Actor
@@ -219,8 +220,12 @@ namespace DATN_Models.Mapper
                 .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
                 .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
 
-            #endregion
+            CreateMap<DATN_Models.DTOS.MembershipBenefit.Req.UpdateMembershipBenefitReq, DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL>()
+                .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
+                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
 
+
+            #endregion
 
 
 
@@ -297,6 +302,12 @@ namespace DATN_Models.Mapper
             CreateMap<DATN_Models.DTOS.MovieFormat.Req.AssignFormatToMovieReq, DATN_Models.DAL.MovieFormat.MovieFormatMovieDAL>().ReverseMap();
             CreateMap<DATN_Models.DAL.Movie.MovieFormatInfoDAL, DATN_Models.DTOS.Movies.Res.MovieFormatInfoRes>().ReverseMap();
             #endregion
+
+            //counter
+
+            CreateMap<Counter_NowPlayingMovies_GetList_DTO, Counter_NowPlayingMovies_GetList_DAL>().ReverseMap();
+
+
 
             //counter
 

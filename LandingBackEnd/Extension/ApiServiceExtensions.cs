@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NekBigCore.Services.WebSockets;
 using System.Reflection;
-namespace DATN_BackEndApi.Extension
+namespace DATN_LandingPage.Extension
 {
     public static class ServiceExtensions
     {

@@ -9,5 +9,6 @@
         public string Banner { get; set; }
         public int Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public decimal Rate { get; set; }
     }
 }

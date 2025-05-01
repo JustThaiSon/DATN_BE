@@ -115,6 +115,8 @@ namespace DATN_Models.DAO
                 response = ConvertUtil.ToInt(pars[1].Value);
 
                 // Parse JSON từ raw string thành object nếu không null
+                if (result != null)
+                {    
                 if (!string.IsNullOrEmpty(result.RawUserMembershipDetails))
                 {
                     result.UserMembershipDetails = JsonSerializer.Deserialize<UserMembershipDetailsDAL>(result.RawUserMembershipDetails);
@@ -127,7 +129,7 @@ namespace DATN_Models.DAO
                 {
                     result.NextLevelBenefits = JsonSerializer.Deserialize<List<MembershipBenefitDAL>>(result.RawNextLevelBenefits);
                 }
-
+                }
                 return result;
             }
             catch (Exception)
@@ -195,21 +197,28 @@ namespace DATN_Models.DAO
             }
         }
 
-        public MembershipPreviewDAL MembershipPreview(Guid userId, long orderPrice, long ticketPrice, out int response)
+        public MembershipPreviewDAL MembershipPreview(Guid userId, long orderPrice, long ticketPrice,int type, out int response)
         {
             response = 0;
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[4];
-                pars[0] = new SqlParameter("@_UserId", userId);
-                pars[1] = new SqlParameter("@_OrderPrice", orderPrice);
-                pars[2] = new SqlParameter("@_TicketPrice", ticketPrice);
-                pars[3] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[5]; 
+                pars[0] = new SqlParameter("@_Type", type); 
+                pars[1] = new SqlParameter("@_UserId", userId);
+                pars[2] = new SqlParameter("@_OrderPrice", orderPrice);
+                pars[3] = new SqlParameter("@_TicketPrice", ticketPrice);
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<MembershipPreviewDAL>("SP_Membership_GetPreview", pars);
-                result.ParseFreeServiceString();
-                response = ConvertUtil.ToInt(pars[3].Value);
+
+                if (result != null)
+                {
+                    result.ParseFreeServiceString();
+                }
+
+                response = ConvertUtil.ToInt(pars[4].Value);
                 return result;
             }
             catch (Exception ex)

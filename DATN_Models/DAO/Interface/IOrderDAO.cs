@@ -18,5 +18,6 @@ namespace DATN_Models.DAO.Interface
         CheckRefundDAL CheckRefund(Guid orderId, out int response);
         GetInfoRefundRes RefundOrderById(RefundOrderByIdReq req, out int response);
         List<GetInfoRefundRes> RefundByShowtime(RefundByShowtimeReq req, out int response);
+        OrderMailResultDAL GetOrderSendMail(Guid orderId, out int response);
     }
 }

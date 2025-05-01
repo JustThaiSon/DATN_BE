@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using DATN_Helpers.Extensions;
+using DATN_LandingPage.Extension;
 
 namespace DATN_LandingPage.Controllers
 {
@@ -55,17 +56,16 @@ namespace DATN_LandingPage.Controllers
         }
 
 
-
+        [BAuthorize]
         [HttpGet]
         [Route("GetUserVouchers")]
         public CommonPagination<List<UserVoucherRes>> GetUserVouchers(
-            [FromQuery] Guid userId,
             [FromQuery] int currentPage = 1,
             [FromQuery] int recordPerPage = 10)
         {
             var res = new CommonPagination<List<UserVoucherRes>>();
 
-            var result = _userVoucherDAO.GetUserVouchers(userId, currentPage, recordPerPage, out int totalRecord, out int response);
+            var result = _userVoucherDAO.GetUserVouchers(HttpContextHelper.GetUserId(), currentPage, recordPerPage, out int totalRecord, out int response);
 
             res.Data = _mapper.Map<List<UserVoucherRes>>(result);
             res.TotalRecord = totalRecord;
@@ -145,16 +145,13 @@ namespace DATN_LandingPage.Controllers
 
             return res;
         }
-
+        [BAuthorize]
         [HttpPost]
         [Route("CheckVoucherAvailability")]
         public CommonResponse<string> CheckVoucherAvailability([FromBody] CheckVoucherAvailabilityReq request)
         {
             var res = new CommonResponse<string>();
-
-            // Gọi trực tiếp đến stored procedure, mọi logic kiểm tra sẽ được xử lý trong SP
-            _userVoucherDAO.CheckVoucherAvailability(request.UserId, request.VoucherCode, out int response);
-
+            _userVoucherDAO.CheckVoucherAvailability(HttpContextHelper.GetUserId(), request.VoucherCode, out int response);
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
 

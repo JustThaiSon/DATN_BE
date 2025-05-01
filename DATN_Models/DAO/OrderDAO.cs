@@ -165,21 +165,29 @@ namespace DATN_Models.DAO
                 string servicesXml = ConvertServicesToXml(req.Services);
                 string ticketsXml = ConvertTicketsToXml(req.Tickets);
 
-                var pars = new SqlParameter[11];
-                pars[0] = new SqlParameter("@UserId", req.UserId == Guid.Empty ? DBNull.Value : req.UserId);
-                pars[1] = new SqlParameter("@_Email", req.Email);
-                pars[2] = new SqlParameter("@IsAnonymous", req.IsAnonymous);
-                pars[3] = new SqlParameter("@_UsePoint", req.PointUse);
-                pars[4] = new SqlParameter("@PaymentId", req.PaymentId);
-                pars[5] = new SqlParameter("@Services", servicesXml);
-                pars[6] = new SqlParameter("@Tickets", ticketsXml);
-                pars[7] = new SqlParameter("@TransactionCode", req.TransactionCode);
-                pars[8] = new SqlParameter("@_VoucherCode", req.VoucherCode);
-                pars[9] = new SqlParameter("@_TotalPriceMethod", req.TotalPriceMethod);
-                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[14];
+                pars[0] = new SqlParameter("@_Type", req.Type);
+                pars[1] = new SqlParameter("@UserId", req.UserId == Guid.Empty ? DBNull.Value : req.UserId);
+                pars[2] = new SqlParameter("@_Email", req.Email ?? (object)DBNull.Value);
+                pars[3] = new SqlParameter("@IsAnonymous", req.IsAnonymous);
+                pars[4] = new SqlParameter("@_UsePoint", req.PointUse);
+                pars[5] = new SqlParameter("@PaymentId", req.PaymentId ?? (object)DBNull.Value);
+                pars[6] = new SqlParameter("@Services", string.IsNullOrEmpty(servicesXml) ? DBNull.Value : servicesXml);
+                pars[7] = new SqlParameter("@Tickets", string.IsNullOrEmpty(ticketsXml) ? DBNull.Value : ticketsXml);
+                pars[8] = new SqlParameter("@TransactionCode", req.TransactionCode ?? (object)DBNull.Value);
+                pars[9] = new SqlParameter("@_VoucherCode", req.VoucherCode ?? (object)DBNull.Value);
+                pars[10] = new SqlParameter("@_TotalPriceMethod", req.TotalPriceMethod);
+                pars[11] = new SqlParameter("@_TotalDiscount", req.TotalDiscount);
+                pars[12] = new SqlParameter("@_TotalPrice", req.TotalPrice);
+                pars[13] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<OrderMailResultDAL>("SP_Order_CreateOrder", pars);
-                response = ConvertUtil.ToInt(pars[10].Value);
+                if (result != null && !string.IsNullOrWhiteSpace(result.ServiceDetailString))
+                {
+                    result.ServiceDetails = ServiceDetailsParser.ParseServiceDetails(result.ServiceDetailString);
+                }
+                response = ConvertUtil.ToInt(pars[13].Value);
                 return result;
             }
             catch (Exception ex)
@@ -525,6 +533,37 @@ namespace DATN_Models.DAO
             {
                 if (db != null)
                     db.Close();
+            }
+        }
+        public OrderMailResultDAL GetOrderSendMail(Guid orderId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderId", orderId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<OrderMailResultDAL>("SP_Order_GetOrderSendMail", pars);
+
+                if (result != null && !string.IsNullOrWhiteSpace(result.ServiceDetailString))
+                {
+                    result.ServiceDetails = ServiceDetailsParser.ParseServiceDetails(result.ServiceDetailString);
+                }
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error while fetching order details for email", ex);
+            }
+            finally
+            {
+                db?.Close();
             }
         }
     }

@@ -120,8 +120,17 @@
   <data name="-1" xml:space="preserve">
     <value>Lịch chiếu bị trùng</value>
   </data>
+  <data name="-3" xml:space="preserve">
+    <value>Lịch chiếu bị trùng</value>
+  </data>
   <data name="-107" xml:space="preserve">
     <value>Opt Sai</value>
+  </data>
+  <data name="-103" xml:space="preserve">
+    <value>Số điện thoại không hợp lệ!</value>
+  </data>
+  <data name="-102" xml:space="preserve">
+    <value>Email không hợp lệ!</value>
   </data>
   <data name="-108" xml:space="preserve">
     <value>Product</value>
@@ -340,5 +349,17 @@
   </data>
   <data name="-127" xml:space="preserve">
     <value>Phim không phù hợp với phòng</value>
+  </data>
+  <data name="-128" xml:space="preserve">
+    <value>OrderId này không tồn tại!</value>
+  </data>
+  <data name="-129" xml:space="preserve">
+    <value>Bạn chỉ được phép hoàn vé trước thời gian chiếu 3 giờ!</value>
+  </data>
+  <data name="-104" xml:space="preserve">
+    <value>Email đã tồn tại!</value>
+  </data>
+  <data name="-105" xml:space="preserve">
+    <value>Số điện thoại đã tồn tại!</value>
   </data>
 </root>
