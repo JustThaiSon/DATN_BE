@@ -6,6 +6,7 @@ using DATN_Helpers.Constants;
 using DATN_Helpers.Extensions;
 using DATN_LandingPage.Extension;
 using DATN_LandingPage.Handlers;
+using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAL.ServiceType;
@@ -83,10 +84,10 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetShowTimeLanding")]
-        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? cinemaId,Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetShowTimeLangdingRes>>();
-            var data = _movieDAO.GetShowTimeLanding(movieId, location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);
+            var data = _movieDAO.GetShowTimeLanding(cinemaId, movieId, location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);
             var resultMapper = _mapper.Map<List<GetShowTimeLangdingRes>>(data);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
@@ -280,6 +281,29 @@ namespace DATN_LandingPage.Controllers
             var result = _orderDAO.CheckRefund(orderId, out int response);
             var resultMapper = _mapper.Map<CheckRefundRes>(result);
             res.Data = resultMapper;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [HttpGet]
+        [Route("GetCinemaByLocation")]
+        public async Task<CommonResponse<List<GetCinemaByLocationRes>>> GetCinemaByLocation(string? location)
+        {
+            var res = new CommonResponse<List<GetCinemaByLocationRes>>();
+            var result = _movieDAO.GetCinemaByLocation(location, out int response);
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+
+        [HttpGet]
+        [Route("GetCinemaAll")]
+        public async Task<CommonResponse<List<GetCinemaByLocationRes>>> GetCinemaAll()
+        {
+            var res = new CommonResponse<List<GetCinemaByLocationRes>>();
+            var result = _movieDAO.GetCinemaAll(out int response);
+            res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
