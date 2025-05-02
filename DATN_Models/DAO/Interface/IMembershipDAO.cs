@@ -8,7 +8,7 @@ namespace DATN_Models.DAO.Interface
     {
         void AddUserMembership(Guid userId,AddUserMembershipReq userMembership,out int response);
         CheckMemberShipDAL CheckMembership(Guid userId, out int response);
-        MembershipPreviewDAL MembershipPreview(Guid userId,long orderPrice,long ticketPrice, out int response);
+        MembershipPreviewDAL MembershipPreview(Guid userId, long orderPrice, long ticketPrice, int type, out int response);
         GetmembershipByUserDAL GetmembershipByUser(Guid userId, out int response);
         GetPointByUserRes GetPointByUser(Guid userId, out int response);
         List<GetPointHistoryRes> GetPointHistory(Guid userId,int type, int currentPage, int recordPerPage, out int totalRecord, out int response);

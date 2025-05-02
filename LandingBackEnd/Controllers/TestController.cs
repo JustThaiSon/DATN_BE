@@ -5,11 +5,14 @@ using DATN_Helpers.Extensions;
 using DATN_LandingPage.Extension;
 using DATN_Models.DAL.Movie.Actor;
 using DATN_Models.DAL.Rating;
+using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Comments.Req;
 using DATN_Models.DTOS.Comments.Res;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.DTOS.Rating.Req;
 using DATN_Models.DTOS.Rating.Res;
+using DATN_Services.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -20,8 +23,8 @@ namespace DATN_BackEndApi.Controllers
     {
         //private readonly CloudService _cloudService;
         private readonly ICommentDAO _commentDAO;
-
-
+        private readonly IOrderDAO _orderDAO;
+        private readonly IMailService _mailService;
         private readonly string _langCode;
         private readonly IMapper _mapper;
         private readonly IRatingDAO _ratingDAO;
@@ -32,13 +35,17 @@ namespace DATN_BackEndApi.Controllers
             IConfiguration configuration,
             IUltil ultils,
             IMapper mapper,
-            IRatingDAO ratingDAO)
+            IRatingDAO ratingDAO,
+            IOrderDAO orderDAO,
+            IMailService mailService)
         {
             _langCode = configuration["MyCustomSettings:LanguageCode"] ?? "vi";
             _ultils = ultils;
             _mapper = mapper;
             _commentDAO = commentDAO;
             _ratingDAO = ratingDAO;
+            _orderDAO = orderDAO;
+            _mailService = mailService;
         }
 
         #region Lấy thông tin người dùng đang đăng nhập hiện tại
@@ -65,7 +72,22 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
+        [HttpGet]
+        [Route("Test")]
+        public async Task<CommonResponse<dynamic>> Test(Guid OrderId)
+        {
+            var res = new CommonResponse<dynamic>();
+            var data = _orderDAO.GetOrderSendMail(OrderId, out int responseCode);
+            var resultMapper = _mapper.Map<OrderMailResultRes>(data);
+            if (resultMapper != null)
+            {
+                _mailService.SendQrCodeEmail(resultMapper);
+            }
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = resultMapper;
+            return res;
+        }
 
 
     }

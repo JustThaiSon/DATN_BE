@@ -16,9 +16,12 @@ namespace DATN_Models.DAO.Interface
         List<GetMovieLandingDAL> GetMovieLanding(int type, int currentPage, int recordPerPage, out int totalRecord, out int response);
         MovieDAL GetDetailMovieLangding(Guid movieId, out int response);
         List<GetAllNameMovieDAL> GetAllNameMovie(out int response);
-        List<GetShowTimeLandingDAL> GetShowTimeLanding(Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage, out int totalRecord, out int response);
+        List<GetShowTimeLandingDAL> GetShowTimeLanding(Guid? cinemaId,Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage, out int totalRecord, out int response);
 
         GetMovieByShowTimeDAL GetMovieByShowTime(Guid showtime,out int response);
         #endregion
+
+        List<GetCinemaByLocationRes> GetCinemaByLocation(string location, out int response);
+        List<GetCinemaByLocationRes> GetCinemaAll( out int response);
     }
 }

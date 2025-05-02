@@ -48,7 +48,7 @@ namespace DATN_LandingPage.Controllers
         }
 
         [BAuthorize]
-        [HttpPost]
+        [HttpGet]
         [Route("CheckMembership")]
         public async Task<CommonResponse<CheckMemberShipRes>> CheckMembership()
         {
@@ -64,11 +64,11 @@ namespace DATN_LandingPage.Controllers
         [BAuthorize]
         [HttpGet]
         [Route("MembershipPreview")]
-        public async Task<CommonResponse<MembershipPreviewRes>> MembershipPreview(long orderPrice,long ticketPrice )
+        public async Task<CommonResponse<MembershipPreviewRes>> MembershipPreview(long orderPrice,long ticketPrice,int type)
         {
             var res = new CommonResponse<MembershipPreviewRes>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _membershipDAO.MembershipPreview(userId, orderPrice, ticketPrice, out int responseCode);
+            var result = _membershipDAO.MembershipPreview(userId, orderPrice, ticketPrice,type, out int responseCode);
             var resultMapper = _mapper.Map<MembershipPreviewRes>(result);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);

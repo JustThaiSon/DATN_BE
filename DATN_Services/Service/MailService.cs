@@ -49,7 +49,7 @@ namespace DATN_Services.Service
             }
         }
 
-        public async Task<bool> SendQrCodeEmail(OrderMailResultDAL req)
+        public async Task<bool> SendQrCodeEmail(OrderMailResultRes req)
         {
             try
             {
@@ -61,118 +61,788 @@ namespace DATN_Services.Service
 
                 // 2️⃣ Tạo nội dung HTML
                 string emailBody = $@"
-      <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html lang=""en"">
+
 <head>
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>Email Template</title>
-    <style>
-        body {{
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-        }}
-        .container {{
-            margin: 0 auto;
-            padding: 20px;
-            max-width: 600px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }}
-        .header {{
-            text-align: center;
-        }}
-        .header img {{
-            max-width: 150px;
-        }}
-        .section {{
-            margin-top: 20px;
-        }}
-        .qr-code {{
-            text-align: center;
-            margin: 20px 0;
-        }}
-        .info {{
-            margin-top: 10px;
-        }}
-        .info table {{
-            width: 100%;
-            border-collapse: collapse;
-        }}
-        .info table td {{
-            padding: 10px;
-            border: 1px solid #ddd;
-        }}
-        .footer {{
-            margin-top: 20px;
-            font-size: 0.9em;
-            color: #555;
-            text-align: center;
-        }}
-    </style>
+    <title>Document</title>
+    <link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"">
+
 </head>
+
 <body>
-    <div class=""container"">
-        <div class=""header"">
-            <img src=""https://banner2.cleanpng.com/20181203/orv/kisspng-cj-cgv-vietnam-cinema-cj-group-film-1713914319903.webp"" alt=""Logo"">
-            <h2>{req.MovieName}</h2>
-            <p><strong>{req.CinemaName}</strong></p>
-            <p>{req.Address}</p>
-        </div>
-        <div class=""qr-code"">
-            <h3>Mã Vé (Reservation Code)</h3>
-            <h2>{req.OrderCode}</h2>
-            <img src='cid:qrcode' alt='QR Code' width='150' height='150'>
-        </div>
-        <div class=""section"">
-            <h3>Suất Chiếu (Session)</h3>
-            <p><strong>{req.SessionTime}</strong></p>
-            <p>
-                Quý khách vui lòng tới quầy dịch vụ xuất trình mã vé này để được nhận vé.<br>
-                <em>Please go to the service counter and present your booking code to receive the physical ticket to check-in.</em>
-            </p>
-        </div>
-        <div class=""info"">
-            <table>
-                <tr>
-                    <td>Phòng Chiếu (Hall)</td>
-                    <td>{req.RoomName}</td>
-                </tr>
-                <tr>
-                    <td>Ghế (Seat)</td>
-                    <td>{req.SeatList}</td>
-                </tr>
-                <tr>
-                    <td>Thời Gian Thanh Toán (Payment Time)</td>
-                    <td>{req.CreatedDate}</td>
-                </tr>
-                <tr>
-                    <td>Tiền combo bỏng nước (Concession amount)</td>
-                    <td>{req.ConcessionAmount} VND</td>
-                </tr>
-                <tr>
-                    <td>Tổng Tiền (Total amount)</td>
-                    <td>{req.TotalPrice} VND</td>
-                </tr>
-                <tr>
-                    <td>Số tiền giảm giá (Discount amount)</td>
-                    <td>{req.DiscountPrice} VND</td>
-                </tr>
-                <tr>
-                    <td>Số tiền thanh toán (Payment amount)</td>
-                    <td>{req.TotalPrice + req.DiscountPrice} VND</td>
-                </tr>
-                <tr>
-                    <td>Số điểm được cộng (Add Point)</td>
-                    <td>{req.PointChange} Điểm</td>
-                </tr>
-            </table>
-        </div>
-        <div class=""footer"">
-            <p>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</p>
-        </div>
-    </div>
+    <table id=""m_-269591128180421385backgroundTable"" role=""presentation"" width=""100%"" cellspacing=""0"" cellpadding=""0""
+        border=""0"" style=""background-color:#000000"">
+        <tbody>
+            <tr>
+                <td align=""center"">
+                    <table role=""presentation"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                        <tbody>
+                            <!-- Giữ nguyên -->
+                            <tr>
+                                <td align=""center"" style=""width:100%"">
+                                    <table role=""presentation"" width=""100%"" cellspacing=""0"" cellpadding=""0"" border=""0"">
+                                        <tbody>
+                                            <tr>
+                                                <td id=""m_-269591128180421385logo"" align=""center""
+                                                    style=""padding:10px 0"">
+                                                    <table cellpadding=""0"" cellspacing=""0"" width=""100%""
+                                                        role=""presentation"" style=""min-width:100%"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td align=""center"" style=""width:636px"">
+                                    <!-- Giữ nguyên -->
+                                    <table cellspacing=""0"" cellpadding=""0"" border=""0"">
+                                        <tbody>
+                                            <tr>
+                                                <td background=""https://amc-theatres-res.cloudinary.com/image/upload/f_auto/q_auto:low/content/general/xzfoh8web4aen2vah3dd.png""
+                                                    style=""width:636px;background-size:cover;background-position:top center;background-color:#e50638""
+                                                    id=""m_-269591128180421385logo"" align=""center"" valign=""top"">
+
+                                                    <table width=""100%"" cellspacing=""0"" cellpadding=""0"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td align=""left"" style=""padding:20px 0 40px 20px"">
+                                                                    <a href=""http://localhost:4200""
+                                                                        title=""CineX"" target=""_blank""
+                                                                        data-saferedirecturl=""http://localhost:4200/"">
+                                                                        <img src=""https://res.cloudinary.com/dw44ghjmu/image/upload/v1745400720/cinexLogo_w6wqyi.png""
+                                                                            title=""CineX Theatres"" border=""0""
+                                                                            style=""display:block;width:146px;height:px""
+                                                                            width=""146"" height="""" class=""CToWUd""
+                                                                            data-bit=""iit"">
+                                                                    </a>
+                                                                </td>
+                                                                <td align=""right"" valign=""top""
+                                                                    style=""padding:20px 20px 10px 20px"">
+                                                                    <table cellspacing=""0"" cellpadding=""0"" border=""0"">
+
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td align=""right""
+                                                                                    style=""font-family:'gordita',arial,helvetica,sans-serif!important;font-size:13px;color:#ffffff"">
+                                                                                    <table width=""100%"" cellspacing=""0""
+                                                                                        cellpadding=""0"" border=""0"">
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td align=""right"">
+                                                                                                    <table
+                                                                                                        cellspacing=""0""
+                                                                                                        cellpadding=""0""
+                                                                                                        border=""0"">
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td align=""right""
+                                                                                                                    style=""padding:8px 10px 0 0"">
+                                                                                                                    <table
+                                                                                                                        cellspacing=""0""
+                                                                                                                        cellpadding=""0""
+                                                                                                                        align=""right"">
+                                                                                                                        <tbody>
+                                                                                                                            <tr>
+                                                                                                                                <td align=""right""
+                                                                                                                                    style=""padding-bottom:10px"">
+                                                                                                                                    <a href=""http://localhost:4200/showtimes""
+                                                                                                                                        style=""text-decoration:none;color:#ffffff""
+                                                                                                                                        target=""_blank""
+                                                                                                                                        data-saferedirecturl=""http://localhost:4200/showtimes"">
+                                                                                                                                        <img src=""https://ci3.googleusercontent.com/meips/ADKq_NYNrqiMMmAeQx2kYIz8MWfHFQS_CZ6fDyG7i-YzMIA1l4IN3fUfYFToBNDa--2uzSe1Uc3ASGdqyANs40iF21MpRHESOLVxKyNBzNbstY6NzX1R8P5794A1mBQUJwQe5Lq9lvIIpKGhUNzi2viOzgPXCtazOPY20PexbQqmqTA=s0-d-e1-ft#http://image.email.amctheatres.com/lib/fe5915707c61017a771d/m/11/9990ff14-c5dc-429f-b138-279277ad24e8.png""
+                                                                                                                                            alt=""Get Tickets""
+                                                                                                                                            title=""Get Tickets""
+                                                                                                                                            border=""0""
+                                                                                                                                            width=""113""
+                                                                                                                                            height=""32""
+                                                                                                                                            style=""display:block;max-width:100%;height:auto""
+                                                                                                                                            class=""CToWUd""
+                                                                                                                                            data-bit=""iit"">
+                                                                                                                                    </a>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </tbody>
+                                                                                                                    </table>
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+
+
+
+
+
+
+
+                                    <!-- Chỉ sửa table này  -->
+
+                                    <table cellpadding=""0"" cellspacing=""0"" width=""100%"" role=""presentation"" style=""min-width:100%"">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <table width=""100%"" cellspacing=""0"" cellpadding=""0"" border=""0"" bgcolor=""#000000"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style=""background-image:url('https://ci3.googleusercontent.com/meips/ADKq_NYQk9y0lGZh2uZrmwX3cF9CWK5yzYw-SzmB6FVyPYZ_TFy86JoEmRpvSertJG5OTw7CgYIpE_V1ZAJnB66zOb44Ia5cae6e-8mZePAdl6C0zWcl6hSsSP70m2OEtmrFpI6oYLi6RGN_lEXUdwYjOUa7IXxBGVUBrvSq8nX7TQ=s0-d-e1-ft#http://image.email.amctheatres.com/lib/fe6115707c61017a7614/m/3/d0b3eb43-011b-4429-8e64-d3e28df8d627.jpg');background-repeat:no-repeat;background-position:top center;vertical-align:middle;background-color:#000000;background-size:contain""
+                                                                    width=""636"" valign=""middle"" height=""auto""
+                                                                    background=""https://ci3.googleusercontent.com/meips/ADKq_NYQk9y0lGZh2uZrmwX3cF9CWK5yzYw-SzmB6FVyPYZ_TFy86JoEmRpvSertJG5OTw7CgYIpE_V1ZAJnB66zOb44Ia5cae6e-8mZePAdl6C0zWcl6hSsSP70m2OEtmrFpI6oYLi6RGN_lEXUdwYjOUa7IXxBGVUBrvSq8nX7TQ=s0-d-e1-ft#http://image.email.amctheatres.com/lib/fe6115707c61017a7614/m/3/d0b3eb43-011b-4429-8e64-d3e28df8d627.jpg""
+                                                                    align=""center"">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td style=""padding:20px 0"" align=""left"">
+                                                                               
+                                                                                <table cellspacing=""0"" cellpadding=""0"" border=""0"" width=""100%"">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td style=""padding:0 40px 20px 40px"" width=""100%"">
+                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""background-color:#1a1a1a; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);"">
+                                                                                                    <tr>
+                                                                                                        <td style=""padding:20px;"">
+                                                                                                            <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                <tr>
+                                                                                                                    <td width=""120"" valign=""top"">
+                                                                                                                        <img src=""{req.Thumbnail}"" style=""width:120px;height:160px;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.2);"">
+                                                                                                                    </td>
+                                                                                                                    <td style=""padding-left:20px;"" valign=""top"">
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:24px;line-height:32px;font-weight:bold;"">{req.MovieName}</div>
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;font-weight:normal;margin-top:8px;"">Thời lượng: {req.Duration}</div>
+                                                                                                                        <!-- Có thể bỏ -->
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;font-weight:normal;margin-top:8px;"">Thể loại: {req.GenreString}</div>
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;font-weight:bold;margin-top:15px;"">
+                                                                                                                            <span style=""background-color:#444444; color:#ffffff; padding:3px 6px; border-radius:3px;"">C{req.MinimumAge}</span>
+                                                                                                                            <span style=""margin-left:10px;"">Phim dành cho khán giả từ {req.MinimumAge} tuổi trở lên</span>
+                                                                                                                        </div>
+                                                                                                                        <!-- / -->
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        
+                                                                                       
+                                                                                        <tr>
+                                                                                            <td style=""padding:0 40px 20px 40px"" width=""100%"">
+                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""background-color:#333333; border-radius:4px;"">
+                                                                                                    <tr>
+                                                                                                        <td style=""padding:15px 20px;"">
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:16px;line-height:22px;font-weight:bold;"">
+                                                                                                                ĐỪNG QUÊN MANG THEO GIẤY TỜ TÙY THÂN CÓ ẢNH!
+                                                                                                            </div>
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;margin-top:8px;"">
+                                                                                                                Chúng tôi sẵn sàng đón tiếp bạn! Chúng tôi sẽ yêu cầu xem giấy phép lái xe hoặc giấy tờ tùy thân có ảnh khi bạn sử dụng dịch vụ CineX Cinema tại rạp.
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        
+                                                                                        
+                                                                                        <tr>
+                                                                                            <td style=""padding:0 40px 20px 40px"" width=""100%"">
+                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""background-color:#1a1a1a; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);"">
+                                                                                                    <tr>
+                                                                                                        <td style=""padding:20px;"">
+                                                                                                            <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                <tr>
+                                                                                                                    <td width=""65%"" valign=""top"">
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:18px;line-height:24px;font-weight:bold;margin-bottom:15px;"">
+                                                                                                                            THÔNG TIN VÉ
+                                                                                                                        </div>
+                                                                                                                        
+                                                                                                                        <div style=""margin-bottom:20px;"">
+                                                                                                                            <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;font-weight:bold;"">
+                                                                                                                                MÃ XÁC NHẬN VÉ:
+                                                                                                                            </div>
+                                                                                                                            <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:20px;line-height:26px;font-weight:bold;letter-spacing:1px;"">
+                                                                                                                                {req.OrderCode}
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                        
+                                                                                                                        <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                            <tr>
+                                                                                                                                <td style=""padding-bottom:15px;"">
+                                                                                                                                    <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                                        <tr>
+                                                                                                                                            <td width=""24"" valign=""top"">
+                                                                                                                                                <i class=""bi bi-ticket"" style=""color:#ffffff;font-size:18px;""></i>
+                                                                                                                                            </td>
+                                                                                                                                            <td style=""padding-left:10px;"">
+                                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;"">
+                                                                                                                                                    <strong style=""color:#ffffff;"">VÉ:</strong> ({req.SeatList.Split(',', StringSplitOptions.RemoveEmptyEntries).Length})
+
+                                                                                                                                                </div>
+                                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;margin-top:4px;"">
+                                                                                                                                                    <strong style=""color:#ffffff;"">GHẾ:</strong> Phòng chiếu {req.RoomName}, Ghế {req.SeatList}
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <td style=""padding-bottom:15px;"">
+                                                                                                                                    <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                                        <tr>
+                                                                                                                                            <td width=""24"" valign=""top"">
+                                                                                                                                                <i class=""bi bi-geo-alt"" style=""color:#ffffff;font-size:18px;""></i>
+                                                                                                                                            </td>
+                                                                                                                                            <td style=""padding-left:10px;"">
+                                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;"">
+                                                                                                                                                    <strong style=""color:#ffffff;"">RẠP CHIẾU:</strong> {req.CinemaName}
+                                                                                                                                                </div>
+                                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;margin-top:4px;"">
+                                                                                                                                                    {req.Address}
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <td>
+                                                                                                                                    <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                                        <tr>
+                                                                                                                                            <td width=""24"" valign=""top"">
+                                                                                                                                                <i class=""bi bi-calendar"" style=""color:#ffffff;font-size:18px;""></i>
+                                                                                                                                            </td>
+                                                                                                                                            <td style=""padding-left:10px;"">
+                                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;"">
+                                                                                                                                                    <strong style=""color:#ffffff;"">NGÀY CHIẾU:</strong> {req.ShowDate}
+                                                                                                                                                </div>
+                                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;margin-top:4px;"">
+                                                                                                                                                    <strong style=""color:#ffffff;"">GIỜ CHIẾU:</strong> {req.ShowTime}
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </table>
+                                                                                                                    </td>
+                                                                                                                    <td width=""35%"" valign=""top"" align=""center"">
+                                                                                                                        <div style=""background-color:#333333;padding:10px;border-radius:8px;display:inline-block;box-shadow:0 2px 6px rgba(0,0,0,0.2);"">
+                                                                                                                        <img  src='cid:qrcode' alt=""Mã QR"" style=""width:150px;height:150px;border:3px solid #ffffff;border-radius:4px;"">
+                                                                                                                        </div>
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:12px;line-height:16px;margin-top:10px;text-align:center;"">
+                                                                                                                            Quét mã QR này tại quầy vé
+                                                                                                                        </div>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        
+                                                                                       
+                                                                                        <tr>
+                                                                                            <td style=""padding:0 40px 20px 40px"" width=""100%"">
+                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""background-color:#1a1a1a; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);"">
+                                                                                                    <tr>
+                                                                                                        <td style=""padding:20px;"">
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:18px;line-height:24px;font-weight:bold;margin-bottom:15px;border-bottom:1px solid #333333;padding-bottom:10px;"">
+                                                                                                                CHI TIẾT ĐƠN HÀNG
+                                                                                                            </div>
+                                                                                                            
+                                                                                                            <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                <tr>
+                                                                                                                    <td style=""padding-bottom:15px;"">
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;font-weight:bold;margin-bottom:8px;"">
+                                                                                                                            VÉ XEM PHIM
+                                                                                                                        </div>
+                                                                                                                        <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                            <tr>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;padding:5px 0;"">
+                                                                                                                                    Vé  ({req.SeatList.Split(',', StringSplitOptions.RemoveEmptyEntries).Length})
+                                                                                                                                </td>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;text-align:right;padding:5px 0;"">
+                                                                                                                                    {req.TotalPriceTicket} đ
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </table>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                                
+                                                                                                                                                          <tr>
+                                                                                                                            <td style=""padding-bottom:15px;"">
+                                                                                                                                <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;font-weight:bold;margin-bottom:8px;"">
+                                                                                                                                    ĐỒ ĂN & NƯỚC UỐNG
+                                                                                                                                </div>
+                                                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                                    {string.Join("", req.ServiceDetails.Select(service => $@"
+                                                                                                                                    <tr>
+                                                                                                                                        <td style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;padding:5px 0;"">
+                                                                                                                                            {service.ServiceName} (x{service.Quantity})
+                                                                                                                                        </td>
+                                                                                                                                        <td style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;text-align:right;padding:5px 0;"">
+                                                                                                                                            {service.Price:N0} đ
+                                                                                                                                        </td>
+                                                                                                                                    </tr>"))}
+                                                                                                                                </table>
+                                                                                                                            </td>
+                                                                                                                </tr>
+                                                                                                                
+                                                                                                                <tr>
+                                                                                                                    <td style=""border-top:1px solid #333333;padding-top:15px;"">
+                                                                                                                        <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                            <tr>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;padding:5px 0;"">
+                                                                                                                                    Tạm tính
+                                                                                                                                </td>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;text-align:right;padding:5px 0;"">
+                                                                                                                                    {req.DiscountPrice + req.TotalPrice} đ
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;padding:5px 0;"">
+                                                                                                                                    Giảm giá 
+                                                                                                                                </td>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;text-align:right;padding:5px 0;"">
+                                                                                                                                    - {req.DiscountPrice} đ
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                            <tr>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#ffffff;font-size:16px;line-height:24px;font-weight:bold;padding:10px 0 5px;"">
+                                                                                                                                    Tổng cộng
+                                                                                                                                </td>
+                                                                                                                                <td style=""font-family:Arial,sans-serif;color:#ffffff;font-size:16px;line-height:24px;font-weight:bold;text-align:right;padding:10px 0 5px;"">
+                                                                                                                                   {req.TotalPrice} đ
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </table>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        
+                                                                                      
+                                                                                        <tr>
+                                                                                            <td style=""padding:0 40px 20px 40px"" width=""100%"">
+                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""background-color:#1a1a1a; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);"">
+                                                                                                    <tr>
+                                                                                                        <td style=""padding:20px;"">
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:18px;line-height:24px;font-weight:bold;margin-bottom:15px;border-bottom:1px solid #333333;padding-bottom:10px;"">
+                                                                                                                THÔNG TIN THANH TOÁN
+                                                                                                            </div>
+                                                                                                            
+                                                                                                            <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"">
+                                                                                                                <tr>
+                                                                                                                    <td width=""50%"" valign=""top"">
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;font-weight:bold;margin-bottom:8px;"">
+                                                                                                                            PHƯƠNG THỨC THANH TOÁN
+                                                                                                                        </div>
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;"">
+                                                                                                                            <i class=""bi bi-credit-card"" style=""color:#ffffff;font-size:16px;margin-right:5px;""></i>
+                                                                                                                           {req.PaymentMethodName}
+                                                                                                                        </div>
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;margin-top:8px;"">
+                                                                                                                          {req.TotalPrice} đ
+                                                                                                                        </div>
+                                                                                                                    </td>
+                                                                                                                    <td width=""50%"" valign=""top"">
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:14px;line-height:20px;font-weight:bold;margin-bottom:8px;"">
+                                                                                                                            THỜI GIAN THANH TOÁN
+                                                                                                                        </div>
+                                                                                                                        <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;"">
+                                                                                                                           {req.CreatedDate}
+                                                                                                                        </div>
+                                                                                                                        
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        
+                                                                                        <!-- Giữ Nguyên -->
+                                                                                        <tr>
+                                                                                            <td style=""padding:0 40px 20px 40px"" width=""100%"">
+                                                                                                <table width=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""background-color:#1a1a1a; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);"">
+                                                                                                    <tr>
+                                                                                                        <td style=""padding:20px;"">
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#ffffff;font-size:16px;line-height:22px;font-weight:bold;margin-bottom:10px;"">
+                                                                                                                LƯU Ý QUAN TRỌNG
+                                                                                                            </div>
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;margin-bottom:10px;"">
+                                                                                                                • Vui lòng đến trước giờ chiếu ít nhất 15 phút để ổn định chỗ ngồi.
+                                                                                                            </div>
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;margin-bottom:10px;"">
+                                                                                                                • Không mang thức ăn và đồ uống từ bên ngoài vào rạp.
+                                                                                                            </div>
+                                                                                                            <div style=""font-family:Arial,sans-serif;color:#cccccc;font-size:14px;line-height:20px;"">
+                                                                                                                • Tắt điện thoại hoặc để chế độ im lặng trong suốt thời gian xem phim.
+                                                                                                            </div>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    <!-- Giữ nguyên -->
+                                    <table style=""border-top:1px solid #3e3e3e;border-bottom:1px solid #3e3e3e""
+                                        cellspacing=""0"" cellpadding=""0"" align=""center"">
+
+
+                                        <tbody>
+                                            <tr>
+                                                <td width=""636"" align=""center"">
+                                                    <table cellspacing=""0"" cellpadding=""0"" border=""0"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <table style=""background:#000000"" cellspacing=""0""
+                                                                        cellpadding=""0"" border=""0"">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style=""padding:5px 0px"" width=""636""
+                                                                                    align=""center"">
+                                                                                    <table cellspacing=""0""
+                                                                                        cellpadding=""0"" border=""0""
+                                                                                        align=""center"">
+                                                                                        <tbody>
+                                                                                            <tr>
+                                                                                                <td
+                                                                                                    style=""line-height:10px;font-size:10px"">
+                                                                                                    &nbsp;</td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td style=""background:transparent;padding-top:5px;padding-bottom:5px""
+                                                                                                    align=""center"">
+                                                                                                    <table
+                                                                                                        cellspacing=""0""
+                                                                                                        cellpadding=""0""
+                                                                                                        border=""0""
+                                                                                                        align=""center"">
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td
+                                                                                                                    style=""width:26px"">
+                                                                                                                    &nbsp;
+                                                                                                                </td>
+                                                                                                                <td style=""width:32px""
+                                                                                                                    align=""center"">
+                                                                                                                    <a href=""https://www.facebook.com/?locale=vi_VN""
+                                                                                                                        alt=""facebook""
+                                                                                                                        style=""text-decoration:none""
+                                                                                                                        target=""_blank""
+                                                                                                                        data-saferedirecturl=""https://www.facebook.com/?locale=vi_VN"">
+                                                                                                                        <img src=""https://ci3.googleusercontent.com/meips/ADKq_NaPBRFT3ub8EENYJe542Vi62ubs8K5zI0TcuolOz-MdfopDr5wJiAN_xIHwudFJx3tqUlOG9zbcgn4Tz6hUdFvrj7Ll577GkaDr92QBVZbE7OjIUo4jiGXlIvRivMi6h8O49V95-DWdHAGKTFyjMGAK94_NYZmYhqfPH7kSpQ=s0-d-e1-ft#http://image.email.amctheatres.com/lib/fe5915707c61017a771d/m/7/fb162d53-978c-49a0-bcde-135f99bad7db.png""
+                                                                                                                            title=""facebook""
+                                                                                                                            style=""width:32px;height:32px""
+                                                                                                                            width=""32""
+                                                                                                                            height=""32""
+                                                                                                                            border=""0""
+                                                                                                                            class=""CToWUd""
+                                                                                                                            data-bit=""iit"">
+                                                                                                                    </a>
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    style=""width:26px"">
+                                                                                                                    &nbsp;
+                                                                                                                </td>
+                                                                                                                <td style=""width:32px""
+                                                                                                                    align=""center"">
+                                                                                                                    <a href=""https://www.instagram.com/""
+                                                                                                                        alt=""instagram""
+                                                                                                                        style=""text-decoration:none""
+                                                                                                                        target=""_blank""
+                                                                                                                        data-saferedirecturl=""https://www.instagram.com/"">
+                                                                                                                        <img src=""https://ci3.googleusercontent.com/meips/ADKq_NbmBQ5g1zAEithX3h1aGEIR-QzgFGJZwvHZ-nDtYOmG4AJd5zPtqS-69Tb3PwzitT2Bjd1tWv670GOzk2cq3y_rs29UHl2gc1kYxMDzKo47oy13ondxEeS81IyM8jv_WoMoaq0LXEqa-0R17JobCM_uVL18TkAkzi9mtHOJWg=s0-d-e1-ft#http://image.email.amctheatres.com/lib/fe5915707c61017a771d/m/7/6af4b936-3775-458e-9790-a5aab205670f.png""
+                                                                                                                            title=""instagram""
+                                                                                                                            style=""width:32px;height:32px""
+                                                                                                                            width=""32""
+                                                                                                                            height=""32""
+                                                                                                                            border=""0""
+                                                                                                                            class=""CToWUd""
+                                                                                                                            data-bit=""iit"">
+                                                                                                                    </a>
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    style=""width:26px"">
+                                                                                                                    &nbsp;
+                                                                                                                </td>
+                                                                                                                <td style=""width:32""
+                                                                                                                    align=""center"">
+                                                                                                                    <a href=""https://x.com/""
+                                                                                                                        alt=""twitter""
+                                                                                                                        style=""text-decoration:none""
+                                                                                                                        target=""_blank""
+                                                                                                                        data-saferedirecturl=""https://x.com/"">
+                                                                                                                        <img src=""https://ci3.googleusercontent.com/meips/ADKq_Nao-MrHjLyA0VsuaaiqItyWUK3p59ti5saPSG6hNnx-1t5FSN-i6wGxSpDBT5sDzMgalidGrnuGeAPkIt8R9HuWoZ4WhRiRHI_yn4j4Evc4WxTeyQQaczunHADF0EZYWJ5gWb6noAGGG2gou2Ndlm5ZpLAL9QpxrAop0lIacNM=s0-d-e1-ft#https://image.email.amctheatres.com/lib/fe5915707c61017a771d/m/1/be41f356-6977-42f1-a8b1-194c7b57f5ec.png""
+                                                                                                                            title=""twitter""
+                                                                                                                            style=""width:32px;height:32px""
+                                                                                                                            width=""32""
+                                                                                                                            height=""32""
+                                                                                                                            border=""0""
+                                                                                                                            class=""CToWUd""
+                                                                                                                            data-bit=""iit"">
+                                                                                                                    </a>
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    style=""width:26px"">
+                                                                                                                    &nbsp;
+                                                                                                                </td>
+                                                                                                                <td style=""width:32px""
+                                                                                                                    align=""center"">
+                                                                                                                    <a href=""https://www.youtube.com/""
+                                                                                                                        alt=""youtube""
+                                                                                                                        style=""text-decoration:none""
+                                                                                                                        target=""_blank""
+                                                                                                                        data-saferedirecturl=""https://www.youtube.com/"">
+                                                                                                                        <img src=""https://ci3.googleusercontent.com/meips/ADKq_NZxUdQ7DHCMbQEZpdqg4LeWOn620St5QUoi49WZs1AASBarptvySn0I1s5i99V7MuQ1bDTCMMy6QWwTGbB2tdQwwLyDz-OtS_CcqKT0gP4aolELuxWpCTWCeEnb5Bsns2bVSQ2YHGhun4TX4SoqkCTEsOWA96v_ZoVKW5SU5w=s0-d-e1-ft#http://image.email.amctheatres.com/lib/fe5915707c61017a771d/m/7/69721c7f-40f3-43f1-9f02-152aeb276291.png""
+                                                                                                                            title=""youtube""
+                                                                                                                            style=""width:32px;height:32px""
+                                                                                                                            width=""32""
+                                                                                                                            height=""32""
+                                                                                                                            border=""0""
+                                                                                                                            class=""CToWUd""
+                                                                                                                            data-bit=""iit"">
+                                                                                                                    </a>
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    style=""width:26px"">
+                                                                                                                    &nbsp;
+                                                                                                                </td>
+                                                                                                                <td style=""width:32px""
+                                                                                                                    align=""center"">
+                                                                                                                    <a href=""https://www.tiktok.com/""
+                                                                                                                        alt=""TikTok""
+                                                                                                                        style=""text-decoration:none""
+                                                                                                                        target=""_blank""
+                                                                                                                        data-saferedirecturl=""https://www.tiktok.com/"">
+                                                                                                                        <img src=""https://ci3.googleusercontent.com/meips/ADKq_NapedqAFoWslbaCHBsDhNkIsmg9kR2qCZ4cxMJbWgam4Xk9WTLeeo6Cy3T9L54RhWTPRLx5tIpix8XR0uBM2il1TzOW7pscX5sAP0ZDLJBAsN6hqOMcY-AphJrELiwmx-5AaJNlkVFgL0jK87j0f_396flm_bD8DFE6X0fyqDmX=s0-d-e1-ft#https://image.email.amctheatres.com/lib/fe5915707c61017a771d/m/14/b243d8ac-2704-4735-823d-56a3acaf0d16.png""
+                                                                                                                            title=""TikTok""
+                                                                                                                            style=""width:32px;height:32px""
+                                                                                                                            width=""32""
+                                                                                                                            height=""32""
+                                                                                                                            border=""0""
+                                                                                                                            class=""CToWUd""
+                                                                                                                            data-bit=""iit"">
+                                                                                                                    </a>
+                                                                                                                </td>
+                                                                                                                <td
+                                                                                                                    style=""width:26px"">
+                                                                                                                    &nbsp;
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td
+                                                                                                    style=""line-height:10px;font-size:10px"">
+                                                                                                    &nbsp;</td>
+                                                                                            </tr>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+
+
+
+
+
+
+
+
+
+                                    <!-- Giữ nguyên -->
+                                    <table cellpadding=""0"" cellspacing=""0"" width=""100%"" role=""presentation""
+                                        style=""min-width:100%"">
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table width=""100%"" style=""background:rgb(23,23,23)"" border=""0"" cellspacing=""0""
+                                        cellpadding=""0"">
+                                        <tbody>
+                                            <tr>
+                                                <td style=""background:rgb(23,23,23)"">
+                                                    <table align=""center"" cellspacing=""0"" cellpadding=""0"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td width=""636"" align=""center""
+                                                                    style=""background:rgb(23,23,23);padding:20px 10px 15px;color:rgb(255,255,255);text-transform:none;line-height:14px;font-family:'gordita',arial,helvetica,sans-serif!important;font-size:11px;font-weight:normal"">
+                                                                    This email was sent by: <span
+                                                                        class=""m_-269591128180421385applelinksWhite"">CineX
+                                                                        Theatres, Trinh Van Bo Street, Nam Tu Liem, Ha Noi</span>
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </td>
+                            </tr>
+                            <!-- Giữ nguyên -->
+                            <tr>
+                                <td align=""center"" style=""width:636px;border-top:2px solid #4a4a4a"">
+                                    <table role=""presentation"" width=""100%"" cellspacing=""0"" cellpadding=""0"" border=""0"">
+                                        <tbody>
+                                            <tr>
+                                                <td style=""padding:20px 0;background-color:#171717"">
+                                                    <table role=""presentation"" align=""center"" width=""100%"" border=""0""
+                                                        cellspacing=""0"" cellpadding=""0"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class=""m_-269591128180421385drop-sub"" align=""center""
+                                                                    style=""padding:10px 0"">
+                                                                    <table class=""m_-269591128180421385drop-sub""
+                                                                        role=""presentation"" cellspacing=""0""
+                                                                        cellpadding=""0"" border=""0"">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td class=""m_-269591128180421385hide""
+                                                                                    align=""center""
+                                                                                    style=""width:50px;font-family:arial;font-size:11px;color:#000000"">
+                                                                                    &nbsp;</td>
+                                                                                <td class=""m_-269591128180421385drop-block""
+                                                                                    align=""center""
+                                                                                    style=""font-family:arial;font-size:12px;color:#ffffff"">
+                                                                                    <a href=""http://localhost:4200/""
+                                                                                        alt=""Contact Us""
+                                                                                        style=""text-decoration:none;color:#ffffff""
+                                                                                        target=""_blank""
+                                                                                        data-saferedirecturl=""http://localhost:4200/"">
+                                                                                        Liên Hệ
+                                                                                    </a>
+                                                                                </td>
+                                                                                <td class=""m_-269591128180421385hide""
+                                                                                    align=""center""
+                                                                                    style=""width:50px;font-family:arial;font-size:11px;color:#ffffff"">
+                                                                                    &nbsp;|&nbsp;</td>
+                                                                                <td class=""m_-269591128180421385drop-block""
+                                                                                    align=""center""
+                                                                                    style=""font-family:arial;font-size:12px;color:#ffffff"">
+                                                                                    <a href=""http://localhost:4200/trogiup""
+                                                                                        alt=""Privacy Policy""
+                                                                                        style=""text-decoration:none;color:#ffffff""
+                                                                                        target=""_blank""
+                                                                                        data-saferedirecturl=""http://localhost:4200/trogiup"">
+                                                                                        Chính Sách
+                                                                                    </a>
+                                                                                </td>
+                                                                                <td class=""m_-269591128180421385hide""
+                                                                                    align=""center""
+                                                                                    style=""width:50px;font-family:arial;font-size:11px;color:#000000"">
+                                                                                    &nbsp;</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align=""center"" style=""padding:20px 0;background-color:#000000"">
+                                                    <table class=""m_-269591128180421385drop-sub"" role=""presentation""
+                                                        cellspacing=""0"" cellpadding=""0"" border=""0"">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class=""m_-269591128180421385drop-block""
+                                                                    align=""center""
+                                                                    style=""font-family:arial;font-size:12px;color:#ffffff;text-transform:uppercase"">
+                                                                    ©&nbsp;2025 CineX
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
+
 </html>
 ";
 

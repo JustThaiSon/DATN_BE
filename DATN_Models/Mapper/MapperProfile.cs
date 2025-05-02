@@ -106,6 +106,7 @@ namespace DATN_Models.Mapper
             CreateMap<ShowtimesLangdingDAL, ShowtimesLangdingRes>().ReverseMap();
             CreateMap<MovieGenreDAL, MovieGenreRes>().ReverseMap();
             CreateMap<GetAllNameMovieDAL, GetAllNameMovieRes>().ReverseMap();
+            CreateMap<OrderMailResultRes, OrderMailResultDAL>().ReverseMap();
             #endregion
 
             #region Actor
