@@ -111,7 +111,7 @@ namespace DATN_Models.Mapper
 
             #region Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
-            CreateMap<CreateCommentDAL, AddActorReq>()
+            CreateMap<AddActorDAL, AddActorReq>()
                 .ForMember(dest => dest.Photo, opt => opt.Ignore())
                 .ReverseMap();
             CreateMap<UpdateActorDAL, UpdateActorReq>()
