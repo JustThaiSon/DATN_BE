@@ -333,25 +333,25 @@ namespace DATN_Models.Mapper
                 case "Discount":
                     return JsonSerializer.Serialize(new
                     {
-                        Target = req.Target,
-                        Value = req.Value
+                        Target = req.Target ?? string.Empty,
+                        Value = req.Value ?? 0
                     });
                 case "PointBonus":
                     return JsonSerializer.Serialize(new
                     {
-                        Multiplier = req.Multiplier
+                        Multiplier = req.Multiplier ?? 0
                     });
                 case "Service":
                     return JsonSerializer.Serialize(new
                     {
-                        ServiceId = req.ServiceId,
-                        Quantity = req.Quantity,
-                        Limit = req.Limit
+                        ServiceId = req.ServiceId ?? Guid.Empty,
+                        Quantity = req.Quantity ?? 0,
+                        Limit = req.Limit ?? 0
                     });
                 case "UsePoint":
                     return JsonSerializer.Serialize(new
                     {
-                        UsePoint = req.UsePointValue
+                        UsePoint = req.UsePointValue ?? 0
                     });
                 default:
                     return "{}";
