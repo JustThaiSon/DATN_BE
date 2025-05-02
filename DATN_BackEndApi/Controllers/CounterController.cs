@@ -34,6 +34,113 @@ namespace DATN_BackEndApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetUserByEmail")]
+        public IActionResult GetUserByEmail(string email)
+        {
+            try
+            {
+                // Gọi phương thức DAO để lấy thông tin người dùng theo email
+                var user = _counterDAO.GetUserByEmail(
+                    email,
+                    out int response,
+                    out string message);
+
+                // Kiểm tra kết quả
+                if (response != 200) // Nếu không thành công
+                {
+                    return StatusCode(response == -128 ? 404 : 500,
+                        new
+                        {
+                            ResponseCode = response,
+                            Message = message
+                        });
+                }
+
+                // Trả về kết quả thành công
+                return Ok(new
+                {
+                    ResponseCode = response,
+                    Message = message,
+                    User = user
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ResponseCode = -99,
+                    Message = "Lỗi hệ thống: " + ex.Message
+                });
+            }
+        }
+
+
+        [HttpPost]
+        [Route("RefundOrder/{orderCode}")]
+        public async Task<IActionResult> RefundOrder(string orderCode)
+        {
+            try
+            {
+                // Gọi phương thức DAO để hoàn vé dựa trên OrderCode
+                var result = _counterDAO.RefundOrderByOrderCode(
+                    orderCode,
+                    out int response,
+                    out string message);
+
+                // Kiểm tra kết quả
+                if (response != 200) // Nếu không thành công
+                {
+                    return StatusCode(response == -128 || response == -129 ? 400 : 500,
+                        new
+                        {
+                            ResponseCode = response,
+                            Message = message
+                        });
+                }
+
+                // Định dạng dữ liệu để trả về client
+                var refundInfo = new
+                {
+                    ResponseCode = response,
+                    Message = message,
+                    RefundDetails = result.Tables.Count > 0 ? FormatRefundData(result.Tables[0]) : null
+                };
+
+                return Ok(refundInfo);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ResponseCode = -99,
+                    Message = "Lỗi hệ thống: " + ex.Message
+                });
+            }
+        }
+
+        // Helper method để định dạng dữ liệu hoàn vé
+        private object FormatRefundData(DataTable refundData)
+        {
+            if (refundData.Rows.Count == 0)
+                return null;
+
+            var row = refundData.Rows[0];
+            return new
+            {
+                Email = ConvertUtil.ToString(row["Email"]),
+                RefundAmount = ConvertUtil.ToDecimal(row["RefundAmount"]),
+                OrderCode = ConvertUtil.ToString(row["OrderCode"]),
+                ShowTimeId = ConvertUtil.ToGuid(row["ShowTimeId"]),
+                SeatStatusByShowTimeIds = ConvertUtil.ToString(row["SeatStatusByShowTimeIds"])?.Split(',')
+                    .Select(id => string.IsNullOrEmpty(id) ? Guid.Empty : Guid.Parse(id))
+                    .Where(id => id != Guid.Empty)
+                    .ToList()
+            };
+        }
+
+
+
+        [HttpGet]
         [Route("GetNowPlayingMoviesFormatted")]
         public async Task<CommonPagination<List<dynamic>>> GetNowPlayingMoviesFormatted(
             int currentPage = 1,

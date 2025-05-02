@@ -1,4 +1,5 @@
 ﻿using DATN_Models.DAL.Counter;
+using DATN_Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -115,6 +116,18 @@ namespace DATN_Models.DAO.Interface
         bool CancelUnpaidOrder(
             string orderCode,
             Guid? userId,
+            out int response,
+            out string message);
+
+        // Phương thức hoàn vé dựa trên OrderCode
+        DataSet RefundOrderByOrderCode(
+            string orderCode,
+            out int response,
+            out string message);
+
+        // Phương thức lấy thông tin người dùng theo email
+        AppUsers GetUserByEmail(
+            string email,
             out int response,
             out string message);
     }

@@ -26,6 +26,120 @@ namespace DATN_Models.DAO
             connectionString = configuration.GetConnectionString("Db") ?? string.Empty;
         }
 
+
+        public AppUsers GetUserByEmail(string email, out int response, out string message)
+        {
+            response = 0;
+            message = string.Empty;
+            DBHelper db = null;
+
+            try
+            {
+                // Khai báo tham số cho Stored Procedure
+                var pars = new SqlParameter[3];
+                pars[0] = new SqlParameter("@_Email", email);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[2] = new SqlParameter("@_Message", SqlDbType.NVarChar, 255) { Direction = ParameterDirection.Output };
+
+                // Thực thi Stored Procedure
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<AppUsers>("SP_Counter_GetUserByEmail", pars);
+
+                // Lấy giá trị các tham số đầu ra
+                response = ConvertUtil.ToInt(pars[1].Value);
+                message = pars[2].Value.ToString();
+
+                // Xử lý các mã lỗi và gán message tương ứng
+                switch (response)
+                {
+                    case 200:
+                        message = "Lấy thông tin người dùng thành công";
+                        break;
+                    case -128:
+                        message = "Người dùng không tồn tại";
+                        break;
+                    case -500:
+                        message = "Lỗi hệ thống";
+                        break;
+                    default:
+                        message = "Có lỗi xảy ra";
+                        break;
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99; // Mã lỗi hệ thống
+                message = ex.Message;
+                throw;
+            }
+            finally
+            {
+                // Đảm bảo đóng kết nối
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+        public DataSet RefundOrderByOrderCode(string orderCode, out int response, out string message)
+        {
+            response = 0;
+            message = string.Empty;
+            DBHelper db = null;
+
+            try
+            {
+                // Khai báo tham số cho Stored Procedure
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderCode", orderCode);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                // Thực thi Stored Procedure
+                db = new DBHelper(connectionString);
+                DataSet result = db.ExecuteDataSetSP("SP_Counter_RefundOrderByOrderCode", pars);
+
+                // Lấy giá trị các tham số đầu ra
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                // Xử lý các mã lỗi và gán message tương ứng
+                switch (response)
+                {
+                    case 200:
+                        message = "Hoàn vé thành công";
+                        break;
+                    case -128:
+                        message = "Đơn hàng không tồn tại";
+                        break;
+                    case -129:
+                        message = "Không thể hoàn vé vì đã quá thời hạn (ít hơn 3 giờ trước suất chiếu)";
+                        break;
+                    case -500:
+                        message = "Lỗi hệ thống";
+                        break;
+                    default:
+                        message = "Có lỗi xảy ra";
+                        break;
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99; // Mã lỗi hệ thống
+                message = ex.Message;
+                throw;
+            }
+            finally
+            {
+                // Đảm bảo đóng kết nối
+                if (db != null)
+                    db.Close();
+            }
+        }
+
+
+
         public List<Counter_NowPlayingMovies_GetList_DAL> GetNowPlayingMovies(
             int currentPage,
             int recordPerPage,
@@ -637,5 +751,6 @@ namespace DATN_Models.DAO
             }
         }
 
+      
     }
 }
