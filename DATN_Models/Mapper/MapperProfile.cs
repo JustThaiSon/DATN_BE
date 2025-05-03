@@ -218,11 +218,8 @@ namespace DATN_Models.Mapper
 
             CreateMap<DATN_Models.DTOS.MembershipBenefit.Req.UpdateMembershipBenefitReq, DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL>()
                 .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
-                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
-
-            CreateMap<DATN_Models.DTOS.MembershipBenefit.Req.UpdateMembershipBenefitReq, DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL>()
-                .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
-                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
+                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
 
 
             #endregion
