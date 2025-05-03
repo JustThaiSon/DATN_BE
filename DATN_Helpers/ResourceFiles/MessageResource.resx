@@ -362,4 +362,7 @@
   <data name="-105" xml:space="preserve">
     <value>Số điện thoại đã tồn tại!</value>
   </data>
+  <data name="-2005" xml:space="preserve">
+    <value>Ngày kết thúc không được nhỏ hơn ngày Nhập</value>
+  </data>
 </root>

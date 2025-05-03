@@ -43,11 +43,18 @@ namespace DATN_BackEndApi.Controllers
         public async Task<CommonResponse<string>> CreateService(IFormFile photo, [FromQuery] CreateServiceReq req)
         {
             var res = new CommonResponse<string>();
-            var reqMapper = _mapper.Map<CreateServiceDAL>(req);
-            if (photo != null)
+
+            // Kiểm tra xem có ảnh không khi tạo mới
+            if (photo == null)
             {
-                reqMapper.ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false);
+                res.ResponseCode = 400;
+                res.Message = "Hình ảnh là bắt buộc khi tạo mới dịch vụ";
+                return res;
             }
+
+            var reqMapper = _mapper.Map<CreateServiceDAL>(req);
+            reqMapper.ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false);
+
             _serviceDAO.CreateService(reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -58,14 +65,22 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("UpdateService")]
-        public async Task<CommonResponse<string>> UpdateService(IFormFile photo, [FromQuery] UpdateServiceReq req)
+        public async Task<CommonResponse<string>> UpdateService(IFormFile? photo, [FromQuery] UpdateServiceReq req)
         {
             var res = new CommonResponse<string>();
             var reqMapper = _mapper.Map<UpdateServiceDAL>(req);
+
+            // Nếu có ảnh mới, cập nhật URL ảnh
             if (photo != null)
             {
                 reqMapper.ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false);
             }
+            else
+            {
+                // Nếu không có ảnh mới, đặt ImageUrl thành chuỗi rỗng để thủ tục lưu trữ biết không cập nhật ảnh
+                reqMapper.ImageUrl = string.Empty;
+            }
+
             _serviceDAO.UpdateService(reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -143,14 +158,33 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("CreateServiceType")]
-        public async Task<CommonResponse<string>> CreateServiceType(IFormFile photo, [FromQuery] CreateServiceTypeReq req)
+        public async Task<CommonResponse<string>> CreateServiceType(IFormFile photo, [FromQuery] string Name, [FromQuery] string Description)
         {
             var res = new CommonResponse<string>();
-            var reqMapper = _mapper.Map<CreateServiceTypeDAL>(req);
-            if (photo != null)
+
+            // Kiểm tra xem có ảnh không khi tạo mới
+            if (photo == null)
             {
-                reqMapper.ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false);
+                res.ResponseCode = 400;
+                res.Message = "Hình ảnh là bắt buộc khi tạo mới loại dịch vụ";
+                return res;
             }
+
+            // Kiểm tra các trường bắt buộc
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Description))
+            {
+                res.ResponseCode = -99;
+                res.Message = "The Name field is required. The Description field is required.";
+                return res;
+            }
+
+            var reqMapper = new CreateServiceTypeDAL
+            {
+                Name = Name,
+                Description = Description,
+                ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false)
+            };
+
             _serviceTypeDAO.CreateServiceType(reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -160,14 +194,36 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("UpdateServiceType")]
-        public async Task<CommonResponse<string>> UpdateServiceType(IFormFile photo, [FromQuery] UpdateServiceTypeReq req)
+        public async Task<CommonResponse<string>> UpdateServiceType(IFormFile? photo, [FromQuery] Guid Id, [FromQuery] string Name, [FromQuery] string Description)
         {
             var res = new CommonResponse<string>();
-            var reqMapper = _mapper.Map<UpdateServiceTypeDAL>(req);
+
+            // Kiểm tra các trường bắt buộc
+            if (Id == Guid.Empty || string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Description))
+            {
+                res.ResponseCode = -99;
+                res.Message = "The Id, Name and Description fields are required.";
+                return res;
+            }
+
+            var reqMapper = new UpdateServiceTypeDAL
+            {
+                Id = Id,
+                Name = Name,
+                Description = Description
+            };
+
+            // Nếu có ảnh mới, cập nhật URL ảnh
             if (photo != null)
             {
                 reqMapper.ImageUrl = await _cloudService.UploadImageAsync(photo).ConfigureAwait(false);
             }
+            else
+            {
+                // Nếu không có ảnh mới, đặt ImageUrl thành chuỗi rỗng để thủ tục lưu trữ biết không cập nhật ảnh
+                reqMapper.ImageUrl = string.Empty;
+            }
+
             _serviceTypeDAO.UpdateServiceType(reqMapper, out int response);
             res.Data = null;
             res.Message = MessageUtils.GetMessage(response, _langCode);
