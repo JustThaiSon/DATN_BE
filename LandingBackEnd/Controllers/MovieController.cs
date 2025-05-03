@@ -236,27 +236,29 @@ namespace DATN_LandingPage.Controllers
         [BAuthorize]
         [HttpGet]
         [Route("GetListHistoryOrderByUser")]
-        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser()
+        public async Task<CommonPagination<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser(int currentPage,int recordPerPage)
         {
-            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var res = new CommonPagination<List<GetListHistoryOrderByUserRes>>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _orderDAO.GetListHistoryOrderByUser(userId, out int response);
+            var result = _orderDAO.GetListHistoryOrderByUser(userId, currentPage, recordPerPage,out int totalRecord, out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.TotalRecord = totalRecord;
             return res;
         }
         [BAuthorize]
         [HttpGet]
         [Route("GetPastShowTimesByTimeFilter")]
-        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetPastShowTimesByTimeFilter(string filter)
+        public async Task<CommonPagination<List<GetListHistoryOrderByUserRes>>> GetPastShowTimesByTimeFilter(string filter, int currentPage, int recordPerPage)
         {
-            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var res = new CommonPagination<List<GetListHistoryOrderByUserRes>>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, out int response);
+            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, currentPage, recordPerPage, out int totalRecord,out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.TotalRecord = totalRecord;
             return res;
         }
         [BAuthorize]
