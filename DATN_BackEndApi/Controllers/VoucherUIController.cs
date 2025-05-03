@@ -72,19 +72,32 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
 
-            var voucherUIDAL = _mapper.Map<VoucherUIDAL>(request);
-            voucherUIDAL.CreatedAt = DateTime.Now;
-
-            if (request.Photo != null)
+            try
             {
-                // gán ImageUrl = ảnh cloud
+                // Validate: Ảnh là bắt buộc khi tạo mới
+                if (request.Photo == null)
+                {
+                    res.ResponseCode = 400;
+                    res.Message = "Vui lòng chọn hình ảnh cho voucher";
+                    return res;
+                }
+
+                var voucherUIDAL = _mapper.Map<VoucherUIDAL>(request);
+                voucherUIDAL.CreatedAt = DateTime.Now;
+
+                // Upload ảnh lên cloud
                 voucherUIDAL.ImageUrl = await _cloudService.UploadImageAsync(request.Photo).ConfigureAwait(false);
+
+                _voucherUIDAO.CreateVoucherUI(voucherUIDAL, out int response);
+
+                res.ResponseCode = response;
+                res.Message = MessageUtils.GetMessage(response, _langCode);
             }
-
-            _voucherUIDAO.CreateVoucherUI(voucherUIDAL, out int response);
-
-            res.ResponseCode = response;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
+            catch (Exception ex)
+            {
+                res.ResponseCode = 500;
+                res.Message = $"Lỗi: {ex.Message}";
+            }
 
             return res;
         }
@@ -95,20 +108,43 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
 
-            var voucherUIDAL = _mapper.Map<VoucherUIDAL>(request);
-            voucherUIDAL.Id = id;
-            voucherUIDAL.UpdatedAt = DateTime.Now;
-
-            if (request.Photo != null)
+            try
             {
-                // gán ImageUrl = ảnh cloud
-                voucherUIDAL.ImageUrl = await _cloudService.UploadImageAsync(request.Photo).ConfigureAwait(false);
+                var voucherUIDAL = _mapper.Map<VoucherUIDAL>(request);
+                voucherUIDAL.Id = id;
+                voucherUIDAL.UpdatedAt = DateTime.Now;
+
+                // Lấy thông tin VoucherUI hiện tại để giữ lại ImageUrl nếu không có ảnh mới
+                var currentVoucherUI = _voucherUIDAO.GetVoucherUIById(id, out int getResponse);
+                if (getResponse != 200)
+                {
+                    res.ResponseCode = getResponse;
+                    res.Message = MessageUtils.GetMessage(getResponse, _langCode);
+                    return res;
+                }
+
+                // Chỉ cập nhật ImageUrl nếu có ảnh mới
+                if (request.Photo != null)
+                {
+                    // gán ImageUrl = ảnh cloud
+                    voucherUIDAL.ImageUrl = await _cloudService.UploadImageAsync(request.Photo).ConfigureAwait(false);
+                }
+                else
+                {
+                    // Giữ nguyên ImageUrl cũ
+                    voucherUIDAL.ImageUrl = currentVoucherUI.ImageUrl;
+                }
+
+                _voucherUIDAO.UpdateVoucherUI(voucherUIDAL, out int response);
+
+                res.ResponseCode = response;
+                res.Message = MessageUtils.GetMessage(response, _langCode);
             }
-
-            _voucherUIDAO.UpdateVoucherUI(voucherUIDAL, out int response);
-
-            res.ResponseCode = response;
-            res.Message = MessageUtils.GetMessage(response, _langCode);
+            catch (Exception ex)
+            {
+                res.ResponseCode = 500;
+                res.Message = $"Lỗi: {ex.Message}";
+            }
 
             return res;
         }
