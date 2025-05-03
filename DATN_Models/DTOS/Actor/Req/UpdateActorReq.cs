@@ -8,6 +8,6 @@ namespace DATN_Models.DTOS.Actor
         public DateTime DateOfBirth { get; set; }
         public string Biography { get; set; }
         public IFormFile? Photo { get; set; }
-        public int Status { get; set; }
+        // Status không được phép cập nhật
     }
 }

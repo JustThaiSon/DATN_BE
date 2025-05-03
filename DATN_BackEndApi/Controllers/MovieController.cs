@@ -61,6 +61,18 @@ namespace DATN_BackEndApi.Controllers
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddMovieDAL>(req);
 
+            // Nếu không có ngày nhập, sử dụng ngày hiện tại
+            if (reqMapper.ImportDate == DateTime.MinValue)
+            {
+                reqMapper.ImportDate = DateTime.Now;
+            }
+
+            // Nếu không có ngày kết thúc, sử dụng ngày nhập + 1 năm
+            if (reqMapper.EndDate == DateTime.MinValue)
+            {
+                reqMapper.EndDate = reqMapper.ImportDate.AddYears(1);
+            }
+
             var uploadTasks = new List<Task>();
             if (req.Thumbnail != null)
             {
@@ -88,6 +100,18 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<UpdateMovieDAL>(req);
+
+            // Nếu không có ngày nhập, sử dụng ngày hiện tại
+            if (reqMapper.ImportDate == DateTime.MinValue)
+            {
+                reqMapper.ImportDate = DateTime.Now;
+            }
+
+            // Nếu không có ngày kết thúc, sử dụng ngày nhập + 1 năm
+            if (reqMapper.EndDate == DateTime.MinValue)
+            {
+                reqMapper.EndDate = reqMapper.ImportDate.AddYears(1);
+            }
 
             // Chỉ cập nhật URL khi có file được tải lên
             if (req.Thumbnail != null)

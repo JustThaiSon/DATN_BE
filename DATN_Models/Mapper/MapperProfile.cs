@@ -111,7 +111,7 @@ namespace DATN_Models.Mapper
 
             #region Actor
             CreateMap<ListActorDAL, GetListActorRes>().ReverseMap();
-            CreateMap<CreateCommentDAL, AddActorReq>()
+            CreateMap<AddActorDAL, AddActorReq>()
                 .ForMember(dest => dest.Photo, opt => opt.Ignore())
                 .ReverseMap();
             CreateMap<UpdateActorDAL, UpdateActorReq>()
@@ -140,6 +140,7 @@ namespace DATN_Models.Mapper
             CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<CinemaInfoDAL, CinemaInfoRes>().ReverseMap();
             CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
             CreateMap<GetmembershipByUserDAL, GetmembershipByUserRes>().ReverseMap();
             CreateMap<DATN_Models.DTOS.Membership.Res.MembershipBenefitRes, DATN_Models.DAL.Membership.MembershipBenefitDAL>().ReverseMap();
@@ -218,10 +219,11 @@ namespace DATN_Models.Mapper
 
             CreateMap<DATN_Models.DTOS.MembershipBenefit.Req.UpdateMembershipBenefitReq, DATN_Models.DAL.MembershipBenefit.MembershipBenefitDAL>()
                 .ForMember(dest => dest.ConfigJson, opt => opt.MapFrom(src => CreateConfigJson(src)))
-                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore());
+                .ForMember(dest => dest.LogoUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id));
+
 
             #endregion
-
 
 
 
@@ -329,25 +331,25 @@ namespace DATN_Models.Mapper
                 case "Discount":
                     return JsonSerializer.Serialize(new
                     {
-                        Target = req.Target,
-                        Value = req.Value
+                        Target = req.Target ?? string.Empty,
+                        Value = req.Value ?? 0
                     });
                 case "PointBonus":
                     return JsonSerializer.Serialize(new
                     {
-                        Multiplier = req.Multiplier
+                        Multiplier = req.Multiplier ?? 0
                     });
                 case "Service":
                     return JsonSerializer.Serialize(new
                     {
-                        ServiceId = req.ServiceId,
-                        Quantity = req.Quantity,
-                        Limit = req.Limit
+                        ServiceId = req.ServiceId ?? Guid.Empty,
+                        Quantity = req.Quantity ?? 0,
+                        Limit = req.Limit ?? 0
                     });
                 case "UsePoint":
                     return JsonSerializer.Serialize(new
                     {
-                        UsePoint = req.UsePointValue
+                        UsePoint = req.UsePointValue ?? 0
                     });
                 default:
                     return "{}";

@@ -1,5 +1,4 @@
 ﻿
-
 namespace DATN_Models.DAL.Movie
 {
     public class UpdateMovieDAL
@@ -12,6 +11,8 @@ namespace DATN_Models.DAL.Movie
         public string? TrailerURL { get; set; }
         public int Duration { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public DateTime ImportDate { get; set; } // ngày nhập phim vào hệ thống
+        public DateTime EndDate { get; set; } // ngày hết hạn của phim
         public int Status { get; set; }
         public List<Guid>? ListActorID { get; set; }
         public List<Guid>? ListGenreID { get; set; }

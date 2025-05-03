@@ -15,6 +15,8 @@ namespace DATN_Models.DAL.Movie
         public List<ActorDAL>? listdienvien { get; set; }
         public List<MovieGenreDAL>? genres { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public DateTime ImportDate { get; set; } // ngày nhập phim vào hệ thống
+        public DateTime EndDate { get; set; } // ngày hết hạn của phim
         public double AverageRating { get; set; }
         public Guid? AgeRatingId { get; set; }
         public string? AgeRatingCode { get; set; }

@@ -217,7 +217,18 @@ namespace DATN_Models.DAO
                     }
                 }
 
-                var pars = new SqlParameter[11]; // Updated parameter count
+                // Create DataTable for format IDs
+                DataTable formatTable = new DataTable();
+                formatTable.Columns.Add("Id", typeof(Guid));
+                if (req.ListFormatID != null && req.ListFormatID.Any())
+                {
+                    foreach (var formatId in req.ListFormatID)
+                    {
+                        formatTable.Rows.Add(formatId);
+                    }
+                }
+
+                var pars = new SqlParameter[15]; // Updated parameter count
 
                 pars[0] = new SqlParameter("@_MovieName", req.MovieName);
                 pars[1] = new SqlParameter("@_Description", req.Description);
@@ -229,12 +240,16 @@ namespace DATN_Models.DAO
                 pars[7] = new SqlParameter("@_Status", req.Status);
                 pars[8] = new SqlParameter("@_ActorIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = actorTable };
                 pars[9] = new SqlParameter("@_GenreIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = genreTable };
-                pars[10] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[10] = new SqlParameter("@_AgeRatingId", (object)req.AgeRatingId ?? DBNull.Value);
+                pars[11] = new SqlParameter("@_FormatIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = formatTable };
+                pars[12] = new SqlParameter("@_ImportDate", req.ImportDate);
+                pars[13] = new SqlParameter("@_EndDate", req.EndDate);
+                pars[14] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[10].Value);
+                response = ConvertUtil.ToInt(pars[14].Value);
             }
             catch (Exception ex)
             {
@@ -453,7 +468,7 @@ namespace DATN_Models.DAO
                     }
                 }
 
-                var pars = new SqlParameter[14]; // Updated parameter count
+                var pars = new SqlParameter[16]; // Updated parameter count
 
                 pars[0] = new SqlParameter("@_MovieID", req.MovieID);
                 pars[1] = new SqlParameter("@_MovieName", req.MovieName);
@@ -468,12 +483,14 @@ namespace DATN_Models.DAO
                 pars[10] = new SqlParameter("@_GenreIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = genreTable };
                 pars[11] = new SqlParameter("@_AgeRatingId", (object)req.AgeRatingId ?? DBNull.Value);
                 pars[12] = new SqlParameter("@_FormatIDs", SqlDbType.Structured) { TypeName = "GuidList", Value = formatTable };
-                pars[13] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[13] = new SqlParameter("@_ImportDate", req.ImportDate);
+                pars[14] = new SqlParameter("@_EndDate", req.EndDate);
+                pars[15] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Movie_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[13].Value);
+                response = ConvertUtil.ToInt(pars[15].Value);
             }
             catch (Exception ex)
             {
