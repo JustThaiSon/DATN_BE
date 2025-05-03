@@ -140,6 +140,7 @@ namespace DATN_Models.Mapper
             CreateMap<CreateEmployeeReq, CreateEmployeeDAL>().ReverseMap();
             CreateMap<UpdateEmployeeReq, UpdateEmployeeDAL>().ReverseMap();
             CreateMap<EmployeeDAL, EmployeeRes>().ReverseMap();
+            CreateMap<CinemaInfoDAL, CinemaInfoRes>().ReverseMap();
             CreateMap<CheckRefundRes, CheckRefundDAL>().ReverseMap();
             CreateMap<GetmembershipByUserDAL, GetmembershipByUserRes>().ReverseMap();
             CreateMap<DATN_Models.DTOS.Membership.Res.MembershipBenefitRes, DATN_Models.DAL.Membership.MembershipBenefitDAL>().ReverseMap();

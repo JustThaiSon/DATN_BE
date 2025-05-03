@@ -16,6 +16,7 @@ namespace DATN_Models.DAL.Employee
         public DateTime Dob { get; set; }
         public int Sex { get; set; }
         public string Address { get; set; }
+        public List<Guid> CinemaIds { get; set; } = new List<Guid>();
     }
 
     public class UpdateEmployeeDAL
@@ -27,6 +28,7 @@ namespace DATN_Models.DAL.Employee
         public DateTime Dob { get; set; }
         public int Sex { get; set; }
         public string Address { get; set; }
+        public List<Guid> CinemaIds { get; set; } = new List<Guid>();
     }
 
     public class EmployeeDAL
@@ -43,5 +45,14 @@ namespace DATN_Models.DAL.Employee
         public int Status { get; set; }
         public bool LockoutEnabled { get; set; }
         public DateTimeOffset? LockoutEnd { get; set; }
+        public List<CinemaInfoDAL> Cinemas { get; set; } = new List<CinemaInfoDAL>();
+    }
+
+    public class CinemaInfoDAL
+    {
+        public Guid CinemasId { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }
