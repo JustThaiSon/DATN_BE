@@ -225,20 +225,28 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<GetListHistoryOrderByUserRes> GetListHistoryOrderByUser(Guid userId, out int response)
+        public List<GetListHistoryOrderByUserRes> GetListHistoryOrderByUser(Guid userId, int currentPage, int recordPerPage, out int totalRecords, out int response)
         {
             response = 0;
+            totalRecords = 0; // Initialize totalRecords
             DBHelper db = null;
             List<GetListHistoryOrderByUserRes> result = new List<GetListHistoryOrderByUserRes>();
 
             try
             {
-                var pars = new SqlParameter[2];
+                var pars = new SqlParameter[5]; 
                 pars[0] = new SqlParameter("@_UserId", userId);
-                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[1] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[2] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[3] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
                 var dataTable = db.GetDataTableSP("SP_HistoryOrder_GetListTicket", pars);
-                response = ConvertUtil.ToInt(pars[1].Value);
+
+                response = ConvertUtil.ToInt(pars[4].Value);
+
+                totalRecords = ConvertUtil.ToInt(pars[3].Value);
 
                 if (response == 200)
                 {
@@ -295,21 +303,31 @@ namespace DATN_Models.DAO
 
             return result;
         }
-        public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, out int response)
+        public List<GetListHistoryOrderByUserRes> GetPastShowTimesByTimeFilter(Guid userId, string filterValue, int currentPage, int recordPerPage, out int totalRecords, out int response)
         {
             response = 0;
+            totalRecords = 0;
             DBHelper db = null;
             List<GetListHistoryOrderByUserRes> result = new List<GetListHistoryOrderByUserRes>();
 
             try
             {
-                var pars = new SqlParameter[3];
+                var pars = new SqlParameter[6]; // Update to 5 parameters
                 pars[0] = new SqlParameter("@_UserId", userId);
                 pars[1] = new SqlParameter("@_FilterValue", filterValue ?? (object)DBNull.Value);
-                pars[2] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
                 var dataTable = db.GetDataTableSP("SP_GetPastShowTimesByTimeFilter", pars);
-                response = ConvertUtil.ToInt(pars[2].Value);
+
+                // Get response code
+                response = ConvertUtil.ToInt(pars[5].Value);
+
+                // Get total records
+                totalRecords = ConvertUtil.ToInt(pars[4].Value); // Assuming the total record count is also returned in the response parameter
 
                 if (response == 200)
                 {
@@ -366,6 +384,7 @@ namespace DATN_Models.DAO
 
             return result;
         }
+
         public GetOrderDetailLangdingDAL GetOrderDetailLangding(Guid orderId, out int response)
         {
             response = 0;
