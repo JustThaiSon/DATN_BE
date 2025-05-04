@@ -11,9 +11,11 @@
         ERR_EXISTS_PHONENUMBER = -105,
         ERR_EMAIL_EXIST = -104,
         ERR_SYSTEM = -500,
-        ERR_USER_NOT_FOUND = -105,
+        ERR_EMAIL_NOT_EXIST = -130,
+        ERR_PASSWORD_RESET_FAILED = -131,
+        ERR_USER_NOT_FOUND = -123,
         OTP_SENT = 106,
-        ERR_INVALID_OTP = 107,
+        ERR_INVALID_OTP = -107,
         ERR_TOKEN_INVALID = -405,
         ERR_PASSWORD = -406,
         // Code Validator (-600< and >-700)

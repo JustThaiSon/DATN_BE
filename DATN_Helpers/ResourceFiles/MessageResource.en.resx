@@ -178,6 +178,12 @@
   <data name="-129" xml:space="preserve">
     <value>OrderId Not Exist!</value>
   </data>
+  <data name="-130" xml:space="preserve">
+    <value>Email Not Exist!</value>
+  </data>
+  <data name="-131" xml:space="preserve">
+    <value>Reset Password Fail!</value>
+  </data>
   <data name="-104" xml:space="preserve">
     <value>Email Exist</value>
   </data>

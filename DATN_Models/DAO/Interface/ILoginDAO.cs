@@ -16,5 +16,7 @@ namespace DATN_Models.DAO.Interface
         GetUserInfoDAL GetUserInfo(Guid userId, out int response);
         //void SaveSession(Guid userId);
         Task<(int,string)> ReSendOpt(ReSendOptReq req);
+        Task<(int Code, string Token)> ForgotPassword(ForgotPasswordReq req);
+        Task<int> ResetPassword(ResetPasswordReq req);
     }
 }

@@ -300,5 +300,68 @@ namespace DATN_Models.DAO
             return (response, otp);
         }
 
+        public async Task<(int Code, string Token)> ForgotPassword(ForgotPasswordReq req)
+        {
+            var user = await _userManager.FindByEmailAsync(req.Email);
+
+            if (user == null)
+            {
+                return ((int)ResponseCodeEnum.ERR_EMAIL_NOT_EXIST, string.Empty);
+            }
+
+            var otp = new Random().Next(100000, 999999).ToString();
+
+            var existingOtp = await _context.OptLog.FirstOrDefaultAsync(x => x.Email == req.Email);
+            if (existingOtp != null)
+            {
+                _context.OptLog.Remove(existingOtp);
+                await _context.SaveChangesAsync();
+            }
+
+            var otpLog = new OptLog
+            {
+                Id = Guid.NewGuid(),
+                Email = req.Email,
+                OtpCode = otp,
+                CreatedAt = DateTime.UtcNow,
+            };
+
+            // Save OTP to the database
+            await _context.OptLog.AddAsync(otpLog);
+            await _context.SaveChangesAsync();
+
+            return ((int)ResponseCodeEnum.SUCCESS, otp); 
+        }
+
+
+
+        public async Task<int> ResetPassword(ResetPasswordReq req)
+        {
+            var user = await _userManager.FindByEmailAsync(req.Email);
+            if (user == null)
+            {
+                return (int)ResponseCodeEnum.ERR_EMAIL_NOT_EXIST; 
+            }
+
+            var otpLog = await _context.OptLog.FirstOrDefaultAsync(x => x.Email == req.Email && x.OtpCode == req.Token);
+            if (otpLog == null)
+            {
+                return (int)ResponseCodeEnum.ERR_INVALID_OTP; 
+            }
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, req.NewPassword);
+            if (!result.Succeeded)
+            {
+                return (int)ResponseCodeEnum.ERR_PASSWORD_RESET_FAILED; 
+            }
+
+            _context.OptLog.Remove(otpLog);
+            await _context.SaveChangesAsync();
+
+            return (int)ResponseCodeEnum.SUCCESS;
+        }
+
     }
 }
