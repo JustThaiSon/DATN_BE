@@ -411,54 +411,6 @@ namespace DATN_LandingPage.Controllers
                     {
                         await _mailService.SendMailRefundAll(item);
                     }
-
-                    List<Guid> seatStatusByShowTimeIds = item.SeatStatusByShowTimeIds
-                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(id => Guid.Parse(id.Trim()))
-                        .ToList();
-
-                    using (var webSocket = new ClientWebSocket())
-                    {
-                        try
-                        {
-                            var uri = new Uri($"wss://localhost:7105/ws/KeepSeat?roomId={item.ShowTimeId}&userId={userId}");
-                            await webSocket.ConnectAsync(uri, CancellationToken.None);
-
-                            var seatStatusUpdateRequests = seatStatusByShowTimeIds
-                                .Select(seatId => new SeatStatusShowHandler.SeatStatusUpdateRequest
-                                {
-                                    SeatId = seatId.ToString(),
-                                    Status = SeatStatusEnum.Available
-                                })
-                                .ToList();
-
-                            var refundRequest = new SeatStatusShowHandler.SeatActionRequest
-                            {
-                                Action = "Refund",
-                                SeatStatusUpdateRequests = seatStatusUpdateRequests
-                            };
-
-                            var message = JsonConvert.SerializeObject(refundRequest);
-                            var buffer = Encoding.UTF8.GetBytes(message);
-                            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
-
-                            var responseBuffer = new byte[1024];
-                            var webSocketResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(responseBuffer), CancellationToken.None);
-                            var responseMessage = Encoding.UTF8.GetString(responseBuffer, 0, webSocketResult.Count);
-                            Console.WriteLine($"WebSocket Response: {responseMessage}");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"WebSocket Error: {ex.Message}");
-                        }
-                        finally
-                        {
-                            if (webSocket.State == WebSocketState.Open)
-                            {
-                                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Operation completed", CancellationToken.None);
-                            }
-                        }
-                    }
                 }
             }
 
