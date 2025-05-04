@@ -34,19 +34,20 @@ namespace DATN_Models.DAO
                 pars[1] = new SqlParameter("@_Description", req.Description);
                 pars[2] = new SqlParameter("@_DiscountType", req.DiscountType);
                 pars[3] = new SqlParameter("@_DiscountValue", req.DiscountValue);
-                pars[4] = new SqlParameter("@_StartDate", req.StartDate);
-                pars[5] = new SqlParameter("@_EndDate", req.EndDate);
-                pars[6] = new SqlParameter("@_MaxUsage", req.MaxUsage);
-                pars[7] = new SqlParameter("@_Status", req.Status);
-                pars[8] = new SqlParameter("@_IsStackable", req.IsStackable);
-                pars[9] = new SqlParameter("@_CreatedAt", DateTime.Now);
-                pars[10] = new SqlParameter("@_VoucherType", req.VoucherType);
-                pars[11] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_MinOrderValue", req.MinOrderValue);
+                pars[5] = new SqlParameter("@_StartDate", req.StartDate);
+                pars[6] = new SqlParameter("@_EndDate", req.EndDate);
+                pars[7] = new SqlParameter("@_MaxUsage", req.MaxUsage);
+                pars[8] = new SqlParameter("@_Status", req.Status);
+                pars[9] = new SqlParameter("@_IsStackable", req.IsStackable);
+                pars[10] = new SqlParameter("@_CreatedAt", DateTime.Now);
+                pars[11] = new SqlParameter("@_VoucherType", req.VoucherType);
+                pars[12] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Voucher_Create", pars);
 
-                response = ConvertUtil.ToInt(pars[11].Value);
+                response = ConvertUtil.ToInt(pars[12].Value);
             }
             catch (Exception ex)
             {
@@ -66,25 +67,26 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[13];
+                var pars = new SqlParameter[14];
                 pars[0] = new SqlParameter("@_Id", req.Id);
                 pars[1] = new SqlParameter("@_Code", req.Code);
                 pars[2] = new SqlParameter("@_Description", req.Description);
                 pars[3] = new SqlParameter("@_DiscountType", req.DiscountType);
                 pars[4] = new SqlParameter("@_DiscountValue", req.DiscountValue);
-                pars[5] = new SqlParameter("@_StartDate", req.StartDate);
-                pars[6] = new SqlParameter("@_EndDate", req.EndDate);
-                pars[7] = new SqlParameter("@_MaxUsage", req.MaxUsage);
-                pars[8] = new SqlParameter("@_Status", req.Status);
-                pars[9] = new SqlParameter("@_IsStackable", req.IsStackable);
-                pars[10] = new SqlParameter("@_UpdatedAt", DateTime.Now);
-                pars[11] = new SqlParameter("@_VoucherType", req.VoucherType);
-                pars[12] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[5] = new SqlParameter("@_MinOrderValue", req.MinOrderValue);
+                pars[6] = new SqlParameter("@_StartDate", req.StartDate);
+                pars[7] = new SqlParameter("@_EndDate", req.EndDate);
+                pars[8] = new SqlParameter("@_MaxUsage", req.MaxUsage);
+                pars[9] = new SqlParameter("@_Status", req.Status);
+                pars[10] = new SqlParameter("@_IsStackable", req.IsStackable);
+                pars[11] = new SqlParameter("@_UpdatedAt", DateTime.Now);
+                pars[12] = new SqlParameter("@_VoucherType", req.VoucherType);
+                pars[13] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Voucher_Update", pars);
 
-                response = ConvertUtil.ToInt(pars[12].Value);
+                response = ConvertUtil.ToInt(pars[13].Value);
             }
             catch (Exception ex)
             {

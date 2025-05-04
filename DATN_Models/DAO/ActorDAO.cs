@@ -28,13 +28,12 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[6];
+                var pars = new SqlParameter[5]; // Giảm số lượng tham số, không cần Status
                 pars[0] = new SqlParameter("@_Name", resquest.Name);
                 pars[1] = new SqlParameter("@_DateOfBirth", resquest.DateOfBirth);
                 pars[2] = new SqlParameter("@_Biography", resquest.Biography);
                 pars[3] = new SqlParameter("@_Photo", resquest.PhotoURL);
-                pars[4] = new SqlParameter("@_Status", resquest.Status);
-                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
                 db = new DBHelper(connectionString);
 
                 db.ExecuteNonQuerySP("SP_Actor_Create", pars);
@@ -42,7 +41,7 @@ namespace DATN_Models.DAO
                 //GetDetail GetInstanceSP
                 //GetList GetListSP
 
-                response = ConvertUtil.ToInt(pars[5].Value);
+                response = ConvertUtil.ToInt(pars[4].Value);
             }
             catch (Exception ex)
             {
@@ -91,21 +90,20 @@ namespace DATN_Models.DAO
             DBHelper db = null;
             try
             {
-                var pars = new SqlParameter[7];
+                var pars = new SqlParameter[6]; // Giảm số lượng tham số, không cần Status
 
                 pars[0] = new SqlParameter("@_ActorID", Id);
                 pars[1] = new SqlParameter("@_Name", req.Name);
                 pars[2] = new SqlParameter("@_DateOfBirth", req.DateOfBirth);
                 pars[3] = new SqlParameter("@_Biography", req.Biography);
                 pars[4] = new SqlParameter("@_Photo", req.PhotoURL);
-                pars[5] = new SqlParameter("@_Status", req.Status);
-                pars[6] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
 
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Actor_Update", pars);
 
                 //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
-                response = ConvertUtil.ToInt(pars[6].Value);
+                response = ConvertUtil.ToInt(pars[5].Value);
             }
             catch (Exception ex)
             {

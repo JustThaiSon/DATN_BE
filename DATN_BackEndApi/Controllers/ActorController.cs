@@ -43,6 +43,7 @@ namespace DATN_BackEndApi.Controllers
             var res = new CommonResponse<dynamic>();
 
             var reqMapper = _mapper.Map<AddActorDAL>(rq);
+            // Status mặc định là 1, không cần thiết lập
 
             if (rq.Photo != null)
             {
@@ -65,6 +66,7 @@ namespace DATN_BackEndApi.Controllers
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<UpdateActorDAL>(rq);
+            // Không cập nhật Status
 
             if (rq.Photo != null)
             {

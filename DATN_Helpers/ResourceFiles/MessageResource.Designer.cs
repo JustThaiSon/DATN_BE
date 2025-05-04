@@ -493,6 +493,15 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ngày kết thúc không được nhỏ hơn ngày Nhập.
+        /// </summary>
+        internal static string _2005 {
+            get {
+                return ResourceManager.GetString("-2005", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lịch chiếu bị trùng.
         /// </summary>
         internal static string _3 {

@@ -121,7 +121,7 @@ namespace DATN_Models.DAO
 
             try
             {
-                var pars = new SqlParameter[5];
+                var pars = new SqlParameter[4];
                 pars[0] = new SqlParameter("@_FormatId", movieFormat.FormatId);
                 pars[1] = new SqlParameter("@_Name", movieFormat.Name);
                 pars[2] = new SqlParameter("@_Description", movieFormat.Description);

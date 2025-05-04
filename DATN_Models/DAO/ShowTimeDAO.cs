@@ -119,7 +119,7 @@ namespace DATN_Models.DAO
                 // Tạo danh sách tham số cho Stored Procedure
                 var pars = new SqlParameter[6];
                 pars[0] = new SqlParameter("@_ShowTimeId", ShowTimeId);
-                pars[1] = new SqlParameter("@_MovieId", ShowTimeId);
+                pars[1] = new SqlParameter("@_MovieId", request.MovieId);
                 pars[2] = new SqlParameter("@_RoomId", request.RoomId);
                 pars[3] = new SqlParameter("@_StartTime", request.StartTime);
                 pars[4] = new SqlParameter("@_EndTime", request.EndTime);
