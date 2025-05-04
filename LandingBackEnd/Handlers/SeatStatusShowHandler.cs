@@ -105,7 +105,7 @@ namespace DATN_LandingPage.Handlers
                                 break;
 
                             case "JoinRoom":
-                                _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, 600, true); // Default 120 seconds
+                                _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, 80, true); // Default 120 seconds
                                 break;
 
                             case "ExtendCountdown":
@@ -230,9 +230,14 @@ namespace DATN_LandingPage.Handlers
                     await RevertSeatsIfUnpaidAsync(hub, roomId, userId);
                 }
 
-                userCountdownTokens.TryRemove(userId, out _);
-                userCountdownRemaining.TryRemove(userId, out _);
-                userPaymentStatus.TryRemove(userId, out _);
+                CancelUserCountdown(currentUserId);
+                userSeatUpdates.TryRemove(currentUserId, out _);
+                userCountdownTokens.TryRemove(currentUserId, out _);
+                userCountdownRemaining.TryRemove(currentUserId, out _);
+                userPaymentStatus.TryRemove(currentUserId, out _);
+
+                await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                await _webSocketManager.RemoveUserSocketAsync(hub, currentUserId);
             }
         }
         private async Task HandleRefundAction(
