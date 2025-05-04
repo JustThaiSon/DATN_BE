@@ -48,24 +48,21 @@ namespace DATN_BackEndApi.Controllers
 
         #region Comment_Nghia
 
-        /* 
+        /*
           - Bắt buộc đăng nhập mới dùng được [bauthorize] ?
           - Khách hàng chỉ có thể đánh giá sau khi kết thúc phim
           - bắt buộc phải XEM PHIM mới có thể đánh giá.
          */
         [HttpPost]
         [Route("AddComment")]
-        //[BAuthorize]
+        [BAuthorize]
         public async Task<CommonResponse<dynamic>> AddComment(CreateCommentReq req)
         {
-            //var userId = await GetUserId();
+            var userId = await GetUserId();
 
             var res = new CommonResponse<dynamic>();
             var resultMapper = _mapper.Map<CreateCommentDAL>(req);
 
-
-
-            var userId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
             _commentDAO.CreateComment(userId, resultMapper, out int response);
 
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -156,14 +153,13 @@ namespace DATN_BackEndApi.Controllers
 
         [HttpPost]
         [Route("CreateRating")]
-        //[BAuthorize]
+        [BAuthorize]
         public async Task<CommonResponse<dynamic>> CreateRating(AddRatingReq req)
         {
             var res = new CommonResponse<dynamic>();
             var reqMapper = _mapper.Map<AddRatingDAL>(req);
-            //reqMapper.UserId = await GetUserId().ConfigureAwait(false);
+            reqMapper.UserId = await GetUserId().ConfigureAwait(false);
 
-            reqMapper.UserId = Guid.Parse("0FB36DD9-BCF1-CCFD-5C4C-66D99CECA741");
             _ratingDAO.CreateRating(reqMapper, out int response);
 
             res.Data = null;

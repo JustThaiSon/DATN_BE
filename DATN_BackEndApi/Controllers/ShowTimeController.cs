@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
+using DATN_BackEndApi.Extension;
 using DATN_Helpers.Common;
 using DATN_Helpers.Extensions;
 using DATN_Models.DAL.ShowTime;
+using DATN_Models.DAO;
 using DATN_Models.DAO.Interface;
 using DATN_Models.DTOS.Movies.Res;
+using DATN_Models.DTOS.Order.Req;
+using DATN_Models.DTOS.Order.Res;
 using DATN_Models.DTOS.ShowTime.Req;
 using DATN_Models.DTOS.ShowTime.Res;
+using DATN_Services.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
@@ -16,6 +21,7 @@ namespace DATN_BackEndApi.Controllers
     {
         private readonly IShowTimeDAO _showTimeDAO;
         private readonly IMapper _mapper;
+
         private readonly string _langCode;
 
         public ShowTimeController(IShowTimeDAO showTimeDAO, IMapper mapper, IConfiguration configuration)
@@ -189,12 +195,31 @@ namespace DATN_BackEndApi.Controllers
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
         [HttpPost]
         [Route("ShowtimeCronjob")]
         public void ShowtimeCronjob()
         {
             _showTimeDAO.ShowtimeCronjob();
         }
+
+
+
+
+
+
+
+
 
 
     }
