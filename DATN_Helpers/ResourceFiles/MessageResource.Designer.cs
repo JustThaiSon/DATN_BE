@@ -277,6 +277,42 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email không tồn tại !.
+        /// </summary>
+        internal static string _130 {
+            get {
+                return ResourceManager.GetString("-130", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lấy lại mật khẩu thất bại!.
+        /// </summary>
+        internal static string _131 {
+            get {
+                return ResourceManager.GetString("-131", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhân viên này không có quyền tại Rạp này !.
+        /// </summary>
+        internal static string _132 {
+            get {
+                return ResourceManager.GetString("-132", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn không có quyền truy cập !.
+        /// </summary>
+        internal static string _133 {
+            get {
+                return ResourceManager.GetString("-133", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ngày tìm kiếm không hợp lệ .
         /// </summary>
         internal static string _1700 {

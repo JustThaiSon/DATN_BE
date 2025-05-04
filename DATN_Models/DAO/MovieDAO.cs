@@ -4,10 +4,12 @@ using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Rating;
 using DATN_Models.DAL.Service;
 using DATN_Models.DAO.Interface;
+using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Globalization;
 
 namespace DATN_Models.DAO
 {
@@ -504,35 +506,43 @@ namespace DATN_Models.DAO
             }
         }
 
-        public List<GetMovieLandingDAL> GetMovieLanding(int type, int currentPage, int recordPerPage, out int totalRecord, out int response)
+        public List<GetMovieLandingDAL> GetMovieLanding(Guid? movieType, int type, int currentPage, int recordPerPage, out int totalRecord, out int response)
         {
             response = 0;
+            totalRecord = 0;
             DBHelper db = null;
+
             try
             {
-                var pars = new SqlParameter[5];
-                pars[0] = new SqlParameter("@_Type", type);
-                pars[1] = new SqlParameter("@_CurrentPage", currentPage);
-                pars[2] = new SqlParameter("@_RecordPerPage", recordPerPage);
-                pars[3] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
-                pars[4] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                var pars = new SqlParameter[6];
+                pars[0] = new SqlParameter("@_MovieType", SqlDbType.UniqueIdentifier);
+                pars[0].Value = movieType.HasValue ? (object)movieType.Value : DBNull.Value;
+
+                pars[1] = new SqlParameter("@_Type", type);
+                pars[2] = new SqlParameter("@_CurrentPage", currentPage);
+                pars[3] = new SqlParameter("@_RecordPerPage", recordPerPage);
+                pars[4] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                pars[5] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
                 db = new DBHelper(connectionString);
                 var result = db.GetListSP<GetMovieLandingDAL>("SP_Langding_GetMovie", pars);
-                response = ConvertUtil.ToInt(pars[4].Value);
-                totalRecord = ConvertUtil.ToInt(pars[3].Value);
+
+                totalRecord = ConvertUtil.ToInt(pars[4].Value);
+                response = ConvertUtil.ToInt(pars[5].Value);
                 return result;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response = -99;
                 throw;
             }
             finally
             {
-                if (db != null)
-                    db.Close();
+                db?.Close();
             }
         }
+
+
 
         public MovieDAL GetDetailMovieLangding(Guid movieId, out int response)
         {
@@ -626,13 +636,14 @@ namespace DATN_Models.DAO
             response = 0;
             totalRecord = 0;
             DBHelper? db = null;
+
             try
             {
                 var pars = new SqlParameter[8];
-                pars[0] = new SqlParameter("@_CinemaId", cinemaId == Guid.Empty ? (object)DBNull.Value : movieId);
+                pars[0] = new SqlParameter("@_CinemaId", cinemaId == Guid.Empty ? (object)DBNull.Value : cinemaId); // Sửa lỗi gán nhầm movieId
                 pars[1] = new SqlParameter("@_MovieID", movieId == Guid.Empty ? (object)DBNull.Value : movieId);
-                pars[2] = new SqlParameter("@_Location", location);
-                pars[3] = new SqlParameter("@_Date", date);
+                pars[2] = new SqlParameter("@_Location", location ?? (object)DBNull.Value);
+                pars[3] = new SqlParameter("@_Date", date ?? (object)DBNull.Value);
                 pars[4] = new SqlParameter("@_CurrentPage", currentPage);
                 pars[5] = new SqlParameter("@_RecordPerPage", recordPerPage);
                 pars[6] = new SqlParameter("@_TotalRecord", SqlDbType.Int) { Direction = ParameterDirection.Output };
@@ -640,23 +651,26 @@ namespace DATN_Models.DAO
 
                 db = new DBHelper(connectionString);
                 var result = db.GetListSP<GetShowTimeLandingDAL>("SP_Langding_GetShowTime", pars);
+
                 if (result != null)
                 {
                     foreach (var item in result)
                     {
                         item.Showtimes = item.ListShowTime.Split(',')
-                            .Select(x => x.Split('|'))
-                            .Where(parts => parts.Length >= 4 && Guid.TryParse(parts[0].Trim(), out _))
-                            .Select(parts => new ShowtimesLangdingDAL
-                            {
-                                Id = Guid.Parse(parts[0].Trim()),
-                                StartTime = TimeSpan.Parse(parts[1].Trim()),
-                                RoomTypeId = Guid.Parse(parts[2].Trim()),
-                                RoomTypeName = parts[3].Trim()
-                            })
-                            .ToList();
+                     .Select(x => x.Split('|'))
+                     .Where(parts => parts.Length >= 4 && Guid.TryParse(parts[0].Trim(), out _))
+                     .Select(parts => new ShowtimesLangdingDAL
+                     {
+                         Id = Guid.Parse(parts[0].Trim()),
+                         StartTime = TimeSpan.Parse(parts[1].Trim()).ToString(@"hh\:mm"),
+                         RoomTypeId = Guid.Parse(parts[2].Trim()),
+                         RoomTypeName = parts[3].Trim()
+                     })
+     .ToList();
+
                     }
                 }
+
                 response = ConvertUtil.ToInt(pars[7].Value);
                 totalRecord = ConvertUtil.ToInt(pars[6].Value);
                 return result ?? new List<GetShowTimeLandingDAL>();
@@ -839,8 +853,29 @@ namespace DATN_Models.DAO
             }
         }
 
-
-
+        public List<GetMovieTypeRes> GetMovieType(out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[1];
+                pars[0] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                db = new DBHelper(connectionString);
+                var result = db.GetListSP<GetMovieTypeRes>("SP_Langding_GetTypeMovie", pars);
+                response = ConvertUtil.ToInt(pars[0].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
 
 
 

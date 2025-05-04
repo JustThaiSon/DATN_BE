@@ -166,26 +166,32 @@ namespace DATN_LandingPage.Controllers
             res.Data = Opt;
             return res;
         }
-         [HttpPost]
-        [Route("Test")]
-        public async Task<IActionResult> Test(GetInfoRefundRes req)
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public async Task<CommonResponse<dynamic>> ForgotPassword(ForgotPasswordReq req)
         {
-            await _mailService.SendMailRefundAll(req);
-            return Ok("Test");
+            var res = new CommonResponse<dynamic>();
+            var (response, Opt) = await _loginDAO.ForgotPassword(req);
+            if (response == (int)ResponseCodeEnum.SUCCESS)
+            {
+                await _mailService.SendOtpEmail(req.Email, Opt);
+            }
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.Data = Opt;
+            return res;
         }
         [HttpPost]
-        [Route("SendMailRefund")]
-        public async Task<IActionResult> SendMailRefund(GetInfoRefundRes req)
+        [Route("ResetPassword")]
+        public async Task<CommonResponse<dynamic>> ResetPassword(ResetPasswordReq req)
         {
-            await _mailService.SendMailRefund(req);
-            return Ok("Test");
-        }
-        [HttpPost]
-        [Route("SendOtpEmail")]
-        public async Task<IActionResult> SendOtpEmail(string email,string opt)
-        {
-            await _mailService.SendOtpEmail(email,opt);
-            return Ok("Test");
+            var res = new CommonResponse<dynamic>();
+            var result = await _loginDAO.ResetPassword(req);
+            res.ResponseCode = result;
+            res.Message = MessageUtils.GetMessage(result, _langCode);
+            return res;
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DATN_Models.DAL.Movie;
+using DATN_Models.DTOS.Movies.Res;
 
 namespace DATN_Models.DAO.Interface
 {
@@ -13,7 +14,7 @@ namespace DATN_Models.DAO.Interface
 
         List<MovieGenreDAL> GetMovieGenres(Guid movieId, out int response);
 
-        List<GetMovieLandingDAL> GetMovieLanding(int type, int currentPage, int recordPerPage, out int totalRecord, out int response);
+        List<GetMovieLandingDAL> GetMovieLanding(Guid? movieType, int type, int currentPage, int recordPerPage, out int totalRecord, out int response);
         MovieDAL GetDetailMovieLangding(Guid movieId, out int response);
         List<GetAllNameMovieDAL> GetAllNameMovie(out int response);
         List<GetShowTimeLandingDAL> GetShowTimeLanding(Guid? cinemaId,Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage, out int totalRecord, out int response);
@@ -23,5 +24,7 @@ namespace DATN_Models.DAO.Interface
 
         List<GetCinemaByLocationRes> GetCinemaByLocation(string location, out int response);
         List<GetCinemaByLocationRes> GetCinemaAll( out int response);
+
+        List<GetMovieTypeRes> GetMovieType(out int response);
     }
 }

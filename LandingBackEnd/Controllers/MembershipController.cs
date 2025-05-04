@@ -106,6 +106,17 @@ namespace DATN_LandingPage.Controllers
             res.Data = resultMapper;
             return res;
         }
+        [HttpGet]
+        [Route("GetMembership")]
+        public async Task<CommonResponse<GetMembershipRes>> GetMembership(long membershipId)
+        {
+            var res = new CommonResponse<GetMembershipRes>();
+            var result = _membershipDAO.GetMembership(membershipId, out int responseCode);
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = result;
+            return res;
+        }
         [BAuthorize]
         [HttpGet]
         [Route("GetPointHistory")]
