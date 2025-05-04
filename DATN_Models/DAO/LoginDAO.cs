@@ -375,7 +375,7 @@ namespace DATN_Models.DAO
             }
 
             var hasCinemaPermission = await _context.AppUsers
-                .Where(ap => ap.Id == user.Id && ap.Status == 1)
+                .Where(ap => ap.Id == user.Id && ap.Status == 1 && ap.LockoutEnabled == false )
                 .Join(_context.AppUsers_Cinemas,
                     ap => ap.Id,
                     auc => auc.UserId,
