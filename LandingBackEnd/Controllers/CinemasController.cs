@@ -56,28 +56,23 @@ namespace DATN_BackEndApi.Controllers
         {
             try
             {
-                await _db.Database.ExecuteSqlRawAsync("DISABLE TRIGGER ALL ON Cinemas;");
-                var Cine = _db.Cinemas.FirstOrDefault(a => a.CinemasId == id);
+                // Sử dụng stored procedure để kiểm tra và xóa cinema
+                _cinemasDAO.DeleteCinema(id, out int response);
 
-                Cine.IsDeleted = true;
-                await _db.SaveChangesAsync();
-                await _db.Database.ExecuteSqlRawAsync("ENABLE TRIGGER ALL ON Cinemas;");
                 return new CommonResponse<dynamic>
                 {
-                    ResponseCode = 200
+                    ResponseCode = response,
+                    Message = MessageUtils.GetMessage(response, _langCode)
                 };
-                
             }
             catch (Exception ex)
             {
                 return new CommonResponse<dynamic>
                 {
                     ResponseCode = -101,
-                    Message = $"có lỗi rồi : {ex}"
+                    Message = $"Có lỗi xảy ra: {ex.Message}"
                 };
             }
-           
-            
         }
 
         [HttpPost]
