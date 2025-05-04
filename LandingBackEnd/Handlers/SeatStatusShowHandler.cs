@@ -32,7 +32,8 @@ namespace DATN_LandingPage.Handlers
         // Lưu trạng thái thanh toán của từng user
         private static ConcurrentDictionary<string, bool> userPaymentStatus
             = new ConcurrentDictionary<string, bool>();
-
+        private static ConcurrentDictionary<string, SemaphoreSlim> userCountdownLocks
+    = new ConcurrentDictionary<string, SemaphoreSlim>();
         private string currentUserId;
 
         public SeatStatusShowHandler(
@@ -105,14 +106,39 @@ namespace DATN_LandingPage.Handlers
                                 break;
 
                             case "JoinRoom":
-                                _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, 600, true); // Default 120 seconds
+                                CancelUserCountdown(currentUserId);
+
+                                userCountdownRemaining[currentUserId] = 600; // Reset thời gian countdown về 600 giây
+
+                                // Khởi tạo countdown mới
+                                _ =  StartOrExtendCountdownAsync(hub, roomId, currentUserId, 80, true); // Default 600 seconds
+
+                                Console.WriteLine($"[WebSocket] User {currentUserId} joined room {roomId} with a new countdown.");
                                 break;
 
                             case "ExtendCountdown":
                                 if (request.ExtensionDuration.HasValue)
                                 {
-                                    _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, request.ExtensionDuration.Value);
+                                    var extension = request.ExtensionDuration.Value;
+
+                                    if (userCountdownRemaining.TryGetValue(currentUserId, out var remainingTime))
+                                    {
+                                        var newDuration = remainingTime + extension;
+
+                                        CancelUserCountdown(currentUserId); 
+
+                                        _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, newDuration, false);
+
+                                        Console.WriteLine($"[WebSocket] Countdown extended for user={currentUserId}, new duration={newDuration} seconds");
+                                    }
+                                    else
+                                    {
+                                        _ = StartOrExtendCountdownAsync(hub, roomId, currentUserId, extension, false);
+                                        Console.WriteLine($"[WebSocket] New countdown started for user={currentUserId}, duration={extension} seconds");
+                                    }
                                 }
+                                break;
+
                                 break;
 
                             case "Payment":
@@ -158,51 +184,55 @@ namespace DATN_LandingPage.Handlers
             if (userCountdownTokens.TryGetValue(userId, out var tokenSource))
             {
                 if (!tokenSource.IsCancellationRequested)
-                    tokenSource.Cancel();
+                {
+                    Console.WriteLine($"[WebSocket] Cancelling countdown for user={userId}");
+                    tokenSource.Cancel(); // Hủy token
+                }
 
-                tokenSource.Dispose();
+                tokenSource.Dispose(); // Giải phóng tài nguyên
+                Console.WriteLine($"[WebSocket] Countdown cancelled and token disposed for user={userId}");
             }
+
+            // Loại bỏ token và trạng thái countdown khỏi dictionary
             userCountdownTokens.TryRemove(userId, out _);
             userCountdownRemaining.TryRemove(userId, out _);
+            Console.WriteLine($"[WebSocket] Removed countdown data for user={userId}");
         }
 
         /// <summary>
         /// Tạo hoặc gia hạn countdown riêng cho user, sau thời gian quy định sẽ hủy ghế nếu chưa thanh toán
         /// </summary>
-        private async Task StartOrExtendCountdownAsync(string hub, Guid roomId, string userId, int durationInSeconds, bool isJoinRoom = false)
+        private async Task StartOrExtendCountdownAsync(string hub, Guid roomId, string userId, int additionalSeconds, bool isJoinRoom = false)
         {
-            int newDuration = durationInSeconds;
-
-            if (userCountdownRemaining.TryGetValue(userId, out int remainingTime))
-            {
-                if (isJoinRoom)
-                {
-                    newDuration = durationInSeconds;
-                }
-                else
-                {
-                    newDuration += remainingTime;
-                }
-            }
-            else
-            {
-                userCountdownRemaining[userId] = newDuration;
-            }
-
-            CancelUserCountdown(userId);
-
-            var newTokenSource = new CancellationTokenSource();
-            userCountdownTokens[userId] = newTokenSource;
-            var cancellationToken = newTokenSource.Token;
-
-            if (isJoinRoom)
-            {
-                userPaymentStatus[userId] = false;
-            }
+            var semaphore = userCountdownLocks.GetOrAdd(userId, _ => new SemaphoreSlim(1, 1));
+            await semaphore.WaitAsync();
 
             try
             {
-                for (int i = newDuration; i >= 0; i--)
+                if (userCountdownTokens.TryGetValue(userId, out var existingTokenSource))
+                {
+                    // Countdown đang chạy: chỉ cần cộng thêm thời gian
+                    if (userCountdownRemaining.TryGetValue(userId, out var remaining))
+                    {
+                        userCountdownRemaining[userId] = remaining + additionalSeconds;
+                        Console.WriteLine($"[WebSocket] Extended countdown for user={userId} by {additionalSeconds}s");
+                        return;
+                    }
+                }
+
+                // Nếu không có countdown cũ, tạo mới
+                var newTokenSource = new CancellationTokenSource();
+                userCountdownTokens[userId] = newTokenSource;
+                var cancellationToken = newTokenSource.Token;
+
+                if (isJoinRoom)
+                {
+                    userPaymentStatus[userId] = false;
+                }
+
+                userCountdownRemaining[userId] = additionalSeconds;
+
+                while (userCountdownRemaining[userId] >= 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -210,31 +240,36 @@ namespace DATN_LandingPage.Handlers
                         break;
                     }
 
-                    userCountdownRemaining[userId] = i;
-                    var countdownData = new { i };
+                    var remaining = userCountdownRemaining[userId];
+                    var countdownData = new { i = remaining };
                     await SendSeatsCountdownToClient(roomId, hub, countdownData);
 
                     await Task.Delay(1000, cancellationToken);
+                    userCountdownRemaining[userId] = Math.Max(0, userCountdownRemaining[userId] - 1);
+                }
+
+                if (!userPaymentStatus.TryGetValue(userId, out var isPaid) || !isPaid)
+                {
+                    await RevertSeatsIfUnpaidAsync(hub, roomId, userId);
                 }
             }
             catch (TaskCanceledException)
             {
-                Console.WriteLine($"[WebSocket] Countdown task cancelled due to disconnect for user={userId}");
+                Console.WriteLine($"[WebSocket] Countdown task cancelled for user={userId}");
             }
             finally
             {
-                bool paid = userPaymentStatus.TryGetValue(userId, out var isPaid) && isPaid;
-
-                if (!paid)
-                {
-                    await RevertSeatsIfUnpaidAsync(hub, roomId, userId);
-                }
-
                 userCountdownTokens.TryRemove(userId, out _);
                 userCountdownRemaining.TryRemove(userId, out _);
                 userPaymentStatus.TryRemove(userId, out _);
+                semaphore.Release();
+
+                Console.WriteLine($"[WebSocket] Countdown finished for user={userId}");
             }
         }
+
+
+
         private async Task HandleRefundAction(
             List<SeatStatusUpdateRequest> seatStatusUpdateRequests,
             string hub,
