@@ -177,7 +177,7 @@ namespace DATN_LandingPage.Handlers
             {
                 if (isJoinRoom)
                 {
-                    newDuration = remainingTime;
+                    newDuration = durationInSeconds;
                 }
                 else
                 {
