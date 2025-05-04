@@ -11,6 +11,8 @@ using DATN_Models.DAO.Interface.SeatAbout;
 using DATN_Models.HandleData;
 using DATN_Models.Mapper;
 using DATN_Models.Models;
+using DATN_Services.Service;
+using DATN_Services.Service.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
@@ -79,6 +81,9 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IPricingRuleDAO, PricingRuleDAO>();
             services.AddTransient<ICommentDAO, CommentDAO>();
             services.AddTransient<IOrderDAO, OrderDAO>();
+            services.AddTransient<IMailService, MailService>();
+
+
             services.AddTransient<IEmployeeDAO, EmployeeDAO>();
             services.AddTransient<IVoucherDAO, VoucherDAO>();
             services.AddTransient<IVoucherUIDAO, VoucherUIDAO>();
@@ -87,6 +92,7 @@ namespace DATN_BackEndApi.Extension
             services.AddTransient<IServiceTypeDAO, ServiceTypeDAO>();
             services.AddTransient<ISeatTypeDAO, SeatTypeDAO>();
             services.AddTransient<IRoomTypeDAO, RoomTypeDAO>();
+            services.AddTransient<IOrderManagementDAO, OrderManagementDAO>();
             services.AddTransient<IAgeRatingDAO, AgeRatingDAO>();
             services.AddTransient<IMovieFormatDAO, MovieFormatDAO>();
 

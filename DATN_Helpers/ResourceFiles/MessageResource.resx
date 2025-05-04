@@ -355,18 +355,6 @@
   <data name="-129" xml:space="preserve">
     <value>Bạn chỉ được phép hoàn vé trước thời gian chiếu 3 giờ!</value>
   </data>
-  <data name="-130" xml:space="preserve">
-    <value>Email không tồn tại !</value>
-  </data>
-  <data name="-131" xml:space="preserve">
-    <value>Lấy lại mật khẩu thất bại!</value>
-  </data>
-  <data name="-132" xml:space="preserve">
-    <value>Nhân viên này không có quyền tại Rạp này !</value>
-  </data>
-  <data name="-133" xml:space="preserve">
-    <value>Bạn không có quyền truy cập !</value>
-  </data>
   <data name="-104" xml:space="preserve">
     <value>Email đã tồn tại!</value>
   </data>
@@ -375,5 +363,11 @@
   </data>
   <data name="-2005" xml:space="preserve">
     <value>Ngày kết thúc không được nhỏ hơn ngày Nhập</value>
+  </data>
+  <data name="-2006" xml:space="preserve">
+    <value>định dạng tuổi này đang được sử dụng, bạn chỉ có thể chỉnh sửa</value>
+  </data>
+  <data name="-1919191" xml:space="preserve">
+    <value>Voucher bị trùng</value>
   </data>
 </root>
