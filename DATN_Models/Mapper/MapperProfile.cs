@@ -12,6 +12,7 @@ using DATN_Models.DAL.Membership;
 using DATN_Models.DAL.MembershipBenefit;
 using DATN_Models.DAL.Movie;
 using DATN_Models.DAL.Movie.Actor;
+using DATN_Models.DAL.OrderManagement;
 using DATN_Models.DAL.Orders;
 using DATN_Models.DAL.PricingRule;
 using DATN_Models.DAL.Rating;
@@ -48,6 +49,7 @@ using DATN_Models.DTOS.Movies.Req.Movie;
 using DATN_Models.DTOS.Movies.Res;
 using DATN_Models.DTOS.Order.Req;
 using DATN_Models.DTOS.Order.Res;
+using DATN_Models.DTOS.OrderManagement.Res;
 using DATN_Models.DTOS.PricingRule.Req;
 using DATN_Models.DTOS.PricingRule.Res;
 using DATN_Models.DTOS.Rating.Req;
@@ -243,6 +245,13 @@ namespace DATN_Models.Mapper
             CreateMap<CheckMemberShipRes, CheckMemberShipDAL>().ReverseMap();
             CreateMap<MembershipPreviewDAL, MembershipPreviewRes>().ReverseMap();
             CreateMap<GetOrderDetailLangdingRes, GetOrderDetailLangdingDAL>().ReverseMap();
+            #endregion
+
+            #region OrderManagement
+            CreateMap<OrderManagementDAL, OrderManagementRes>().ReverseMap();
+            CreateMap<OrderManagementDetailDAL, OrderManagementDetailRes>().ReverseMap();
+            CreateMap<OrderTicketDetailDAL, OrderTicketDetailRes>().ReverseMap();
+            CreateMap<OrderServiceDetailDAL, OrderServiceDetailRes>().ReverseMap();
             #endregion
             // ==========================================================
 
