@@ -363,5 +363,68 @@ namespace DATN_Models.DAO
             return (int)ResponseCodeEnum.SUCCESS;
         }
 
+        public async Task<(LoginDTO LoginDto, int Response)> LoginByEmployee(LoginEmployeeReq req)
+        {
+            int response = 0;
+
+            var user = await _userManager.FindByNameAsync(req.UserName);
+            if (user == null)
+            {
+                response = (int)ResponseCodeEnum.ERR_USER_NOT_FOUND;
+                return (null, response);
+            }
+
+            var hasCinemaPermission = await _context.AppUsers
+                .Where(ap => ap.Id == user.Id && ap.Status == 1)
+                .Join(_context.AppUsers_Cinemas,
+                    ap => ap.Id,
+                    auc => auc.UserId,
+                    (ap, auc) => new { ap, auc })
+                .Join(_context.Cinemas,
+                    combined => combined.auc.CinemasId,
+                    c => c.CinemasId,
+                    (combined, c) => new { combined.ap, combined.auc, c })
+                .AnyAsync(x => x.c.CinemasId == req.CinemaId);
+
+            if (!hasCinemaPermission)
+            {
+                response = (int)ResponseCodeEnum.ERR_UNAUTHORIZED_CINEMA;
+                return (null, response);
+            }
+
+            var roleNames = await _userManager.GetRolesAsync(user);
+
+            var allowedRoles = new List<string> { "Admin", "Employee" };
+            if (!roleNames.Any(r => allowedRoles.Contains(r)))
+            {
+                response = (int)ResponseCodeEnum.ERR_FORBIDDEN_ROLE;
+                return (null, response);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, req.PassWord, true, true);
+            if (!result.Succeeded)
+            {
+                response = -406;
+                return (null, response);
+            }
+
+            var roles = _context.Roles
+                .Where(r => roleNames.Contains(r.Name))
+                .Select(x => new RoleRes { Name = x.Name })
+                .ToList();
+
+            var loginDTO = new LoginDTO
+            {
+                ID = user.Id,
+                DisplayName = user.Name,
+                UserName = user.UserName,
+                Roles = roles.Select(x => x.Name).ToList(),
+                Email = user.Email
+            };
+
+            response = (int)ResponseCodeEnum.SUCCESS;
+            return (loginDTO, response);
+        }
+
     }
 }

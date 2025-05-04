@@ -70,6 +70,33 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
+        [HttpPost]
+        [Route("LoginByEmployee")]
+        public async Task<CommonResponse<dynamic>> LoginByEmployee(LoginEmployeeReq req)
+        {
+            var res = new CommonResponse<dynamic>();
+            var (loginDto, responseCode) = await _loginDAO.LoginByEmployee(req);
+            if (responseCode != 200)
+            {
+                res.ResponseCode = responseCode;
+                res.Message = MessageUtils.GetMessage(res.ResponseCode, _langCode);
+                return res;
+            }
+            LoginRes loginCms = new LoginRes
+            {
+                AccessToken = _ultils.GenerateToken(loginDto.ID, loginDto.Roles),
+                RefreshToken = _ultils.GenerateRefreshToken(loginDto.ID, loginDto.Roles),
+                Roles = loginDto.Roles,
+
+                UserId = loginDto.ID.ToString(),
+                UserName = loginDto.UserName,
+                DisplayName = loginDto.DisplayName
+            };
+            res.ResponseCode = responseCode;
+            res.Message = MessageUtils.GetMessage(responseCode, _langCode);
+            res.Data = loginCms;
+            return res;
+        }
 
 
         [HttpPost("verify-otp")]
