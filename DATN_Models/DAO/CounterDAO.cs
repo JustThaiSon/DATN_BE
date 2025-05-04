@@ -751,6 +751,40 @@ namespace DATN_Models.DAO
             }
         }
 
-      
+
+        public DataSet GetOrderDetailsByOrderCode(string orderCode, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                // Khai báo tham số cho Stored Procedure
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_OrderCode", orderCode);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                // Thực thi Stored Procedure
+                db = new DBHelper(connectionString);
+                DataSet result = db.ExecuteDataSetSP("SP_Order_GetDetailsByOrderCode", pars);
+
+                // Lấy giá trị tham số đầu ra
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                response = -99; // Mã lỗi hệ thống
+                throw;
+            }
+            finally
+            {
+                // Đảm bảo đóng kết nối
+                if (db != null)
+                    db.Close();
+            }
+        }
+
     }
 }

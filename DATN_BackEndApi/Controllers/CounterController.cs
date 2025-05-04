@@ -979,7 +979,187 @@ namespace DATN_BackEndApi.Controllers
         }
 
 
+        [HttpGet]
+        [Route("Order/GetDetails/{orderCode}")]
+        public async Task<IActionResult> GetOrderDetailsByOrderCode(string orderCode)
+        {
+            try
+            {
+                // Gọi phương thức DAO để lấy chi tiết đơn hàng
+                var result = _counterDAO.GetOrderDetailsByOrderCode(
+                    orderCode,
+                    out int response);
 
+                // Kiểm tra kết quả
+                if (response != 200) // Nếu không thành công
+                {
+                    return StatusCode(response >= 400 && response < 500 ? response : 500,
+                        new
+                        {
+                            ResponseCode = response,
+                            Message = MessageUtils.GetMessage(response, _langCode)
+                        });
+                }
+
+                // Kiểm tra nếu không có dữ liệu
+                if (result == null || result.Tables.Count == 0)
+                {
+                    return NotFound(new
+                    {
+                        ResponseCode = 404,
+                        Message = "Không tìm thấy thông tin đơn hàng"
+                    });
+                }
+
+                // Định dạng dữ liệu trả về
+                var orderDetails = new
+                {
+                    ResponseCode = response,
+                    Message = "Lấy thông tin đơn hàng thành công",
+                    OrderInfo = result.Tables[0].Rows.Count > 0 ? FormatOrderInfo(result.Tables[0]) : null,
+                    MovieShowtimeInfo = result.Tables.Count > 1 && result.Tables[1].Rows.Count > 0 ? FormatMovieShowtimeInfo(result.Tables[1]) : null,
+                    SeatDetails = result.Tables.Count > 2 && result.Tables[2].Rows.Count > 0 ? FormatSeatDetails(result.Tables[2]) : null,
+                    ServiceDetails = result.Tables.Count > 3 && result.Tables[3].Rows.Count > 0 ? FormatServiceInfo(result.Tables[3]) : null
+                };
+
+                return Ok(orderDetails);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    ResponseCode = -99,
+                    Message = "Lỗi hệ thống: " + ex.Message
+                });
+            }
+        }
+
+        // Format thông tin đơn hàng (Table 0)
+        private dynamic FormatOrderInfo(DataTable orderTable)
+        {
+            var row = orderTable.Rows[0];
+            return new
+            {
+                OrderId = row["OrderId"].ToString(),
+                OrderCode = row["OrderCode"].ToString(),
+                Email = row["Email"].ToString(),
+                TotalPrice = Convert.ToInt64(row["TotalPrice"]),
+                Status = Convert.ToInt32(row["Status"]),
+                IsAnonymous = Convert.ToBoolean(row["IsAnonymous"]),
+                DiscountPrice = Convert.ToInt64(row["DiscountPrice"]),
+                CreatedDate = Convert.ToDateTime(row["OrderCreatedDate"]),
+                UpdatedDate = row["OrderUpdatedDate"] != DBNull.Value ? Convert.ToDateTime(row["OrderUpdatedDate"]) : (DateTime?)null,
+                UserInfo = row["IsAnonymous"].ToString() == "True" ? null : new
+                {
+                    UserName = row["UserName"].ToString(),
+                    FullName = row["FullName"].ToString(),
+                    PhoneNumber = row["PhoneNumber"].ToString(),
+                    Address = row["Address"].ToString(),
+                    Dob = row["Dob"] != DBNull.Value ? Convert.ToDateTime(row["Dob"]) : (DateTime?)null
+                },
+                FormattedTotalPrice = _ultils.FormatMoney(Convert.ToInt64(row["TotalPrice"])),
+                FormattedDiscountPrice = _ultils.FormatMoney(Convert.ToInt64(row["DiscountPrice"])),
+                FormattedCreatedDate = Convert.ToDateTime(row["OrderCreatedDate"]).ToString("dd/MM/yyyy HH:mm"),
+                FormattedUpdatedDate = row["OrderUpdatedDate"] != DBNull.Value ?
+                    Convert.ToDateTime(row["OrderUpdatedDate"]).ToString("dd/MM/yyyy HH:mm") : null
+            };
+        }
+
+        // Format thông tin phim và suất chiếu (Table 1)
+        private dynamic FormatMovieShowtimeInfo(DataTable movieTable)
+        {
+            var row = movieTable.Rows[0];
+            return new
+            {
+                MovieId = row["MovieId"].ToString(),
+                MovieName = row["MovieName"].ToString(),
+                MovieDescription = row["MovieDescription"].ToString(),
+                Duration = Convert.ToInt32(row["MovieDuration"]),
+                Thumbnail = row["Thumbnail"].ToString(),
+                Banner = row["Banner"].ToString(),
+                Trailer = row["Trailer"].ToString(),
+                AgeRatingCode = row["AgeRatingCode"].ToString(),
+                AverageRating = row["AverageRating"] != DBNull.Value ? Convert.ToDouble(row["AverageRating"]) : 0,
+                ShowTimeInfo = new
+                {
+                    ShowTimeId = row["ShowTimeId"].ToString(),
+                    StartTime = Convert.ToDateTime(row["StartTime"]),
+                    EndTime = Convert.ToDateTime(row["EndTime"]),
+                    Status = Convert.ToInt32(row["ShowTimeStatus"]),
+                    FormattedStartTime = Convert.ToDateTime(row["StartTime"]).ToString("dd/MM/yyyy HH:mm"),
+                    FormattedEndTime = Convert.ToDateTime(row["EndTime"]).ToString("HH:mm"),
+                    FormattedDuration = $"{Convert.ToInt32(row["MovieDuration"])} phút"
+                },
+                RoomInfo = new
+                {
+                    RoomId = row["RoomId"].ToString(),
+                    RoomName = row["Name"].ToString(),
+                    RoomType = row["RoomTypeName"].ToString()
+                },
+                CinemaInfo = new
+                {
+                    CinemaId = row["CinemaId"].ToString(),
+                    CinemaName = row["CinemaName"].ToString(),
+                    Address = row["CinemaAddress"].ToString(),
+                    PhoneNumber = row["CinemaPhoneNumber"].ToString()
+                }
+            };
+        }
+
+        // Format thông tin ghế (Table 2)
+        private List<dynamic> FormatSeatDetails(DataTable seatTable)
+        {
+            var result = new List<dynamic>();
+
+            foreach (DataRow row in seatTable.Rows)
+            {
+                result.Add(new
+                {
+                    TicketId = row["TicketId"].ToString(),
+                    TicketCode = row["TickeCode"].ToString(),
+                    SeatInfo = new
+                    {
+                        SeatId = row["SeatId"].ToString(),
+                        SeatName = row["SeatName"].ToString(),
+                        RowNumber = row["RowNumber"].ToString(),
+                        ColumnNumber = row["ColNumber"].ToString(),
+                        SeatType = row["SeatTypeName"].ToString(),
+                        BasePrice = Convert.ToInt64(row["BasePrice"]),
+                        ActualPrice = Convert.ToInt64(row["ActualPrice"]),
+                        Status = Convert.ToInt32(row["SeatStatus"]),
+                        FormattedBasePrice = _ultils.FormatMoney(Convert.ToInt64(row["BasePrice"])),
+                        FormattedActualPrice = _ultils.FormatMoney(Convert.ToInt64(row["ActualPrice"]))
+                    }
+                });
+            }
+
+            return result;
+        }
+
+        // Format thông tin dịch vụ (Table 3)
+        private List<dynamic> FormatServiceInfo(DataTable serviceTable)
+        {
+            var result = new List<dynamic>();
+
+            foreach (DataRow row in serviceTable.Rows)
+            {
+                result.Add(new
+                {
+                    OrderServiceId = row["OrderServiceId"].ToString(),
+                    ServiceId = row["ServiceId"].ToString(),
+                    ServiceName = row["ServiceName"].ToString(),
+                    Description = row["ServiceDescription"].ToString(),
+                    Quantity = Convert.ToInt32(row["Quantity"]),
+                    UnitPrice = Convert.ToInt64(row["UnitPrice"]),
+                    TotalPrice = Convert.ToInt64(row["TotalPrice"]),
+                    ServiceType = row["ServiceTypeName"].ToString(),
+                    FormattedUnitPrice = _ultils.FormatMoney(Convert.ToInt64(row["UnitPrice"])),
+                    FormattedTotalPrice = _ultils.FormatMoney(Convert.ToInt64(row["TotalPrice"]))
+                });
+            }
+
+            return result;
+        }
 
 
 

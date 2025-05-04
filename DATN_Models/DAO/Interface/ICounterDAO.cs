@@ -130,6 +130,14 @@ namespace DATN_Models.DAO.Interface
             string email,
             out int response,
             out string message);
+
+
+        // Phương thức lấy thông tin chi tiết đơn hàng theo OrderCode
+        DataSet GetOrderDetailsByOrderCode(
+            string orderCode,
+            out int response);
+
+
     }
 
 
