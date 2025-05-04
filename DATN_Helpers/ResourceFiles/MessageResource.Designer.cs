@@ -277,6 +277,42 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email không tồn tại !.
+        /// </summary>
+        internal static string _130 {
+            get {
+                return ResourceManager.GetString("-130", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lấy lại mật khẩu thất bại!.
+        /// </summary>
+        internal static string _131 {
+            get {
+                return ResourceManager.GetString("-131", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhân viên này không có quyền tại Rạp này !.
+        /// </summary>
+        internal static string _132 {
+            get {
+                return ResourceManager.GetString("-132", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bạn không có quyền truy cập !.
+        /// </summary>
+        internal static string _133 {
+            get {
+                return ResourceManager.GetString("-133", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ngày tìm kiếm không hợp lệ .
         /// </summary>
         internal static string _1700 {
@@ -439,7 +475,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ID Không tồn tại (Khách Hàng).
+        ///   Looks up a localized string similar to Rạp đã đạt số phòng tối đa, không thể thêm phòng mới.
         /// </summary>
         internal static string _2001 {
             get {
@@ -471,6 +507,15 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _2004 {
             get {
                 return ResourceManager.GetString("-2004", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ngày kết thúc không được nhỏ hơn ngày Nhập.
+        /// </summary>
+        internal static string _2005 {
+            get {
+                return ResourceManager.GetString("-2005", resourceCulture);
             }
         }
         

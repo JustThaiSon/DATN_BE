@@ -20,5 +20,14 @@ namespace DATN_Models.DTOS.Employee.Res
         public int Status { get; set; }
         public bool LockoutEnabled { get; set; }
         public DateTimeOffset? LockoutEnd { get; set; }
+        public List<CinemaInfoRes> Cinemas { get; set; } = new List<CinemaInfoRes>();
+    }
+
+    public class CinemaInfoRes
+    {
+        public Guid CinemasId { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

@@ -93,7 +93,6 @@ namespace DATN_BackEndApi.Controllers
             return res;
         }
 
-
         [HttpGet]
         [Route("GetListCinemas")]
 

@@ -139,6 +139,9 @@
   <data name="-1997" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="-2001" xml:space="preserve">
+    <value>The cinema has reached the maximum number of rooms, cannot add new room</value>
+  </data>
   <data name="200" xml:space="preserve">
     <value>Success</value>
   </data>
@@ -177,6 +180,18 @@
   </data>
   <data name="-129" xml:space="preserve">
     <value>OrderId Not Exist!</value>
+  </data>
+  <data name="-130" xml:space="preserve">
+    <value>Email Not Exist!</value>
+  </data>
+  <data name="-131" xml:space="preserve">
+    <value>Reset Password Fail!</value>
+  </data>
+  <data name="-132" xml:space="preserve">
+    <value>Nhân viên này không có quyền tại Rạp này !</value>
+  </data>
+  <data name="-133" xml:space="preserve">
+    <value>Bạn không có quyền truy cập !</value>
   </data>
   <data name="-104" xml:space="preserve">
     <value>Email Exist</value>

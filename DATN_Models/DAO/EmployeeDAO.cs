@@ -63,6 +63,21 @@ namespace DATN_Models.DAO
                     using (var context = new DATN_Context())
                     {
                         context.UserRoles.Add(userRole);
+
+                        // Thêm thông tin về rạp chiếu phim mà nhân viên quản lý
+                        if (req.CinemaIds != null && req.CinemaIds.Count > 0)
+                        {
+                            foreach (var cinemaId in req.CinemaIds)
+                            {
+                                var userCinema = new AppUsers_Cinemas
+                                {
+                                    UserId = user.Id,
+                                    CinemasId = cinemaId
+                                };
+                                context.Set<AppUsers_Cinemas>().Add(userCinema);
+                            }
+                        }
+
                         await context.SaveChangesAsync();
                     }
 
@@ -98,7 +113,40 @@ namespace DATN_Models.DAO
                     user.Address = req.Address;
 
                     var result = await _userManager.UpdateAsync(user);
-                    return result.Succeeded ? 200 : -99;
+
+                    if (result.Succeeded)
+                    {
+                        // Cập nhật thông tin về rạp chiếu phim mà nhân viên quản lý
+                        using (var context = new DATN_Context())
+                        {
+                            // Xóa tất cả các liên kết hiện tại
+                            var existingUserCinemas = context.Set<AppUsers_Cinemas>().Where(uc => uc.UserId == id).ToList();
+                            if (existingUserCinemas.Any())
+                            {
+                                context.Set<AppUsers_Cinemas>().RemoveRange(existingUserCinemas);
+                            }
+
+                            // Thêm các liên kết mới
+                            if (req.CinemaIds != null && req.CinemaIds.Count > 0)
+                            {
+                                foreach (var cinemaId in req.CinemaIds)
+                                {
+                                    var userCinema = new AppUsers_Cinemas
+                                    {
+                                        UserId = id,
+                                        CinemasId = cinemaId
+                                    };
+                                    context.Set<AppUsers_Cinemas>().Add(userCinema);
+                                }
+                            }
+
+                            await context.SaveChangesAsync();
+                        }
+
+                        return 200; // Success
+                    }
+
+                    return -99; // Update failed
                 }
                 else
                 {
@@ -147,6 +195,54 @@ namespace DATN_Models.DAO
                 var result = db.GetListSP<EmployeeDAL>("SP_Employee_GetList", pars);
                 int response = ConvertUtil.ToInt(pars[3].Value);
                 int totalRecord = ConvertUtil.ToInt(pars[2].Value);
+
+                // Lấy thông tin về các rạp chiếu phim cho mỗi nhân viên trong danh sách
+                if (result != null && result.Count > 0)
+                {
+                    using (var context = new DATN_Context())
+                    {
+                        // Lấy tất cả các ID của nhân viên trong danh sách
+                        var employeeIds = result.Select(e => e.Id).ToList();
+
+                        // Lấy tất cả các liên kết giữa nhân viên và rạp chiếu phim
+                        var userCinemas = context.Set<AppUsers_Cinemas>()
+                            .Where(uc => employeeIds.Contains(uc.UserId))
+                            .ToList();
+
+                        if (userCinemas.Any())
+                        {
+                            // Lấy tất cả các ID của rạp chiếu phim
+                            var cinemaIds = userCinemas.Select(uc => uc.CinemasId).Distinct().ToList();
+
+                            // Lấy thông tin chi tiết về các rạp chiếu phim
+                            var cinemas = context.Set<Cinemas>()
+                                .Where(c => cinemaIds.Contains(c.CinemasId) && !c.IsDeleted)
+                                .Select(c => new { c.CinemasId, c.Name, c.Address, c.PhoneNumber })
+                                .ToList();
+
+                            // Gán thông tin về rạp chiếu phim cho mỗi nhân viên
+                            foreach (var employee in result)
+                            {
+                                var employeeCinemaIds = userCinemas
+                                    .Where(uc => uc.UserId == employee.Id)
+                                    .Select(uc => uc.CinemasId)
+                                    .ToList();
+
+                                employee.Cinemas = cinemas
+                                    .Where(c => employeeCinemaIds.Contains(c.CinemasId))
+                                    .Select(c => new CinemaInfoDAL
+                                    {
+                                        CinemasId = c.CinemasId,
+                                        Name = c.Name,
+                                        Address = c.Address,
+                                        PhoneNumber = c.PhoneNumber
+                                    })
+                                    .ToList();
+                            }
+                        }
+                    }
+                }
+
                 return (result, totalRecord, response);
             }
             catch (Exception ex)
@@ -171,6 +267,34 @@ namespace DATN_Models.DAO
                 db = new DBHelper(connectionString);
                 var result = db.GetInstanceSP<EmployeeDAL>("SP_Employee_GetDetail", pars);
                 int response = ConvertUtil.ToInt(pars[1].Value);
+
+                // Lấy thông tin về các rạp chiếu phim mà nhân viên đang quản lý
+                using (var context = new DATN_Context())
+                {
+                    var userCinemas = context.Set<AppUsers_Cinemas>()
+                        .Where(uc => uc.UserId == id)
+                        .ToList();
+
+                    if (userCinemas.Any())
+                    {
+                        var cinemaIds = userCinemas.Select(uc => uc.CinemasId).ToList();
+
+                        // Lấy thông tin chi tiết về các rạp chiếu phim
+                        var cinemas = context.Set<Cinemas>()
+                            .Where(c => cinemaIds.Contains(c.CinemasId) && !c.IsDeleted)
+                            .Select(c => new CinemaInfoDAL
+                            {
+                                CinemasId = c.CinemasId,
+                                Name = c.Name,
+                                Address = c.Address,
+                                PhoneNumber = c.PhoneNumber
+                            })
+                            .ToList();
+
+                        result.Cinemas = cinemas;
+                    }
+                }
+
                 return (result, response);
             }
             catch (Exception ex)

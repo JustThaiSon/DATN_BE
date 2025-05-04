@@ -230,5 +230,32 @@ namespace DATN_Models.DAO
                 db?.Close();
             }
         }
+
+        public GetMembershipRes GetMembership(long membershipId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+            try
+            {
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_MemberShipId", membershipId);
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                db = new DBHelper(connectionString);
+                var result = db.GetInstanceSP<GetMembershipRes>("SP_Membership_GetMembershipPrice", pars);
+
+
+                response = ConvertUtil.ToInt(pars[1].Value);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding user membership", ex);
+            }
+            finally
+            {
+                db?.Close();
+            }
+        }
     }
 }

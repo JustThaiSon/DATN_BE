@@ -16,6 +16,7 @@ namespace DATN_Models.DTOS.Employee.Req
         public DateTime Dob { get; set; }
         public int Sex { get; set; }
         public string Address { get; set; }
+        public List<Guid> CinemaIds { get; set; } = new List<Guid>();
     }
 
     public class UpdateEmployeeReq
@@ -27,6 +28,7 @@ namespace DATN_Models.DTOS.Employee.Req
         public DateTime Dob { get; set; }
         public int Sex { get; set; }
         public string Address { get; set; }
+        public List<Guid> CinemaIds { get; set; } = new List<Guid>();
     }
     public class ChangePasswordReq
     {

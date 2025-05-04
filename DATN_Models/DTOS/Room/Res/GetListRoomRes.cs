@@ -23,5 +23,6 @@ namespace DATN_Models.DTOS.Room.Res
         public Guid CinemasId { get; set; }
         public string Name { get; set; }
         public string RoomType { get; set; }
+        public RoomStatusEnum Status { get; set; }
     }
 }

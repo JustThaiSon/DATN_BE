@@ -59,10 +59,10 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetMovie")]
-        public async Task<CommonPagination<List<GetMovieLandingRes>>> GetMovie(int type, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetMovieLandingRes>>> GetMovie(Guid? movieType, int type, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetMovieLandingRes>>();
-            var data = _movieDAO.GetMovieLanding(type, currentPage, recordPerPage, out int totalRecord, out int responseCode);
+            var data = _movieDAO.GetMovieLanding(movieType, type, currentPage, recordPerPage, out int totalRecord, out int responseCode);
             var resultMapper = _mapper.Map<List<GetMovieLandingRes>>(data);
             res.ResponseCode = responseCode;
             res.Message = MessageUtils.GetMessage(responseCode, _langCode);
@@ -84,7 +84,7 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetShowTimeLanding")]
-        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? cinemaId,Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? cinemaId, Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetShowTimeLangdingRes>>();
             var data = _movieDAO.GetShowTimeLanding(cinemaId, movieId, location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);
@@ -236,27 +236,29 @@ namespace DATN_LandingPage.Controllers
         [BAuthorize]
         [HttpGet]
         [Route("GetListHistoryOrderByUser")]
-        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser()
+        public async Task<CommonPagination<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser(int currentPage, int recordPerPage)
         {
-            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var res = new CommonPagination<List<GetListHistoryOrderByUserRes>>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _orderDAO.GetListHistoryOrderByUser(userId, out int response);
+            var result = _orderDAO.GetListHistoryOrderByUser(userId, currentPage, recordPerPage, out int totalRecord, out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.TotalRecord = totalRecord;
             return res;
         }
         [BAuthorize]
         [HttpGet]
         [Route("GetPastShowTimesByTimeFilter")]
-        public async Task<CommonResponse<List<GetListHistoryOrderByUserRes>>> GetPastShowTimesByTimeFilter(string filter)
+        public async Task<CommonPagination<List<GetListHistoryOrderByUserRes>>> GetPastShowTimesByTimeFilter(string filter, int currentPage, int recordPerPage)
         {
-            var res = new CommonResponse<List<GetListHistoryOrderByUserRes>>();
+            var res = new CommonPagination<List<GetListHistoryOrderByUserRes>>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, out int response);
+            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, currentPage, recordPerPage, out int totalRecord, out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
+            res.TotalRecord = totalRecord;
             return res;
         }
         [BAuthorize]
@@ -303,6 +305,17 @@ namespace DATN_LandingPage.Controllers
         {
             var res = new CommonResponse<List<GetCinemaByLocationRes>>();
             var result = _movieDAO.GetCinemaAll(out int response);
+            res.Data = result;
+            res.ResponseCode = response;
+            res.Message = MessageUtils.GetMessage(response, _langCode);
+            return res;
+        }
+        [HttpGet]
+        [Route("GetMovieType")]
+        public async Task<CommonResponse<List<GetMovieTypeRes>>> GetMovieType()
+        {
+            var res = new CommonResponse<List<GetMovieTypeRes>>();
+            var result = _movieDAO.GetMovieType(out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -382,20 +395,25 @@ namespace DATN_LandingPage.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
         }
-
+        [BAuthorize]
         [HttpPost]
         [Route("RefundByShowtime")]
         public async Task<CommonResponse<List<GetInfoRefundRes>>> RefundByShowtime(RefundByShowtimeReq req)
         {
             var res = new CommonResponse<List<GetInfoRefundRes>>();
             var result = _orderDAO.RefundByShowtime(req, out int response);
-            if (result != null)
+            if (result != null && response == 200)
             {
+                var userId = HttpContextHelper.GetUserId();
                 foreach (var item in result)
                 {
-                    await _mailService.SendMailRefund(item);
+                    if (item.Email != null)
+                    {
+                        await _mailService.SendMailRefundAll(item);
+                    }
                 }
             }
+
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
