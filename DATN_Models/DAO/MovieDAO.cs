@@ -417,6 +417,12 @@ namespace DATN_Models.DAO
 
                 //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
                 response = ConvertUtil.ToInt(pars[1].Value);
+
+                // Nếu mã lỗi là -102 (có lịch chiếu trong tương lai), đổi thành -202 để hiển thị thông báo phù hợp
+                if (response == -102)
+                {
+                    response = -202;
+                }
             }
             catch (Exception ex)
             {

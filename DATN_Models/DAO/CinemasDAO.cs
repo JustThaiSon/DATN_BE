@@ -229,5 +229,41 @@ namespace DATN_Models.DAO
 
 
 
+        public void DeleteCinema(Guid cinemaId, out int response)
+        {
+            response = 0;
+            DBHelper db = null;
+
+            try
+            {
+                // Khai báo tham số cho Stored Procedure
+                var pars = new SqlParameter[2];
+                pars[0] = new SqlParameter("@_CinemaId", SqlDbType.UniqueIdentifier) { Value = cinemaId };
+                pars[1] = new SqlParameter("@_Response", SqlDbType.Int) { Direction = ParameterDirection.Output };
+
+                // Thực thi Stored Procedure
+                db = new DBHelper(connectionString);
+                db.ExecuteNonQuerySP("SP_Cinema_Delete", pars);
+
+                // Lấy mã phản hồi từ tham số OUTPUT
+                response = ConvertUtil.ToInt(pars[1].Value);
+
+                // Nếu mã lỗi là -102 (có lịch chiếu trong tương lai), đổi thành -202 để hiển thị thông báo phù hợp
+                if (response == -102)
+                {
+                    response = -202;
+                }
+            }
+            catch (Exception ex)
+            {
+                response = -99;
+                throw new Exception("Error deleting cinema", ex);
+            }
+            finally
+            {
+                if (db != null)
+                    db.Close();
+            }
+        }
     }
 }
