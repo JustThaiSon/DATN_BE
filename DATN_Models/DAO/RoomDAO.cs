@@ -118,8 +118,14 @@ namespace DATN_Models.DAO
                 db = new DBHelper(connectionString);
                 db.ExecuteNonQuerySP("SP_Room_Delete", pars);
 
-                //var result = db.GetListSP<ListActorDAL>("SP_Actor_GetListActor", pars);
+                // Lấy mã phản hồi từ tham số OUTPUT
                 response = ConvertUtil.ToInt(pars[1].Value);
+
+                // Nếu mã lỗi là -102 (có lịch chiếu trong tương lai), đổi thành -202 để hiển thị thông báo phù hợp
+                if (response == -102)
+                {
+                    response = -202;
+                }
             }
             catch (Exception ex)
             {
