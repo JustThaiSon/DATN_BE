@@ -59,7 +59,7 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetMovie")]
-        public async Task<CommonPagination<List<GetMovieLandingRes>>> GetMovie(Guid? movieType,int type, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetMovieLandingRes>>> GetMovie(Guid? movieType, int type, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetMovieLandingRes>>();
             var data = _movieDAO.GetMovieLanding(movieType, type, currentPage, recordPerPage, out int totalRecord, out int responseCode);
@@ -84,7 +84,7 @@ namespace DATN_LandingPage.Controllers
         }
         [HttpGet]
         [Route("GetShowTimeLanding")]
-        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? cinemaId,Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
+        public async Task<CommonPagination<List<GetShowTimeLangdingRes>>> GetShowTimeLanding(Guid? cinemaId, Guid? movieId, string? location, DateTime? date, int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetShowTimeLangdingRes>>();
             var data = _movieDAO.GetShowTimeLanding(cinemaId, movieId, location, date, currentPage, recordPerPage, out int totalRecord, out int responseCode);
@@ -236,11 +236,11 @@ namespace DATN_LandingPage.Controllers
         [BAuthorize]
         [HttpGet]
         [Route("GetListHistoryOrderByUser")]
-        public async Task<CommonPagination<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser(int currentPage,int recordPerPage)
+        public async Task<CommonPagination<List<GetListHistoryOrderByUserRes>>> GetListHistoryOrderByUser(int currentPage, int recordPerPage)
         {
             var res = new CommonPagination<List<GetListHistoryOrderByUserRes>>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _orderDAO.GetListHistoryOrderByUser(userId, currentPage, recordPerPage,out int totalRecord, out int response);
+            var result = _orderDAO.GetListHistoryOrderByUser(userId, currentPage, recordPerPage, out int totalRecord, out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -254,7 +254,7 @@ namespace DATN_LandingPage.Controllers
         {
             var res = new CommonPagination<List<GetListHistoryOrderByUserRes>>();
             var userId = HttpContextHelper.GetUserId();
-            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, currentPage, recordPerPage, out int totalRecord,out int response);
+            var result = _orderDAO.GetPastShowTimesByTimeFilter(userId, filter, currentPage, recordPerPage, out int totalRecord, out int response);
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
@@ -395,20 +395,73 @@ namespace DATN_LandingPage.Controllers
             res.Message = MessageUtils.GetMessage(response, _langCode);
             return res;
         }
-
+        [BAuthorize]
         [HttpPost]
         [Route("RefundByShowtime")]
         public async Task<CommonResponse<List<GetInfoRefundRes>>> RefundByShowtime(RefundByShowtimeReq req)
         {
             var res = new CommonResponse<List<GetInfoRefundRes>>();
             var result = _orderDAO.RefundByShowtime(req, out int response);
-            if (result != null)
+            if (result != null && response == 200)
             {
+                var userId = HttpContextHelper.GetUserId();
                 foreach (var item in result)
                 {
-                    await _mailService.SendMailRefund(item);
+                    if (item.Email != null)
+                    {
+                        await _mailService.SendMailRefundAll(item);
+                    }
+
+                    List<Guid> seatStatusByShowTimeIds = item.SeatStatusByShowTimeIds
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(id => Guid.Parse(id.Trim()))
+                        .ToList();
+
+                    using (var webSocket = new ClientWebSocket())
+                    {
+                        try
+                        {
+                            var uri = new Uri($"wss://localhost:7105/ws/KeepSeat?roomId={item.ShowTimeId}&userId={userId}");
+                            await webSocket.ConnectAsync(uri, CancellationToken.None);
+
+                            var seatStatusUpdateRequests = seatStatusByShowTimeIds
+                                .Select(seatId => new SeatStatusShowHandler.SeatStatusUpdateRequest
+                                {
+                                    SeatId = seatId.ToString(),
+                                    Status = SeatStatusEnum.Available
+                                })
+                                .ToList();
+
+                            var refundRequest = new SeatStatusShowHandler.SeatActionRequest
+                            {
+                                Action = "Refund",
+                                SeatStatusUpdateRequests = seatStatusUpdateRequests
+                            };
+
+                            var message = JsonConvert.SerializeObject(refundRequest);
+                            var buffer = Encoding.UTF8.GetBytes(message);
+                            await webSocket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+
+                            var responseBuffer = new byte[1024];
+                            var webSocketResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(responseBuffer), CancellationToken.None);
+                            var responseMessage = Encoding.UTF8.GetString(responseBuffer, 0, webSocketResult.Count);
+                            Console.WriteLine($"WebSocket Response: {responseMessage}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"WebSocket Error: {ex.Message}");
+                        }
+                        finally
+                        {
+                            if (webSocket.State == WebSocketState.Open)
+                            {
+                                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Operation completed", CancellationToken.None);
+                            }
+                        }
+                    }
                 }
             }
+
             res.Data = result;
             res.ResponseCode = response;
             res.Message = MessageUtils.GetMessage(response, _langCode);
