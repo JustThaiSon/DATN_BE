@@ -139,8 +139,6 @@ namespace DATN_LandingPage.Handlers
                                 }
                                 break;
 
-                                break;
-
                             case "Payment":
                                 if (request.SeatStatusUpdateRequests != null)
                                 {
@@ -232,7 +230,7 @@ namespace DATN_LandingPage.Handlers
 
                 userCountdownRemaining[userId] = additionalSeconds;
 
-                while (userCountdownRemaining[userId] >= 0)
+                while (userCountdownRemaining[userId] > 0)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -248,8 +246,10 @@ namespace DATN_LandingPage.Handlers
                     userCountdownRemaining[userId] = Math.Max(0, userCountdownRemaining[userId] - 1);
                 }
 
+                // Khi countdown kết thúc, kiểm tra trạng thái thanh toán
                 if (!userPaymentStatus.TryGetValue(userId, out var isPaid) || !isPaid)
                 {
+                    Console.WriteLine($"[WebSocket] Countdown ended, reverting seats for user={userId}");
                     await RevertSeatsIfUnpaidAsync(hub, roomId, userId);
                 }
             }
@@ -259,6 +259,7 @@ namespace DATN_LandingPage.Handlers
             }
             finally
             {
+                // Dọn dẹp tài nguyên countdown
                 userCountdownTokens.TryRemove(userId, out _);
                 userCountdownRemaining.TryRemove(userId, out _);
                 userPaymentStatus.TryRemove(userId, out _);
@@ -267,8 +268,6 @@ namespace DATN_LandingPage.Handlers
                 Console.WriteLine($"[WebSocket] Countdown finished for user={userId}");
             }
         }
-
-
 
         private async Task HandleRefundAction(
             List<SeatStatusUpdateRequest> seatStatusUpdateRequests,
