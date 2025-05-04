@@ -439,7 +439,7 @@ namespace DATN_Helpers.ResourceFiles {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ID Không tồn tại (Khách Hàng).
+        ///   Looks up a localized string similar to Rạp đã đạt số phòng tối đa, không thể thêm phòng mới.
         /// </summary>
         internal static string _2001 {
             get {
@@ -480,6 +480,15 @@ namespace DATN_Helpers.ResourceFiles {
         internal static string _2005 {
             get {
                 return ResourceManager.GetString("-2005", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to định dạng tuổi này đang được sử dụng, bạn chỉ có thể chỉnh sửa.
+        /// </summary>
+        internal static string _2006 {
+            get {
+                return ResourceManager.GetString("-2006", resourceCulture);
             }
         }
         
