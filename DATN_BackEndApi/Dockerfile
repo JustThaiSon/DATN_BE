@@ -3,15 +3,15 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Sao chép toàn bộ project cha (lùi ra khỏi DATN_BackEndApi)
-COPY ../ ./
+# Sao chép toàn bộ source code lên container
+COPY ../ . 
 
-# Di chuyển vào thư mục chứa file .csproj chính
+# Khôi phục dependency từ file solution
+RUN dotnet restore "DATN_BE.sln"
+
+# Build và publish riêng project Web API
 WORKDIR /src/DATN_BackEndApi
-
-# Khôi phục package và biên dịch
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish "DATN_BackEndApi.csproj" -c Release -o /app/publish
 
 # -------------------------------
 # Runtime stage
