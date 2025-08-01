@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DATN_BackEndApi.Controllers
 {
-    [BAuthorize]
+    //[BAuthorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TestController : ControllerBase
